@@ -5,8 +5,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import model.Game;
 
 
 /**
@@ -14,6 +16,9 @@ import javafx.stage.Stage;
  */
 public class Main extends Application
 {
+	public static Game game;
+	
+	
 	/**
 	 * main application entry point
 	 * @param args program's arguments (nothing special here)
@@ -21,6 +26,10 @@ public class Main extends Application
 	public static void main(String[] args)
 	{
 		System.out.println("- = MAIN THREAD START = -");
+		game = new Game(8, 8, 1);
+		System.out.println(game);
+		game.createSnake(0, 2, 2, 3, 1, 0);
+		System.out.println(game);
 		launch(args);
 		System.out.println("- = MAIN THREAD END = -");
 	}
@@ -36,12 +45,34 @@ public class Main extends Application
 			@Override
 			public void handle(ActionEvent event)
 			{
-				System.out.println("Play here bro");
+				game.evolve();
+				System.out.println(game);
 			}
 		});
 		StackPane root = new StackPane();
 		root.getChildren().add(button);
-		stage.setScene(new Scene(root, 300, 250));
+		Scene scene = new Scene(root, 300, 250);
+		stage.setScene(scene);
+		scene.setOnKeyReleased(event -> {
+			KeyCode keyCode = event.getCode();
+            String keyText = keyCode.getName();
+            System.out.println("_" + keyText + "_");
+            switch(keyText)
+            {
+            case "D":
+            	game.getPlayer(0).setDirection(1, 0);
+            	break;
+            case "Q":
+            	game.getPlayer(0).setDirection(-1, 0);
+            	break;
+            case "S":
+            	game.getPlayer(0).setDirection(0, 1);
+            	break;
+            case "Z":
+            	game.getPlayer(0).setDirection(0, -1);
+            	break;
+            }
+		});
 		stage.show();
 	}
 }
