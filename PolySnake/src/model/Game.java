@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Random;
+
 
 /**
  * global game object
@@ -145,7 +147,9 @@ public class Game
 	public boolean isAccessible(int x, int y)
 	{
 		return ((x >= 0) && (x < map.length) && 
-				(y >= 0) && (y < map[0].length));
+				(y >= 0) && (y < map[0].length) && 
+				((map[x][y].getEntity() == Cell.AIR) || 
+				(map[x][y].getEntity() == Cell.APPLE)));
 	}
 	
 	
@@ -156,9 +160,11 @@ public class Game
 	{
 		int[] pos = new int[2];
 		int x, y, dx, dy;
+		int effect;
 		Snake snake;
+		int eaten = 0;
 		
-		// we move every player p one by one
+		// we move every alive player p one by one
 		for (int p=0; p<players.length; p++)
 		{
 			snake = players[p];
@@ -186,26 +192,63 @@ public class Game
 				else
 				{
 					// head's movement
-					System.out.println("Head : "  + x + ":" + y + " + " + dx + ":" + dy);
-					// map[x + dx][y + dy] = map[x][y];
-					map[x + dx][y + dy].setEntity(Cell.PLAYER);
+					if (map[x + dx][y + dy].getEntity() == Cell.APPLE)
+					{
+						effect = map[x + dx][y + dy].getDetail();
+						eaten++;
+					}
+					else
+					{
+						effect = 0;
+					}
+					/*map[x + dx][y + dy].setEntity(Cell.PLAYER);
 					map[x + dx][y + dy].setDetail(p);
-					map[x + dx][y + dy].setDirection(dx, dy);
+					map[x + dx][y + dy].setDirection(dx, dy);*/
+					map[x + dx][y + dy].reset(dx, dy, Cell.PLAYER, p);
 					snake.replaceHead(x + dx, y + dy);
 					
 					// tail's movement
-					x = snake.getTail()[0];
-					y = snake.getTail()[1];
-					dx = map[x][y].getxdir();
-					dy = map[x][y].getydir();
-					map[x][y].reset();
-					System.out.println("Tail : " + x + ":" + y + " + " + dx + ":" + dy);
-					snake.replaceTail(x + dx, y + dy);
+					if (!((effect == Cell.A_CLASSIC) || (effect == Cell.A_LENGTH_ONLY)))
+					{
+						x = snake.getTail()[0];
+						y = snake.getTail()[1];
+						dx = map[x][y].getxdir();
+						dy = map[x][y].getydir();
+						map[x][y].reset();
+						snake.replaceTail(x + dx, y + dy);
+					}
 				}
 			}
 		}
+		// apples respawn
+		for (int a=0; a<eaten; a++)
+		{
+			createApple(Cell.A_LENGTH_ONLY);
+		}
 	}
 	
+	/**
+	 * try to create an apple on the board
+	 * @param detail type of apple
+	 */
+	public void createApple(int detail)
+	{
+		boolean created = false;
+		int x, y;
+		int n = 0;
+		Random random = new Random();
+		while ((created == false) && (n < map.length*map.length))
+		{
+			x = random.nextInt(map.length);
+			y = random.nextInt(map[0].length);
+			if (map[x][y].getEntity() == Cell.AIR)
+			{
+				map[x][y].reset(0, 0, Cell.APPLE, detail);
+				created = true;
+			}
+			n++;
+		}
+	}
 	
 	/**
 	 * get a player in the list

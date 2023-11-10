@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import model.Cell;
 import model.Game;
 
 
@@ -30,6 +31,7 @@ public class Main extends Application
 		System.out.println(game);
 		game.createSnake(0, 2, 2, 3, 1, 0);
 		System.out.println(game);
+		game.createApple(Cell.A_LENGTH_ONLY);
 		launch(args);
 		System.out.println("- = MAIN THREAD END = -");
 	}

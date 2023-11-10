@@ -10,6 +10,11 @@ public class Cell
 	public static final int APPLE = 2;
 	public static final int PLAYER = 3;
 	
+	public static final int A_NOTHING = 0;
+	public static final int A_CLASSIC = 1;
+	public static final int A_LENGTH_ONLY = 2;
+	public static final int A_SPEED_ONLY = 3;
+	
 	private int xdir;
 	private int ydir;
 	private int entity;
@@ -24,10 +29,7 @@ public class Cell
 	 */
 	public Cell(int xdir, int ydir, int entity, int detail)
 	{
-		this.xdir = xdir;
-		this.ydir = ydir;
-		this.entity = entity;
-		this.detail = detail;
+		reset(xdir, ydir, entity, detail);
 	}
 	
 	/**
@@ -35,15 +37,20 @@ public class Cell
 	 */
 	public Cell()
 	{
-		this(0, 0, 0, 0);
+		reset(0, 0, 0, 0);
 	}
 	
 	public void reset()
 	{
-		xdir = 0;
-		ydir = 0;
-		entity = 0;
-		detail = 0;
+		reset(0, 0, 0, 0);
+	}
+	
+	public void reset(int xdir, int ydir, int entity, int detail)
+	{
+		this.xdir = xdir;
+		this.ydir = ydir;
+		this.entity = entity;
+		this.detail = detail;
 	}
 	
 	/**
