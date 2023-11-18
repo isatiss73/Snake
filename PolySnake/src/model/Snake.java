@@ -2,14 +2,16 @@ package model;
 
 
 /**
- * Snake object
+ * snake object
  */
 public class Snake
 {
 	private int playerID;
 	private int length;
 	private int speed;
-	private int direction;
+	private int time;
+	private int delay;
+	private int[] direction;
 	private int score;
 	private String pseudo;
 	private int snakeSkin;
@@ -17,18 +19,30 @@ public class Snake
 	private int appleSkin;
 	private boolean living;
 	private int power;
-	// ajouter head et tail et ce qui va avec
-	
+	private int[] head;
+	private int[] tail;
 	
 	/**
-	 * default constructor
+	 * complete constructor
+	 * @param x start head horizontal position
+	 * @param y start head vertical position
 	 */
-	public Snake()
+	public Snake(int x, int y, int length, int xdir, int ydir)
 	{
 		playerID = 0;
-		length = 3;
+		this.length = length;
 		speed = 1;
-		direction = 0;
+		delay = 1000;
+		time = 0;
+		head = new int[2];
+		head[0] = x;
+		head[1] = y;
+		tail = new int[2];
+		tail[0] = x - (length - 1) * xdir;
+		tail[1] = y - (length - 1) * ydir;
+		direction = new int[2];
+		direction[0] = xdir;
+		direction[1] = ydir;
 		score = 0;
 		pseudo = "Anonymous";
 		snakeSkin = 0;
@@ -38,6 +52,21 @@ public class Snake
 		power = 0;
 	}
 	
+	/**
+	 * default constructor
+	 */
+	public Snake()
+	{
+		this(1, 1, 2, 1, 0);
+	}
+	
+	public String toString()
+	{
+		String res = "" + playerID + " (" + pseudo + ") : " + score;
+		if (living) res += "pts (alive)\n";
+		else res += "pts (dead)\n";
+		return res;
+	}
 	
 	/**
 	 * get player id
@@ -48,6 +77,23 @@ public class Snake
 		return playerID;
 	}
 	
+	/**
+	 * get snake's head position
+	 * @return head 2D position (x, y)
+	 */
+	public int[] getHead()
+	{
+		return head;
+	}
+	
+	/**
+	 * get snake's tail position
+	 * @return tail 2D position (x, y)
+	 */
+	public int[] getTail()
+	{
+		return tail;
+	}
 	
 	/**
 	 * get snake's length
@@ -58,26 +104,23 @@ public class Snake
 		return length;
 	}
 	
-	
 	/**
-	 * get snake's speed
-	 * @return snake's speed in ???
+	 * get snake's movement delay
+	 * @return movement delay in ms
 	 */
-	public int getSpeed()
+	public int getDelay()
 	{
-		return speed;
+		return delay;
 	}
 	
-	
 	/**
-	 * get snake's direction id
-	 * @return 0 (up) / 1(right) / 2 (down) / 3 (left)
+	 * get snake's horizontal direction
+	 * @return (xdir, ydir)
 	 */
-	public int getDirection()
+	public int[] getDirection()
 	{
 		return direction;
 	}
-	
 	
 	/**
 	 * get player's score in a game
@@ -88,7 +131,6 @@ public class Snake
 		return score;
 	}
 	
-	
 	/**
 	 * get player's pseudo
 	 * @return player's text pseudo
@@ -97,7 +139,6 @@ public class Snake
 	{
 		return pseudo;
 	}
-	
 	
 	/**
 	 * get snake skin id
@@ -108,7 +149,6 @@ public class Snake
 		return snakeSkin;
 	}
 	
-	
 	/**
 	 * get map skin id
 	 * @return map skin id
@@ -117,7 +157,6 @@ public class Snake
 	{
 		return mapSkin;
 	}
-	
 	
 	/**
 	 * get apple skin id
@@ -128,7 +167,6 @@ public class Snake
 		return appleSkin;
 	}
 	
-	
 	/**
 	 * know if the snake is living
 	 * @return true if snake the snake is living
@@ -137,7 +175,6 @@ public class Snake
 	{
 		return living;
 	}
-	
 	
 	/**
 	 * get snake power up id
@@ -148,7 +185,6 @@ public class Snake
 		return power;
 	}
 	
-	
 	/**
 	 * change the player id
 	 * @param id new player id
@@ -157,7 +193,6 @@ public class Snake
 	{
 		this.playerID = id;
 	}
-	
 	
 	/**
 	 * change the snake's length (absolute)
@@ -169,7 +204,6 @@ public class Snake
 			this.length = length;
 	}
 	
-	
 	/**
 	 * change the snake's length (relative)
 	 * @param delta difference to add/remove
@@ -180,7 +214,6 @@ public class Snake
 			length += delta;
 	}
 	
-	
 	/**
 	 * change the snake's speed (absolute)
 	 * @param speed new snake's speed
@@ -188,9 +221,11 @@ public class Snake
 	public void setSpeed(int speed)
 	{
 		if (speed > 0)
+		{
 			this.speed = speed;
+			delay = 1000/speed;
+		}
 	}
-	
 	
 	/**
 	 * change the snake's speed (relative)
@@ -199,20 +234,41 @@ public class Snake
 	public void addSpeed(int delta)
 	{
 		if (speed + delta > 0)
+		{
 			speed += delta;
+			delay = 1000/speed;
+		}
 	}
 	
+	/**
+	 * elapse time and say if the snake can move
+	 * @param delta time (ms) since last update
+	 * @return true if the snake can move by one cell
+	 */
+	public boolean elapseTime(int delta)
+	{
+		time += delta;
+		if (time >= delay)
+		{
+			time -= delay;
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * change the snake's direction
-	 * @param direction new direction (0/1/2/3)
+	 * @param xdir new horizontal direction
+	 * @param ydir new vertical direction
 	 */
-	public void setDirection(int direction)
+	public void setDirection(int xdir, int ydir)
 	{
-		if ((direction >= 0) && (direction <= 3))
-			this.direction = direction;
+		if ((direction[0] + xdir != 0) && (direction[1] + ydir != 0))
+		{
+			direction[0] = xdir;
+			direction[1] = ydir;
+		}
 	}
-	
 	
 	/**
 	 * change player's score (absolute)
@@ -224,7 +280,6 @@ public class Snake
 			this.score = score;
 	}
 	
-	
 	/**
 	 * change player's score (relative)
 	 * @param delta difference to add/remove
@@ -233,7 +288,6 @@ public class Snake
 	{
 		score += delta;
 	}
-	
 	
 	/**
 	 * change player's pseudo
@@ -244,7 +298,6 @@ public class Snake
 		this.pseudo = pseudo;
 	}
 	
-	
 	/**
 	 * change the snake skin id
 	 * @param id new snake skin id
@@ -253,7 +306,6 @@ public class Snake
 	{
 		snakeSkin = id;
 	}
-	
 	
 	/**
 	 * change the map skin id
@@ -264,7 +316,6 @@ public class Snake
 		mapSkin = id;
 	}
 	
-	
 	/**
 	 * chnage the apple skin id
 	 * @param id new apple skin id
@@ -273,7 +324,6 @@ public class Snake
 	{
 		appleSkin = id;
 	}
-	
 	
 	/**
 	 * change the living status of the snake
@@ -284,7 +334,6 @@ public class Snake
 		this.living = living;
 	}
 	
-	
 	/**
 	 * change the snake's power up id
 	 * @param id new power up id
@@ -293,14 +342,27 @@ public class Snake
 	{
 		power = id;
 	}
-	
+
+	/**
+	 * replace the head position
+	 * @param x new horizontal position
+	 * @param y new vertical position
+	 */
+	public void replaceHead(int x, int y)
+	{
+		head[0] = x;
+		head[1] = y;
+	}
 	
 	/**
-	 * move the snake with it's direction
+	 * replace the tail position
+	 * @param x new horizontal position
+	 * @param y new vertical position
 	 */
-	public void move()
+	public void replaceTail(int x, int y)
 	{
-		
+		tail[0] = x;
+		tail[1] = y;
 	}
 }
 
