@@ -6,9 +6,9 @@ package model;
  */
 public class Game
 {
-	// private int[] map;
-	// private Snake[] players;
-	// private int livingNumber;
+	private int[][] map;
+	private Snake[] players;
+	private int livingNumber;
 	private int maxSpeed;
 	private int maxLength;
 	private int mapSize;

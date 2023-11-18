@@ -286,7 +286,7 @@ public class Snake
 	
 	
 	/**
-	 * change the snake's pwoer up id
+	 * change the snake's power up id
 	 * @param id new power up id
 	 */
 	public void setPower(int id)
