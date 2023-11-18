@@ -114,7 +114,7 @@ public class Game
 			res += "|";
 			for (int x=0; x<map.length; x++)
 			{
-				word = map[x][y] + "";
+				word = "" + map[x][y];
 				res += padStart(word, 4);
 			}
 			res += "   |\n\n";
@@ -125,6 +125,35 @@ public class Game
 			res += "   -";
 		}
 		res += "   +\n";
+		return res;
+	}
+	
+	public String smoothString()
+	{
+		String res = "";
+		String word;
+		res += "+";
+		for (int x=0; x<map.length; x++)
+		{
+			res += "--";
+		}
+		res += "-+\n";
+		for (int y=0; y<map[0].length; y++)
+		{
+			res += "|";
+			for (int x=0; x<map.length; x++)
+			{
+				word = "" + map[x][y].toChar();
+				res += padStart(word, 2);
+			}
+			res += " |\n";
+		}
+		res += "+";
+		for (int x=0; x<map.length; x++)
+		{
+			res += "--";
+		}
+		res += "-+\n";
 		return res;
 	}
 	

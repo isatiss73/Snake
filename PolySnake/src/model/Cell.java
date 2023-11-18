@@ -137,4 +137,13 @@ public class Cell
 		res += entity + "" + detail;
 		return res;
 	}
+	
+	public char toChar()
+	{
+		if (entity == AIR) return ' ';
+		if (entity == PLAYER) return (char) (detail + '0');
+		if (entity == APPLE) return 'A';
+		if (entity == WALL) return 'X';
+		return '?';
+	}
 }
