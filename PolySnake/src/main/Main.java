@@ -1,5 +1,6 @@
 package main;
 
+import controler.GameRunnable;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -27,7 +28,8 @@ public class Main extends Application
 	public static void main(String[] args)
 	{
 		System.out.println("- = MAIN THREAD START = -");
-		game = new Game(8, 8, 1);
+		game = Game.getInstance();
+		game.reset(8, 8, 1);
 		System.out.println(game);
 		game.createSnake(0, 2, 2, 3, 1, 0);
 		System.out.println(game);
@@ -47,8 +49,8 @@ public class Main extends Application
 			@Override
 			public void handle(ActionEvent event)
 			{
-				game.evolve();
-				System.out.println(game);
+				/*game.evolve();
+				System.out.println(game);*/
 			}
 		});
 		StackPane root = new StackPane();
@@ -75,6 +77,8 @@ public class Main extends Application
             	break;
             }
 		});
+		Thread gameThread = new Thread(new GameRunnable());
+		gameThread.start();
 		stage.show();
 	}
 }

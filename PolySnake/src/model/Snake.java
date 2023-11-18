@@ -9,6 +9,8 @@ public class Snake
 	private int playerID;
 	private int length;
 	private int speed;
+	private int time;
+	private int delay;
 	private int[] direction;
 	private int score;
 	private String pseudo;
@@ -30,6 +32,8 @@ public class Snake
 		playerID = 0;
 		this.length = length;
 		speed = 1;
+		delay = 1000;
+		time = 0;
 		head = new int[2];
 		head[0] = x;
 		head[1] = y;
@@ -54,6 +58,14 @@ public class Snake
 	public Snake()
 	{
 		this(1, 1, 2, 1, 0);
+	}
+	
+	public String toString()
+	{
+		String res = "" + playerID + " (" + pseudo + ") : " + score;
+		if (living) res += "pts (alive)\n";
+		else res += "pts (dead)\n";
+		return res;
 	}
 	
 	/**
@@ -93,12 +105,12 @@ public class Snake
 	}
 	
 	/**
-	 * get snake's speed
-	 * @return snake's speed in ???
+	 * get snake's movement delay
+	 * @return movement delay in ms
 	 */
-	public int getSpeed()
+	public int getDelay()
 	{
-		return speed;
+		return delay;
 	}
 	
 	/**
@@ -209,7 +221,10 @@ public class Snake
 	public void setSpeed(int speed)
 	{
 		if (speed > 0)
+		{
 			this.speed = speed;
+			delay = 1000/speed;
+		}
 	}
 	
 	/**
@@ -219,7 +234,26 @@ public class Snake
 	public void addSpeed(int delta)
 	{
 		if (speed + delta > 0)
+		{
 			speed += delta;
+			delay = 1000/speed;
+		}
+	}
+	
+	/**
+	 * elapse time and say if the snake can move
+	 * @param delta time (ms) since last update
+	 * @return true if the snake can move by one cell
+	 */
+	public boolean elapseTime(int delta)
+	{
+		time += delta;
+		if (time >= delay)
+		{
+			time -= delay;
+			return true;
+		}
+		return false;
 	}
 	
 	/**

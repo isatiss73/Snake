@@ -11,6 +11,7 @@ public class Game
 	public static final int DEFAULT_MAX_SPEED = 10;
 	public static final int DEFAULT_MAX_LENGTH = 10;
 	
+	private static Game instance;
 	
 	private Cell[][] map;
 	private Snake[] players;
@@ -25,13 +26,49 @@ public class Game
 	 * @param vsize vertical map size
 	 * @param maxPlayers maximum players number
 	 */
-	public Game(int hsize, int vsize, int maxPlayers)
+	private Game(int hsize, int vsize, int maxPlayers)
 	{
+		reset(hsize, vsize, maxPlayers);
+	}
+	
+	
+	/**
+	 * default constructor
+	 */
+	private Game()
+	{
+		reset(10, 10, 1);
+	}
+	
+	/**
+	 * single instance getter
+	 * @return the only game instance
+	 */
+	public static Game getInstance()
+	{
+		if (instance == null)
+			instance = new Game();
+		return instance;
+	}
+	
+	/**
+	 * complete reconstructor
+	 * @param hsize horizontal map size
+	 * @param vsize vertical map size
+	 * @param maxPlayers maximum players number
+	 */
+	public void reset(int hsize, int vsize, int maxPlayers)
+	{
+		// creation of tables
 		map = new Cell[hsize][vsize];
 		players = new Snake[maxPlayers];
+		
+		// variables initialisation
 		livingNumber = maxPlayers;
 		maxSpeed = DEFAULT_MAX_SPEED;
 		maxLength = DEFAULT_MAX_LENGTH;
+		
+		// map initialisation
 		for (int x=0; x<hsize; x++)
 		{
 			for (int y=0; y<vsize; y++)
@@ -40,16 +77,6 @@ public class Game
 			}
 		}
 	}
-	
-	
-	/**
-	 * default constructor
-	 */
-	public Game()
-	{
-		this(10, 10, 1);
-	}
-	
 	
 	/**
 	 * add spaces before a text to fill a length
@@ -152,24 +179,39 @@ public class Game
 				(map[x][y].getEntity() == Cell.APPLE)));
 	}
 	
+	/**
+	 * evolve by 10 ms until something change
+	 */
+	public void evolve()
+	{
+		while (!evolve(10))
+		{
+			System.out.print('.');
+		}
+		System.out.println();
+	}
 	
 	/**
 	 * make the game map evolve by one frame
+	 * @param delta time (ms) elapsed since last update
+	 * @return yes if something has changed
 	 */
-	public void evolve()
+	public boolean evolve(int delta)
 	{
 		int[] pos = new int[2];
 		int x, y, dx, dy;
 		int effect;
 		Snake snake;
 		int eaten = 0;
+		boolean changement = false;
 		
 		// we move every alive player p one by one
 		for (int p=0; p<players.length; p++)
 		{
 			snake = players[p];
-			if (snake.isLiving())
+			if (snake.isLiving() && snake.elapseTime(delta))
 			{
+				changement = true;
 				pos = snake.getHead();
 				x = pos[0];
 				y = pos[1];
@@ -225,6 +267,8 @@ public class Game
 		{
 			createApple(Cell.A_LENGTH_ONLY);
 		}
+		
+		return changement;
 	}
 	
 	/**
@@ -260,7 +304,6 @@ public class Game
 		return players[who];
 	}
 	
-	
 	/**
 	 * get max snakes speed
 	 * @return max snakes speed
@@ -270,7 +313,6 @@ public class Game
 		return maxSpeed;
 	}
 	
-	
 	/**
 	 * get max snakes length
 	 * @return max snakes length
@@ -278,5 +320,10 @@ public class Game
 	public int getMaxLength()
 	{
 		return maxLength;
+	}
+	
+	public int getLivingNumber()
+	{
+		return livingNumber;
 	}
 }

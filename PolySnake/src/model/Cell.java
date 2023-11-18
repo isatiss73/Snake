@@ -40,11 +40,21 @@ public class Cell
 		reset(0, 0, 0, 0);
 	}
 	
+	/**
+	 * standard cell reset with nothing
+	 */
 	public void reset()
 	{
 		reset(0, 0, 0, 0);
 	}
 	
+	/**
+	 * cell reset with every information
+	 * @param xdir horizontal direction of the entity
+	 * @param ydir vertical direction of the entity
+	 * @param entity type of entity
+	 * @param detail detail of the entity
+	 */
 	public void reset(int xdir, int ydir, int entity, int detail)
 	{
 		this.xdir = xdir;
