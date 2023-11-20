@@ -10,16 +10,30 @@ public class GameControler
 	private int rightID;
 	private boolean twoLocal;
 	
+	/**
+	 * constructor with one single local player
+	 * @param leftID
+	 */
 	public GameControler(int leftID)
 	{
 		setIDs(leftID, -1);
 	}
 	
+	/**
+	 * constructor with two local players
+	 * @param leftID
+	 * @param rightID
+	 */
 	public GameControler(int leftID, int rightID)
 	{
 		setIDs(leftID, rightID);
 	}
 	
+	/**
+	 * change ID for the two local players
+	 * @param left ID for the left player >= 0
+	 * @param right ID for the right player, -1 if no right player
+	 */
 	public void setIDs(int left, int right)
 	{
 		if (left >= 0)
@@ -37,6 +51,10 @@ public class GameControler
 		}
 	}
 	
+	/**
+	 * listener for key release on game
+	 * @param event the key event
+	 */
 	public void keyReleased(KeyEvent event)
 	{
 		KeyCode keyCode = event.getCode();
@@ -45,6 +63,7 @@ public class GameControler
         Game game = Game.getInstance();
         boolean left = true;
         
+        // left player management
         switch(keyText)
         {
         case "D":
@@ -63,6 +82,7 @@ public class GameControler
         	left = false;
         	break;
         }
+        // right player management
         if (!left && twoLocal)
         {
         	switch(keyText)

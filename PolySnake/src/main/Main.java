@@ -1,10 +1,14 @@
 package main;
 
+import java.io.File;
+import java.net.MalformedURLException;
+
 import controler.GameControler;
 import controler.GameRunnable;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.Cell;
 import model.Game;
@@ -16,7 +20,20 @@ import model.Game;
 public class Main extends Application
 {
 	public static Game game;
+	public static String scenePathQuentin = "/home/quentin/git/Snake/PolySnake/scenes/";
+	public static String scenePath = System.getProperty("user.dir") + "/scenes/";
 	
+	/**
+	 * create a FXMLLoader without headache
+	 * @param fileName just the name of the file without extension
+	 * @return the beautiful FXMLLoader if you are lucky
+	 * @throws MalformedURLException a huge error if you are unlucky
+	 */
+	public static FXMLLoader FXLoad(String fileName) throws MalformedURLException
+	{
+		String path = scenePath + fileName + ".fxml";
+		return new FXMLLoader(new File(path).toURL());
+	}
 	
 	/**
 	 * main application entry point
@@ -42,9 +59,9 @@ public class Main extends Application
 		
 		stage.setTitle("PolySnake");
 		
-		StackPane root = new StackPane();
-		/*FXMLLoader loader = new FXMLLoader(getClass().getResource("/Scene_menu.fxml"));
-        Parent root = loader.load();*/
+		// StackPane root = new StackPane();
+		FXMLLoader loader = FXLoad("Scene_menu");
+        Parent root = loader.load();
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		
