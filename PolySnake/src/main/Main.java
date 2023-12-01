@@ -1,12 +1,16 @@
 package main;
 
+import java.io.File;
+
+import controler.GameControler;
+import controler.GameRunnable;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import model.Cell;
+import model.Game;
 
 
 /**
@@ -14,34 +18,47 @@ import javafx.stage.Stage;
  */
 public class Main extends Application
 {
-	/**
-	 * main application entry point
-	 * @param args program's arguments (nothing special here)
-	 */
-	public static void main(String[] args)
-	{
-		System.out.println("- = MAIN THREAD START = -");
-		launch(args);
-		System.out.println("- = MAIN THREAD END = -");
-	}
-	
-	@Override
-	public void start(Stage stage) throws Exception
-	{
-		stage.setTitle("PolySnake");
-		Button button = new Button();
-		button.setText("Play in terminal");
-		button.setOnAction(new EventHandler<ActionEvent>()
-		{
-			@Override
-			public void handle(ActionEvent event)
-			{
-				System.out.println("Play here bro");
-			}
-		});
-		StackPane root = new StackPane();
-		root.getChildren().add(button);
-		stage.setScene(new Scene(root, 300, 250));
-		stage.show();
-	}
+    public static Game game;
+    
+    
+    /**
+     * main application entry point
+     * @param args program's arguments (nothing special here)
+     */
+    public static void main(String[] args)
+    {
+        System.out.println("- = MAIN THREAD START = -");
+        launch(args);
+        System.out.println("- = MAIN THREAD END = -");
+    }
+    
+    @Override
+    public void start(Stage stage) throws Exception
+    {
+        game = Game.getInstance();
+        game.reset(8, 8, 2);
+        System.out.println(game.smoothString());
+        game.createSnake(0, 2, 2, 3, 1, 0);
+        game.createSnake(1, 2, 4, 3, 1, 0);
+        System.out.println(game);
+        game.createApple(Cell.A_LENGTH_ONLY);
+        
+        stage.setTitle("PolySnake");
+        
+        //StackPane root = new StackPane();
+        //FXMLLoader loader = new FXMLLoader(getClass().getResource(System.getProperty("user.dir") + "/scenes/Scene_menu.fxml"));
+        FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_menu.fxml").toURL());
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        
+        GameControler gameControler = new GameControler(0, 1);
+        
+        scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
+        
+        Thread gameThread = new Thread(new GameRunnable());
+        gameThread.start();
+        stage.setOnCloseRequest(event -> {stage.close(); gameThread.interrupt();});
+        stage.show();
+    }
 }

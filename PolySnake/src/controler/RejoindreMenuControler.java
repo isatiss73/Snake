@@ -1,5 +1,6 @@
 package controler;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.event.ActionEvent;
@@ -34,8 +35,7 @@ public class RejoindreMenuControler {
     
     @FXML	
     public void clicboutonMenuAction(ActionEvent event) throws IOException {
-        System.out.println("Bouton Menu cliqué !");
-    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/Scene_menu.fxml"));
+        FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_menu.fxml").toURL());
     	Parent root = loader.load();
 		
     	Scene scene = new Scene(root);
