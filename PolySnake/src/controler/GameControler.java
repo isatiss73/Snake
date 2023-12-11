@@ -59,7 +59,7 @@ public class GameControler
 	{
 		KeyCode keyCode = event.getCode();
         String keyText = keyCode.getName();
-        System.out.println("_" + keyText + "_");
+        // System.out.println("_" + keyText + "_");
         Game game = Game.getInstance();
         boolean left = true;
         

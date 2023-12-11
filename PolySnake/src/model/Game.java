@@ -10,12 +10,34 @@ public class Game
 {
 	public static final int DEFAULT_MAX_SPEED = 10;
 	public static final int DEFAULT_MAX_LENGTH = 10;
+	public static final int DEFAULT_MAP_SIZE = 10;
+	
+	/** easier rules for noobs */
+	public static final int OPT_EASY_MODE = 0;
+	
+	/** revenge mode for dead players to troll alive players */
+	public static final int OPT_REVENGE = 1;
+	
+	/** say if the snakes speeds are independant */
+	public static final int OPT_INDEP_SPEED = 2;
+	
+	/** special quest for bonus for the last alive player */
+	public static final int OPT_GOLD_QUEST = 3;
+	
+	/** time (ms) between two apples spawn | 0 if spawn on eating */
+	public static final int RANDOM_APPLE = 4;
+	
+	/** say if a carcass rest on the map after snake death */
+	public static final int OPT_CARCASS = 5;
 	
 	private static Game instance;
 	
+	private int[] options;
+	private int[] optVar;
 	private Cell[][] map;
 	private Snake[] players;
 	private int livingNumber;
+	private int livingApples;
 	private int maxSpeed;
 	private int maxLength;
 	
@@ -37,7 +59,7 @@ public class Game
 	 */
 	private Game()
 	{
-		reset(10, 10, 1);
+		reset(DEFAULT_MAP_SIZE, DEFAULT_MAP_SIZE, 1);
 	}
 	
 	/**
@@ -59,11 +81,16 @@ public class Game
 	 */
 	public void reset(int hsize, int vsize, int maxPlayers)
 	{
-		// creation of tables
+		// options
+		options = new int[]{0, 0, 0, 0, 4000, 0};
+		optVar = new int[]{0, 0, 0, 0, 4000, 0};
+		
+		// creation of tablesy
 		map = new Cell[hsize][vsize];
 		players = new Snake[maxPlayers];
 		
 		// variables initialisation
+		livingApples = 0;
 		livingNumber = maxPlayers;
 		maxSpeed = DEFAULT_MAX_SPEED;
 		maxLength = DEFAULT_MAX_LENGTH;
@@ -97,7 +124,7 @@ public class Game
 	
 	
 	/**
-	 * text representation
+	 * rich ASCII representation
 	 */
 	public String toString()
 	{
@@ -128,6 +155,10 @@ public class Game
 		return res;
 	}
 	
+	/**
+	 * smooth ASCII representation
+	 * @return
+	 */
 	public String smoothString()
 	{
 		String res = "";
@@ -188,6 +219,23 @@ public class Game
 	 */
 	public int killSnake(int who)
 	{
+		// we delete the snake carcass
+		if (options[OPT_CARCASS] == 0)
+		{
+			int x = players[who].getTail()[0];
+			int y = players[who].getTail()[1];
+			int ex = players[who].getHead()[0];
+			int ey = players[who].getHead()[1];
+			
+			// we clear every cell one by one from tail to head
+			while(x != ex && y != ey)
+			{
+				map[x][y].setEntity(Cell.AIR);
+				x += map[x][y].getxdir();
+				y += map[x][y].getydir();
+			}
+		}
+
 		players[who].setLiving(false);
 		livingNumber--;
 		return livingNumber;
@@ -288,13 +336,36 @@ public class Game
 						map[x][y].reset();
 						snake.replaceTail(x + dx, y + dy);
 					}
+					else
+					{
+						snake.addLength(1);
+					}
+					if ((effect == Cell.A_CLASSIC) || (effect == Cell.A_SPEED_ONLY))
+					{
+						snake.addSpeed(1);
+					}
 				}
 			}
 		}
+		
 		// apples respawn
-		for (int a=0; a<eaten; a++)
+		livingApples -= eaten;
+		if (options[RANDOM_APPLE] == 0)
 		{
-			createApple(Cell.A_LENGTH_ONLY);
+			int max = optVar[RANDOM_APPLE] - livingApples;
+			for (int a=0; a<max; a++)
+			{
+				createApple(Cell.A_LENGTH_ONLY);
+			}
+		}
+		else
+		{
+			optVar[RANDOM_APPLE] -= delta;
+			if (optVar[RANDOM_APPLE] <= 0)
+			{
+				createApple(Cell.A_LENGTH_ONLY);
+				optVar[RANDOM_APPLE] += options[RANDOM_APPLE]*(0.5 + Math.random());
+			}
 		}
 		
 		return changement;
@@ -321,6 +392,17 @@ public class Game
 			}
 			n++;
 		}
+		livingApples++;
+	}
+	
+	public void setOptions(int[] options)
+	{
+		this.options = options;
+	}
+	
+	public void setOptVar(int[] optVar)
+	{
+		this.optVar = optVar;
 	}
 	
 	/**
@@ -351,6 +433,10 @@ public class Game
 		return maxLength;
 	}
 	
+	/**
+	 * get number of living players
+	 * @return this number
+	 */
 	public int getLivingNumber()
 	{
 		return livingNumber;

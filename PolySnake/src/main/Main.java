@@ -20,7 +20,6 @@ import model.Game;
 public class Main extends Application
 {
 	public static Game game;
-	public static String scenePathQuentin = "/home/quentin/git/Snake/PolySnake/scenes/";
 	public static String scenePath = System.getProperty("user.dir") + "/scenes/";
 	
 	/**
@@ -29,6 +28,7 @@ public class Main extends Application
 	 * @return the beautiful FXMLLoader if you are lucky
 	 * @throws MalformedURLException a huge error if you are unlucky
 	 */
+	@SuppressWarnings("deprecation")
 	public static FXMLLoader FXLoad(String fileName) throws MalformedURLException
 	{
 		String path = scenePath + fileName + ".fxml";
@@ -71,7 +71,6 @@ public class Main extends Application
 		
 		Thread gameThread = new Thread(new GameRunnable());
 		gameThread.start();
-		stage.setOnCloseRequest(event -> {stage.close(); gameThread.interrupt();});
 		stage.show();
 	}
 }
