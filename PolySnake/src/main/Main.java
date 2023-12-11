@@ -21,7 +21,7 @@ public class Main extends Application
 {    
 	public static Game game;
 	//public static String scenePathQuentin = "/home/quentin/git/Snake/PolySnake/scenes/";
-	public static String scenePath = "/scenes/";
+	public static String scenePath = "scenes/";
 	
 	/**
 	 * create a FXMLLoader without headache

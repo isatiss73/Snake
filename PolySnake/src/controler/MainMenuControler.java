@@ -31,6 +31,8 @@ public class MainMenuControler {
 	
 	private int MaxSkinPomme = 4;
 	
+	private String Pseudo;
+	
     @FXML
     private ImageView FlecheDSkinJoueur;
 
@@ -73,7 +75,7 @@ public class MainMenuControler {
     @FXML
     public void initialize() {
         boutonQuitter.setOnAction(event -> clicBoutonQuitterAction());
-        boutonHeberger.setOnAction(event -> clicBoutonHebergerAction());
+        //boutonHeberger.setOnAction(event -> clicBoutonHebergerAction());
         //boutonRejoindre.setOnAction(event -> clicBoutonRejoindreAction(ActionEvent event));
     }
     
@@ -84,8 +86,16 @@ public class MainMenuControler {
 
 
     @FXML
-    void clicBoutonHebergerAction() {
-    	System.out.println("Bouton Heberger cliqué !");
+    void clicBoutonHebergerAction(ActionEvent event) throws IOException {
+    	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_Heberger_param.fxml").toURL());
+    	Parent root = loader.load();
+		
+    	Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    	
+    	stage.setScene(scene);
+
+    	stage.show();
     }
     
     @FXML

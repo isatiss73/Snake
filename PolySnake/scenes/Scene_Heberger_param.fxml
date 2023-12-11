@@ -35,17 +35,19 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="590.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controler.ChooseOptionControler">
   <children>
     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sélection règles :" textAlignment="CENTER" underline="true" x="60.0" y="50.0">
+            <Text layoutX="-60.0" layoutY="-12.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sélection règles :" textAlignment="CENTER" underline="true" wrappingWidth="640.0" x="60.0" y="50.0">
                <font>
                   <Font name="System Bold" size="36.0" />
                </font>
@@ -54,73 +56,128 @@
     </AnchorPane>
       <Pane prefHeight="531.0" prefWidth="400.0">
          <children>
-            <CheckBox layoutX="10.0" layoutY="40.0" mnemonicParsing="false" text="Mode assisté" textFill="#00b718">
+            <CheckBox fx:id="BoiteAssiste" layoutX="10.0" layoutY="31.0" mnemonicParsing="false" onAction="#BoiteAssisteAction" text="Mode assisté" textFill="#00b718">
                <font>
                   <Font size="21.0" />
                </font>
             </CheckBox>
-            <CheckBox layoutX="200.0" layoutY="18.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="196.0" text="Apparition aléatoire pomme" wrapText="true">
+            <CheckBox fx:id="BoiteRevanche" layoutX="213.0" layoutY="31.0" mnemonicParsing="false" onAction="#BoiteRevancheAction" text="Mode revanche" textFill="#dc00a9">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="BoiteItem" layoutX="437.0" layoutY="66.0" mnemonicParsing="false" onAction="#BoiteItemAction" prefHeight="56.0" prefWidth="195.0" text="Item supplémentaire" wrapText="true">
                <font>
                   <Font size="18.0" />
                </font>
             </CheckBox>
-            <CheckBox layoutX="10.0" layoutY="99.0" mnemonicParsing="false" text="Mode revanche" textFill="#dc00a9">
+            <CheckBox fx:id="BoiteMap" layoutX="213.0" layoutY="138.0" mnemonicParsing="false" onAction="#BoiteMapAction" text="Map Aléatoire">
                <font>
-                  <Font size="20.0" />
+                  <Font size="18.0" />
                </font>
             </CheckBox>
-            <CheckBox layoutX="10.0" layoutY="160.0" mnemonicParsing="false" text="Item supps">
+            <CheckBox fx:id="BoiteChacunPomme" layoutX="10.0" layoutY="125.0" lineSpacing="2.0" mnemonicParsing="false" onAction="#BoiteChacunPommeAction" prefHeight="56.0" prefWidth="189.0" text="Chacun pour sa pomme" textOverrun="CLIP" wrapText="true">
                <font>
-                  <Font size="20.0" />
+                  <Font size="17.0" />
                </font>
             </CheckBox>
-            <CheckBox layoutX="10.0" layoutY="218.0" mnemonicParsing="false" text="Map Random">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </CheckBox>
-            <CheckBox layoutX="10.0" layoutY="275.0" lineSpacing="2.0" mnemonicParsing="false" prefHeight="72.0" prefWidth="189.0" text="Chacun pour sa pomme" textOverrun="CLIP" wrapText="true">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </CheckBox>
-            <CheckBox layoutX="200.0" layoutY="163.0" mnemonicParsing="false" text="Mode sans croissance" textFill="#4305d4">
+            <CheckBox fx:id="BoiteCroissance" layoutX="214.0" layoutY="82.0" mnemonicParsing="false" onAction="#BoiteCroissanceAction" text="Mode sans croissance" textFill="#4305d4">
                <font>
                   <Font size="16.0" />
                </font>
             </CheckBox>
-            <CheckBox layoutX="10.0" layoutY="360.0" lineSpacing="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="189.0" text="Mode ruée vers l'or" textFill="#e49800" textOverrun="CLIP" wrapText="true">
+            <CheckBox fx:id="BoiteRuéeOr" layoutX="10.0" layoutY="75.0" lineSpacing="2.0" mnemonicParsing="false" onAction="#BoiteRuéeOrAction" prefHeight="38.0" prefWidth="183.0" text="Mode ruée vers l'or" textFill="#e49800" textOverrun="CLIP" wrapText="true">
                <font>
                   <Font size="17.0" />
                </font>
             </CheckBox>
-            <CheckBox layoutX="203.0" layoutY="358.0" lineSpacing="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="189.0" text="Mode échec" textFill="#d40202" textOverrun="CLIP" wrapText="true">
+            <CheckBox fx:id="BoiteEchec" layoutX="437.0" layoutY="31.0" lineSpacing="2.0" mnemonicParsing="false" onAction="#BoiteEchecAction" prefHeight="25.0" prefWidth="189.0" text="Mode échec" textFill="#d40202" textOverrun="CLIP" wrapText="true">
                <font>
                   <Font size="20.0" />
                </font>
             </CheckBox>
-            <Button fx:id="BoutonLancerPartie" layoutX="109.0" layoutY="452.0" mnemonicParsing="false" onAction="#clicBoutonLancerPartieAction" prefHeight="26.0" prefWidth="183.0" text="Lancer Partie">
+            <Button fx:id="BoutonLancerPartie" layoutX="236.0" layoutY="297.0" mnemonicParsing="false" onAction="#clicBoutonLancerPartieAction" prefHeight="7.0" prefWidth="156.0" text="Lancer Partie">
                <font>
-                  <Font size="26.0" />
+                  <Font size="20.0" />
                </font>
             </Button>
-            <Slider layoutX="204.0" layoutY="112.0" prefHeight="26.0" prefWidth="189.0" />
-            <CheckBox layoutX="203.0" layoutY="296.0" lineSpacing="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="189.0" text="Murs spéciaux" textOverrun="CLIP" wrapText="true">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </CheckBox>
-            <Slider layoutX="203.0" layoutY="235.0" prefHeight="26.0" prefWidth="189.0" />
-            <Text layoutX="238.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choisir nb bots :" underline="true">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Text>
-            <Text layoutX="213.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choisir taille serpent :" underline="true">
+            <Slider fx:id="BoiteNbBots" blockIncrement="1.0" layoutX="214.0" layoutY="208.0" majorTickUnit="3.0" max="3.0" minorTickCount="0" prefHeight="26.0" prefWidth="201.0" />
+            <CheckBox fx:id="BoiteMurSpecial" layoutX="437.0" layoutY="138.0" lineSpacing="2.0" mnemonicParsing="false" onAction="#BoiteMurSpecialAction" prefHeight="25.0" prefWidth="189.0" text="Murs spéciaux" textOverrun="CLIP" wrapText="true">
                <font>
                   <Font size="18.0" />
                </font>
+            </CheckBox>
+            <Slider fx:id="BoiteTailleSerpent" blockIncrement="1.0" layoutX="437.0" layoutY="207.0" majorTickUnit="3.0" max="6.0" min="2.0" minorTickCount="0" prefHeight="26.0" prefWidth="189.0" value="2.0" />
+            <Text layoutX="250.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choisir nb bots :" underline="true" wrappingWidth="128.0645751953125">
+               <font>
+                  <Font size="17.0" />
+               </font>
             </Text>
+            <Text layoutX="451.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choisir taille serpent :" underline="true">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Text>
+            <CheckBox fx:id="BoiteApparitionPomme" layoutX="10.0" layoutY="186.0" mnemonicParsing="false" onAction="#BoiteApparitionPommeAction" prefHeight="53.0" prefWidth="183.0" text="Apparition aléatoire pomme" wrapText="true">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </CheckBox>
+            <Text fx:id="ChiffreNbBots" layoutX="309.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="ChiffreTailleSerpent" layoutX="526.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+            <Button fx:id="BoutonRetour" layoutX="14.0" layoutY="300.0" mnemonicParsing="false" onAction="#clicBoutonRetourAction" prefHeight="12.0" prefWidth="73.0" text="Retour">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Text fx:id="TextIP" layoutX="437.0" layoutY="314.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP : ">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="TextPort" layoutX="437.0" layoutY="337.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port : ">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="TextPseudoJ2" disable="true" fill="#b4cc00" layoutX="40.0" layoutY="277.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pseudo J2" textAlignment="CENTER" wrappingWidth="128.0645751953125">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Text>
+            <Text fx:id="TextPseudoJ3" disable="true" fill="#00e422" layoutX="241.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pseudo J3" textAlignment="CENTER" wrappingWidth="128.0645751953125">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Text>
+            <Text fx:id="TextPseudoJ4" disable="true" fill="#001de3" layoutX="462.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pseudo J4" textAlignment="CENTER" wrappingWidth="128.0645751953125">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Text>
+            <ImageView fx:id="J2LogoValidation" disable="true" fitHeight="26.0" fitWidth="26.0" layoutX="155.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/Pseudo-invalide.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="J3LogoValidation" fitHeight="26.0" fitWidth="26.0" layoutX="356.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/Pseudo-invalide.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="J4LogoValidation" disable="true" fitHeight="26.0" fitWidth="26.0" layoutX="577.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/Pseudo-invalide.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
   </children>
