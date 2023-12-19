@@ -32,6 +32,10 @@ public class Game
 	}
 	
 	
+	public Cell[][] getMap() {
+		return map;
+	}
+	
 	/**
 	 * default constructor
 	 */

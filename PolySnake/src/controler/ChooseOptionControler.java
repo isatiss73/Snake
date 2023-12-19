@@ -4,6 +4,7 @@ package controler;
 import java.io.File;
 import java.io.IOException;
 
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,9 +17,11 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.Cell;
+import model.Game;
 
-public class ChooseOptionControler {
-	
+public class ChooseOptionControler extends Application {
+	public static Game game;
 		private int ruleAppPomme=0;
 		private int ruleAssiste=0;
 		private int ruleChacunPomme=0;
@@ -171,7 +174,35 @@ public class ChooseOptionControler {
 
 	    @FXML
 	    void clicBoutonLancerPartieAction(ActionEvent event) throws IOException {
-	    	System.out.println("Bouton Lancer partie !");
+	    	//System.out.println("Bouton Lancer partie !");
+	    	// Initialiser le jeu en premier
+		    game = Game.getInstance();
+		    game.reset(10,10, 2);
+		    System.out.println(game.smoothString());
+		    game.createSnake(0, 2, 2, 3, 1, 0);
+		    game.createSnake(1, 2, 4, 3, 1, 0);
+		    System.out.println(game);
+		    game.createApple(Cell.A_LENGTH_ONLY);
+		    
+	    	Thread gameThread = new Thread(new GameRunnable());
+			gameThread.start();
+			
+			FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_partie.fxml").toURL());
+
+		    //loader.setController(jeu);
+	    	Parent root = loader.load();
+	    	
+
+		    
+	    	Scene scene = new Scene(root);
+	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    	
+	    	stage.setScene(scene);
+		    GameViewControler jeu = new GameViewControler(game, stage);
+		    
+		    jeu.initializeCanvas(game,stage);
+	    	
+	    	stage.show();
 	    }
 	    
 
@@ -187,5 +218,12 @@ public class ChooseOptionControler {
 
 	    	stage.show();
 	    }
+
+
+		@Override
+		public void start(Stage arg0) throws Exception {
+			// TODO Auto-generated method stub
+			
+		}
     
 }
