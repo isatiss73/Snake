@@ -22,6 +22,13 @@ import model.Game;
 
 public class ChooseOptionControler extends Application {
 	public static Game game;
+	
+	
+		private int skinMap;
+	    private int skinPlayer;
+	    private int skinPomme;
+	
+	
 		private int ruleAppPomme=0;
 		private int ruleAssiste=0;
 		private int ruleChacunPomme=0;
@@ -121,6 +128,12 @@ public class ChooseOptionControler extends Application {
 	    	});
 	    }
 	    
+	    public void setSkinOptions(int skinMap, int skinPlayer, int skinPomme) {
+	        this.skinMap = skinMap;
+	        this.skinPlayer = skinPlayer;
+	        this.skinPomme = skinPomme;
+	    }
+	    
 	    
 	    @FXML
 	    void BoiteApparitionPommeAction() {
@@ -177,33 +190,34 @@ public class ChooseOptionControler extends Application {
 	    	//System.out.println("Bouton Lancer partie !");
 	    	// Initialiser le jeu en premier
 		    game = Game.getInstance();
-		    game.reset(10,10, 2);
-		    System.out.println(game.smoothString());
+		    game.reset(9,9, 2);
+		    //System.out.println(game.smoothString());
 		    game.createSnake(0, 2, 2, 3, 1, 0);
 		    game.createSnake(1, 2, 4, 3, 1, 0);
-		    System.out.println(game);
+		    //System.out.println(game);
 		    game.createApple(Cell.A_LENGTH_ONLY);
+		    game.createWall(Cell.A_LENGTH_ONLY);
 		    
 	    	Thread gameThread = new Thread(new GameRunnable());
 			gameThread.start();
 			
 			FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_partie.fxml").toURL());
 
-		    //loader.setController(jeu);
 	    	Parent root = loader.load();
-	    	
-
 		    
 	    	Scene scene = new Scene(root);
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	    	
 	    	stage.setScene(scene);
 		    GameViewControler jeu = new GameViewControler(game, stage);
-		    
+			
+			jeu.setGameRules(skinMap, skinPlayer, skinPomme);
+			
 		    jeu.initializeCanvas(game,stage);
 	    	
 	    	stage.show();
 	    }
+	    
 	    
 
 	    @FXML

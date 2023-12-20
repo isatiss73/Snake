@@ -16,7 +16,7 @@ public class GameRunnable implements Runnable
 			today = (int) System.currentTimeMillis();
 			if (game.evolve(today - yesterday))
 			{
-				System.out.println(game.smoothString());
+				//System.out.println(game.smoothString());
 			}
 			yesterday = today;
 		}

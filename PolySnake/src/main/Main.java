@@ -40,9 +40,7 @@ public class Main extends Application
 	 */
 	public static void main(String[] args)
 	{
-		//System.out.println("- = MAIN THREAD START = -");
 		launch(args);
-		//System.out.println("- = MAIN THREAD END = -");
 	}
 	
 	@Override
@@ -54,26 +52,6 @@ public class Main extends Application
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
-		
-		
-		//-------------Lancer jeu-----------------//
-		
-		/*
-		game = Game.getInstance();
-		game.reset(8, 8, 2);
-		System.out.println(game.smoothString());
-		game.createSnake(0, 2, 2, 3, 1, 0);
-		game.createSnake(1, 2, 4, 3, 1, 0);
-		System.out.println(game);
-		game.createApple(Cell.A_LENGTH_ONLY);
-		
-		GameControler gameControler = new GameControler(0, 1);
-		
-		scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
-		
-		Thread gameThread = new Thread(new GameRunnable());
-		gameThread.start();
-		stage.setOnCloseRequest(event -> {stage.close(); gameThread.interrupt();});*/
 		
 	}
 }

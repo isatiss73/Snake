@@ -2,7 +2,6 @@ package model;
 
 import java.util.Random;
 
-
 /**
  * global game object
  */
@@ -261,6 +260,7 @@ public class Game
 					if (killSnake(p) == 0)
 					{
 						System.out.println("GAME OVER");
+						//map[x][y].reset(dx, dy, Cell.AIR, 0);
 					}
 				}
 				// if the snake is still living, we move it
@@ -324,6 +324,28 @@ public class Game
 				created = true;
 			}
 			n++;
+		}
+	}
+	
+	public void createWall(int detail)
+	{
+		Random randomwall = new Random();
+		for (int i=0; i<randomwall.nextInt(map.length*2) + 5; i++) {
+			boolean created = false;
+			int x, y;
+			int n = 0;
+			Random random = new Random();
+			while ((created == false) && (n < map.length*map.length))
+			{
+				x = random.nextInt(map.length);
+				y = random.nextInt(map[0].length);
+				if (map[x][y].getEntity() == Cell.AIR)
+				{
+					map[x][y].reset(0, 0, Cell.WALL, detail);
+					created = true;
+				}
+				n++;
+			}
 		}
 	}
 	
