@@ -330,7 +330,10 @@ public class Game
 	public void createWall(int detail)
 	{
 		Random randomwall = new Random();
-		for (int i=0; i<randomwall.nextInt(map.length*2) + 5; i++) {
+		
+		int nbWall = randomwall.nextInt((int)(map.length-4)) + 1;
+		
+		for (int i=0; i<nbWall; i++) {
 			boolean created = false;
 			int x, y;
 			int n = 0;

@@ -164,7 +164,7 @@ public class GameViewControler implements Initializable {
     }
     
 	private void drawPlayer2Image(GraphicsContext gc, double x, double y) {
-        Image playerImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + 1 +".png");
+        Image playerImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/persoj2.png");
         gc.drawImage(playerImage, x, y);
     }
     
