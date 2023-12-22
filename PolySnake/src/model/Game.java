@@ -193,6 +193,22 @@ public class Game
 	{
 		players[who].setLiving(false);
 		livingNumber--;
+		
+		int x = players[who].getTail()[0];
+		int y = players[who].getTail()[1];
+		int dx = map[x][y].getxdir();
+		int dy = map[x][y].getydir();
+		
+		for (int i=0; i<players[who].getLength(); i++) {
+			dx = map[x][y].getxdir();
+			dy = map[x][y].getydir();
+			
+			map[x][y].setEntity(Cell.AIR);
+			
+			x=x+dx;
+			y=y+dy;
+		}
+		
 		return livingNumber;
 	}
 	
@@ -241,6 +257,9 @@ public class Game
 		for (int p=0; p<players.length; p++)
 		{
 			snake = players[p];
+			if(snake.isLiving()==false) {
+				//killSnake(p);
+			}
 			if (snake.isLiving() && snake.elapseTime(delta))
 			{
 				changement = true;
@@ -255,7 +274,7 @@ public class Game
 				{
 					// we kill the snake
 					System.out.println("DEATH OF " + snake.getPseudo());
-					
+
 					// we manage the end game
 					if (killSnake(p) == 0)
 					{
@@ -270,6 +289,7 @@ public class Game
 					if (map[x + dx][y + dy].getEntity() == Cell.APPLE)
 					{
 						effect = map[x + dx][y + dy].getDetail();
+						snake.addLength(1);
 						eaten++;
 					}
 					else
