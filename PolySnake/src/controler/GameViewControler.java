@@ -159,7 +159,7 @@ public class GameViewControler implements Initializable {
 	    	    	int yCase=(int)y;
 	    			
 	    			drawFloorImage(gc, x*66, y*66);
-	    			Image playerTailImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/tail" + skinPlayer +".png"); 
+	    			Image playerTailImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"tail.png"); 
 	    			
 	    			
 	    			if (game.getMap()[xCase][yCase].getxdir() == -1) {
@@ -181,65 +181,88 @@ public class GameViewControler implements Initializable {
 	    		
 	    		else if (i>0 && i<tailleSnake0-1) {
 	    			
-	    			int bodyPart =0;
-	    	    	
-	    	    	int xCase=(int)x;
-	    	    	int yCase=(int)y;
+	    			int xCaseTail=game.getPlayer(0).getTail()[0];
+	    	    	int yCaseTail=game.getPlayer(0).getTail()[1];
+
 	    			
-	    			int xdir = game.getMap()[xCase][yCase].getxdir();
-	    			int ydir = game.getMap()[xCase][yCase].getydir();
+	    			int xdir = game.getMap()[xCaseTail][yCaseTail].getxdir();
+	    			int ydir = game.getMap()[xCaseTail][yCaseTail].getydir();
 	    			
+	    			int xCase=xCaseTail+xdir;
+	    			int yCase=yCaseTail + ydir;
+	    			
+	    			for (int j=0; j<tailleSnake0-2; j++) {
+		    			
+		    			xdir = game.getMap()[xCase][yCase].getxdir();
+			    		ydir = game.getMap()[xCase][yCase].getydir();
+		    				    				
+		    			if(xCase != game.getPlayer(0).getHead()[0] || yCase != game.getPlayer(0).getHead()[1]) {
+		    			    			
+			    			drawFloorImage(gc, xCase*66, yCase*66);
+			    						    			
+			    			if (xCase+xdir>=0 && xCase+xdir<game.getMap().length && xCase-xdir>=0 && xCase-xdir<game.getMap().length && 
+			    				yCase+ydir>=0 && yCase+ydir<game.getMap().length && yCase-ydir>=0 && yCase-ydir<game.getMap().length) 
+			    			{
+			    				if((ydir == 0 && game.getMap()[xCase-xdir][yCase-ydir].getDetail() == 0 && game.getMap()[xCase-xdir][yCase+ydir].getDetail() == 0 && game.getMap()[xCase-xdir][yCase-ydir].getxdir() == xdir)) {
+				    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"body.png"); 
+				    				gc.drawImage(rotateImage(playerBodyImage, 90) , xCase*66, yCase*66);
+				    			}
+			    				
+			    				else if((xdir == 0 && game.getMap()[xCase-xdir][yCase-ydir].getDetail() == 0 && game.getMap()[xCase-xdir][yCase+ydir].getDetail() == 0 && game.getMap()[xCase-xdir][yCase-ydir].getydir() == ydir)) {
+				    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"body.png"); 
+				    				gc.drawImage(playerBodyImage, xCase*66, yCase*66);
+				    			}
+			    			}
+			    				
+				    		if (xCase-1>=0 || yCase-1>=0 || xCase+1<game.getMap().length || yCase+1<game.getMap().length) {
+				    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"coin.png"); 
+
+				    				//On teste chaque coin possible
+			    					if (xCase-1>=0) {
+			    						if ((game.getMap()[xCase-1][yCase].getxdir() == 1 && ydir==-1 && game.getMap()[xCase-1][yCase].getDetail() == 0)) {
+					    					gc.drawImage(rotateImage(playerBodyImage, 180), xCase*66, yCase*66); 
+			    						}
+			    						
+			    						else if (game.getMap()[xCase-1][yCase].getxdir() == 1 && ydir==1 && game.getMap()[xCase-1][yCase].getDetail() == 0) {
+			    							gc.drawImage(rotateImage(playerBodyImage, 270), xCase*66, yCase*66);
+			    						}
+			    					}
+			    					
+			    					if (yCase-1>=0) {
+			    						if (game.getMap()[xCase][yCase-1].getydir() == 1 && xdir==-1 && game.getMap()[xCase][yCase-1].getDetail() == 0) {
+			    							gc.drawImage(rotateImage(playerBodyImage, 180), xCase*66, yCase*66);
+			    						}
+			    						
+			    						else if (game.getMap()[xCase][yCase-1].getydir() == 1 && xdir==1 && game.getMap()[xCase][yCase-1].getDetail() == 0) {
+			    							gc.drawImage(rotateImage(playerBodyImage, 90), xCase*66, yCase*66); 
+			    						}
+			    					}
+			    					
+			    					if (xCase+1<game.getMap().length) {
+			    						if (game.getMap()[xCase+1][yCase].getxdir() == -1 && ydir==-1 && game.getMap()[xCase+1][yCase].getDetail() == 0) {
+			    							gc.drawImage(rotateImage(playerBodyImage, 90), xCase*66, yCase*66);
+			    						}
+			    						
+			    						else if (game.getMap()[xCase+1][yCase].getxdir() == -1 && ydir==1 && game.getMap()[xCase+1][yCase].getDetail() == 0) {
+			    							gc.drawImage(playerBodyImage, xCase*66, yCase*66);
+			    						}
+			    					}
+			    					
+			    					if (yCase+1<game.getMap().length) {
+			    						if (game.getMap()[xCase][yCase+1].getydir() == -1 && xdir==-1 && game.getMap()[xCase][yCase+1].getDetail() == 0) {
+			    							gc.drawImage(rotateImage(playerBodyImage, 270), xCase*66, yCase*66); 
+			    						}
+			    						
+			    						else if (game.getMap()[xCase][yCase+1].getydir() == -1 && xdir==1 && game.getMap()[xCase][yCase+1].getDetail() == 0) {
+			    							gc.drawImage(playerBodyImage, xCase*66, yCase*66);
+			    						}
+			    					}
+			    			}	
+		    			}
+	    				//on met à jour xCase et yCase
 		    			xCase=xCase+xdir;
 		    			yCase=yCase + ydir;
-		    			    			
-		    			drawFloorImage(gc, xCase*66, yCase*66);
-		    			
-		    			if (xCase+xdir>=0 && xCase+xdir<=game.getMap().length && xCase-xdir>=0 && xCase-xdir<=game.getMap().length && 
-		    					yCase>=0 && yCase<=game.getMap().length && yCase+ydir>=0 && yCase+ydir<=game.getMap().length && yCase-ydir>=0 && yCase-ydir<=game.getMap().length && 
-		    					xCase>=0 && xCase<=game.getMap().length) {
-			    			if((ydir == 0 && game.getMap()[xCase+xdir][yCase].getDetail() == 0 && game.getMap()[xCase-xdir][yCase].getDetail() == 0)) {
-			    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"body.png"); 
-			    				//gc.drawImage(playerBodyImage, xCase*66, yCase*66);
-			    				
-			    				gc.drawImage(rotateImage(playerBodyImage, 90) , xCase*66, yCase*66);
-			    			}
-			    			else if (xdir == 0 && game.getMap()[xCase][yCase+ydir].getDetail() == 0 && game.getMap()[xCase][yCase-ydir].getDetail() == 0) {
-			    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"body.png"); 
-			    				gc.drawImage(playerBodyImage, xCase*66, yCase*66);
-			    			}
-			    			else {
-			    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"coin.png"); 
-			        	        
-			    				//On teste chaque coin possible
-			    				gc.drawImage(playerBodyImage, xCase*66, yCase*66);  
-			    			}
-		    			}
-	    			/*
-	    			if (xCase+xdir>=0 && xCase+xdir<=game.getMap().length && xCase-xdir>=0 && xCase-xdir<=game.getMap().length ) {
-		    			
-	    				//Pour corps droit horizontal
-	    				if((ydir == 0 && game.getMap()[xCase+xdir][yCase].getEntity() == Cell.PLAYER && game.getMap()[xCase-xdir][yCase].getEntity() == Cell.PLAYER)) {
-		    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"body.png"); 
-		    				gc.drawImage(playerBodyImage, xCase*66, yCase*66);
-		    				
-		    				//gc.drawImage(rotateImage(playerBodyImage, 90) , xCase*66, yCase*66);
-		    			}
-	    				
-		    			//Pour corps droit vertical
-		    			else if((xdir == 0 && game.getMap()[xCase][yCase+ydir].getEntity() == Cell.PLAYER && game.getMap()[xCase][yCase-ydir].getEntity() == Cell.PLAYER)) {
-		    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"body.png"); 
-		        	        gc.drawImage(playerBodyImage, xCase*66, yCase*66);
-		    			}
-	    				
-		    			//Pour corps coin
-		    			else {
-		    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"coin.png"); 
-		        	        
-		    				//On teste chaque coin possible
-		    				
-		    				gc.drawImage(playerBodyImage, xCase*66, yCase*66);  
-		    			}
-	    			}*/
+	    			}			
 				}
 	    		
 	    		//La tête

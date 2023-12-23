@@ -190,12 +190,12 @@ public class ChooseOptionControler extends Application {
 	    	//System.out.println("Bouton Lancer partie !");
 	    	// Initialiser le jeu en premier
 		    game = Game.getInstance();
-		    game.reset(9,9, 1);
+		    game.reset(9,9, 2);
 		    //System.out.println(game.smoothString());
 		    game.createSnake(0, 2, 2, 3, 1, 0);
-		    //game.createSnake(1, 2, 4, 3, 1, 0);
+		    game.createSnake(1, 2, 4, 3, 1, 0);
 		    game.getPlayer(0).setSpeed(2);
-		    //game.getPlayer(1).setSpeed(2);
+		    game.getPlayer(1).setSpeed(2);
 		    //System.out.println(game);
 		    game.createApple(Cell.A_LENGTH_ONLY);
 		    game.createWall(Cell.A_LENGTH_ONLY);
