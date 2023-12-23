@@ -190,10 +190,10 @@ public class ChooseOptionControler extends Application {
 	    	//System.out.println("Bouton Lancer partie !");
 	    	// Initialiser le jeu en premier
 		    game = Game.getInstance();
-		    game.reset(9,9, 2);
+		    game.reset(10,10, 2);
 		    //System.out.println(game.smoothString());
-		    game.createSnake(0, 2, 2, 3, 1, 0);
-		    game.createSnake(1, 2, 4, 3, 1, 0);
+		    game.createSnake(0, 2, 2, 2, 1, 0);
+		    game.createSnake(1, 2, 4, 2, 1, 0);
 		    game.getPlayer(0).setSpeed(2);
 		    game.getPlayer(1).setSpeed(2);
 		    //System.out.println(game);
@@ -211,7 +211,7 @@ public class ChooseOptionControler extends Application {
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	    	
 	    	stage.setScene(scene);
-		    GameViewControler jeu = new GameViewControler(game, stage);
+		    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
 			
 			jeu.setGameRules(skinMap, skinPlayer, skinPomme);
 			

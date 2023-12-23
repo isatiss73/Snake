@@ -1,10 +1,14 @@
 package controler;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.animation.AnimationTimer;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -20,6 +24,12 @@ import model.Game;
 public class GameViewControler implements Initializable {
 	public static Game game;
 	
+	private Stage stage;
+	
+	private Thread gameThread;
+	
+	private Pane root;
+			
 	public int nbColonnes = 1;
 	
 	private int nbLignes = 1;
@@ -28,11 +38,13 @@ public class GameViewControler implements Initializable {
 	
 	private int skinPlayer0;
 	
-	private int skinPlayer1=2;
+	private int skinPlayer1=1;
 	
 	private int skinPomme;
 	
 	public Canvas canvas;
+	
+	private boolean isCanvasInitialized = false;
 	
 	public GraphicsContext gc;
 	public AnimationTimer gameLoop;
@@ -59,6 +71,7 @@ public class GameViewControler implements Initializable {
             	if (game != null && gc != null) {
                     updateGame();
                     drawGame();
+                    checkGameOver();
             	}
             }
         };
@@ -67,36 +80,43 @@ public class GameViewControler implements Initializable {
 	
     public void initializeCanvas(Game game, Stage stage) {
     	
-		this.nbColonnes = game.getMap().length;
-		this.nbLignes = game.getMap()[0].length;
-    	    	
-    	 // Create the Canvas
-        canvas = new Canvas(nbColonnes*66, nbLignes*66);
-        // Get the graphics context of the canvas
-        gc = canvas.getGraphicsContext2D();
-        
-        // Create the Pane
-        Pane root = new Pane();
-        
-        // Add the Canvas to the Pane
-        root.getChildren().add(canvas);
-        
-        // Create the Scene
-        Scene scene = new Scene(root);
-        GameControler gameControler = new GameControler(0, 1);
-        scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
-        stage.setScene(scene);
-        stage.setTitle("Jeu local");
-        stage.show(); 
-        
-        shapeMapImage(gc, nbColonnes, skinPlayer0);
-        startGameLoop();
-		loadTiles(game, gc);
-        drawGame();
+    	if (!isCanvasInitialized) {
+    	
+			this.nbColonnes = game.getMap().length;
+			this.nbLignes = game.getMap()[0].length;
+	    	    	
+	    	 // Create the Canvas
+	        canvas = new Canvas(nbColonnes*66, nbLignes*66);
+	        // Get the graphics context of the canvas
+	        gc = canvas.getGraphicsContext2D();
+	        
+	        // Create the Pane
+	        root = new Pane();
+	        
+	        // Add the Canvas to the Pane
+	        root.getChildren().add(canvas);
+	        
+	        isCanvasInitialized = true;
+	        
+	        // Create the Scene
+	        Scene scene = new Scene(root);
+	        GameControler gameControler = new GameControler(0, 1);
+	        scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
+	        stage.setScene(scene);
+	        stage.setTitle("Jeu local");
+	        stage.show(); 
+	        
+	        shapeMapImage(gc, nbColonnes, skinPlayer0);
+	        startGameLoop();
+			loadTiles(game, gc);
+	        drawGame();
+    	}
     }
 	
-	public GameViewControler(Game game, Stage stage) {
+	public GameViewControler(Game game, Stage stage, Thread gameThread) {
 		this.game=game;
+		this.stage=stage;
+		this.gameThread=gameThread;
 		
 		nbColonnes = game.getMap().length;
 		nbLignes = game.getMap()[0].length;
@@ -366,17 +386,50 @@ public class GameViewControler implements Initializable {
     }
     
     private void updateGame() {
-        // Mettez à jour l'état du jeu ici (par exemple, déplacez le joueur, vérifiez les collisions, etc.)
-        // game.update(); // Vous devez implémenter la méthode update dans votre classe Game
+    	
     }
 
     private void drawGame() {
-        // Effacez le canvas
+
         
     	gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        // Dessinez les entités du jeu
+        // Dessiner les entités du jeu
         loadTiles(game, gc);
     }
 	
+    private void checkGameOver() {
+        if (game.getLivingNumber() == 0) {
+        	
+        	if (gameThread != null && gameThread.isAlive()) {
+                gameThread.interrupt();
+            }
+        	
+        	if (gameLoop != null) {
+                gameLoop.stop();
+            }
+        	
+        	gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        	
+            root.getChildren().remove(canvas);
+        	
+            try {
+
+                
+            	// Load the main menu FXML file
+            	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_menu.fxml").toURL());
+    	    	Parent menu = loader.load();
+                
+    	    	Scene menuScene = new Scene(menu);
+    	    
+                stage.setScene(menuScene);
+                stage.setTitle("Main Menu");
+                stage.show();
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
 }
