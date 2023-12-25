@@ -12,15 +12,18 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Cell;
 import model.Game;
+import network.UDPClientMessage;
+import network.UDPServerMessage;
 
 
 /**
  * main application class
  */
 public class Main extends Application
-{
+{    
 	public static Game game;
-	public static String scenePath = System.getProperty("user.dir") + "/scenes/";
+	//public static String scenePathQuentin = "/home/quentin/git/Snake/PolySnake/scenes/";
+	public static String scenePath = "scenes/";
 	
 	/**
 	 * create a FXMLLoader without headache
@@ -28,7 +31,6 @@ public class Main extends Application
 	 * @return the beautiful FXMLLoader if you are lucky
 	 * @throws MalformedURLException a huge error if you are unlucky
 	 */
-	@SuppressWarnings("deprecation")
 	public static FXMLLoader FXLoad(String fileName) throws MalformedURLException
 	{
 		String path = scenePath + fileName + ".fxml";
@@ -46,6 +48,11 @@ public class Main extends Application
 		System.out.println("- = MAIN THREAD END = -");
 	}
 	
+	/**
+	 * standard application start method
+	 * @param stage application stage
+	 * @throws Exception we don't really know
+	 */
 	@Override
 	public void start(Stage stage) throws Exception
 	{
@@ -69,8 +76,16 @@ public class Main extends Application
 		
 		scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
 		
+		Thread serverThread = new Thread(new UDPServerMessage());
+		Thread clientThread = new Thread(new UDPClientMessage());
+		// serverThread.start();
+		// clientThread.start();
+		
 		Thread gameThread = new Thread(new GameRunnable());
 		gameThread.start();
+		stage.setOnCloseRequest(event -> {
+			stage.close();
+		});
 		stage.show();
 	}
 }

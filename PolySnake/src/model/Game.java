@@ -441,4 +441,13 @@ public class Game
 	{
 		return livingNumber;
 	}
+	
+	/**
+	 * return the map of cells
+	 * @return a 2D cell array
+	 */
+	public Cell[][] getMap()
+	{
+		return map;
+	}
 }

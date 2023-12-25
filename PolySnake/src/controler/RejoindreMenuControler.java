@@ -1,5 +1,7 @@
+
 package controler;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.event.ActionEvent;
@@ -11,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import main.Main;
 
 public class RejoindreMenuControler {
 	
@@ -35,8 +36,7 @@ public class RejoindreMenuControler {
     
     @FXML	
     public void clicboutonMenuAction(ActionEvent event) throws IOException {
-        System.out.println("Bouton Menu cliqué !");
-    	FXMLLoader loader = Main.FXLoad("Scene_menu");
+        FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_menu.fxml").toURL());
     	Parent root = loader.load();
 		
     	Scene scene = new Scene(root);
