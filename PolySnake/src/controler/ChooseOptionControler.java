@@ -4,6 +4,7 @@ package controler;
 import java.io.File;
 import java.io.IOException;
 
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +17,17 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.Cell;
+import model.Game;
 
-public class ChooseOptionControler {
+public class ChooseOptionControler extends Application {
+	public static Game game;
+	
+	
+		private int skinMap;
+	    private int skinPlayer;
+	    private int skinPomme;
+	
 	
 		private int ruleAppPomme=0;
 		private int ruleAssiste=0;
@@ -118,6 +128,12 @@ public class ChooseOptionControler {
 	    	});
 	    }
 	    
+	    public void setSkinOptions(int skinMap, int skinPlayer, int skinPomme) {
+	        this.skinMap = skinMap;
+	        this.skinPlayer = skinPlayer;
+	        this.skinPomme = skinPomme;
+	    }
+	    
 	    
 	    @FXML
 	    void BoiteApparitionPommeAction() {
@@ -171,8 +187,39 @@ public class ChooseOptionControler {
 
 	    @FXML
 	    void clicBoutonLancerPartieAction(ActionEvent event) throws IOException {
-	    	System.out.println("Bouton Lancer partie !");
+	    	//System.out.println("Bouton Lancer partie !");
+	    	// Initialiser le jeu en premier
+		    game = Game.getInstance();
+		    game.reset(10,10, 2);
+		    //System.out.println(game.smoothString());
+		    game.createSnake(0, 2, 2, 2, 1, 0);
+		    game.createSnake(1, 2, 4, 2, 1, 0);
+		    game.getPlayer(0).setSpeed(2);
+		    game.getPlayer(1).setSpeed(2);
+		    //System.out.println(game);
+		    game.createApple(Cell.A_LENGTH_ONLY);
+		    game.createWall(Cell.A_LENGTH_ONLY);
+		    
+	    	Thread gameThread = new Thread(new GameRunnable());
+			gameThread.start();
+			
+			FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_partie.fxml").toURL());
+
+	    	Parent root = loader.load();
+		    
+	    	Scene scene = new Scene(root);
+	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    	
+	    	stage.setScene(scene);
+		    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
+			
+			jeu.setGameRules(skinMap, skinPlayer, skinPomme);
+			
+		    jeu.initializeCanvas(game,stage);
+	    	
+	    	stage.show();
 	    }
+	    
 	    
 
 	    @FXML
@@ -187,5 +234,12 @@ public class ChooseOptionControler {
 
 	    	stage.show();
 	    }
+
+
+		@Override
+		public void start(Stage arg0) throws Exception {
+			// TODO Auto-generated method stub
+			
+		}
     
 }

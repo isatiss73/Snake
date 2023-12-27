@@ -90,6 +90,10 @@ public class MainMenuControler {
     	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_Heberger_param.fxml").toURL());
     	Parent root = loader.load();
 		
+    	ChooseOptionControler chooseOptionController = loader.getController();
+
+    	chooseOptionController.setSkinOptions(skinMap, skinPlayer, skinPomme);
+    	
     	Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
     	

@@ -2,7 +2,6 @@ package model;
 
 import java.util.Random;
 
-
 /**
  * global game object
  */
@@ -52,7 +51,7 @@ public class Game
 	{
 		reset(hsize, vsize, maxPlayers);
 	}
-	
+
 	
 	/**
 	 * default constructor
@@ -238,6 +237,22 @@ public class Game
 
 		players[who].setLiving(false);
 		livingNumber--;
+		
+		int x = players[who].getTail()[0];
+		int y = players[who].getTail()[1];
+		int dx = map[x][y].getxdir();
+		int dy = map[x][y].getydir();
+		
+		for (int i=0; i<players[who].getLength(); i++) {
+			dx = map[x][y].getxdir();
+			dy = map[x][y].getydir();
+			
+			map[x][y].setEntity(Cell.AIR);
+			
+			x=x+dx;
+			y=y+dy;
+		}
+		
 		return livingNumber;
 	}
 	
@@ -286,6 +301,9 @@ public class Game
 		for (int p=0; p<players.length; p++)
 		{
 			snake = players[p];
+			if(snake.isLiving()==false) {
+				//killSnake(p);
+			}
 			if (snake.isLiving() && snake.elapseTime(delta))
 			{
 				changement = true;
@@ -300,11 +318,12 @@ public class Game
 				{
 					// we kill the snake
 					System.out.println("DEATH OF " + snake.getPseudo());
-					
+
 					// we manage the end game
 					if (killSnake(p) == 0)
 					{
 						System.out.println("GAME OVER");
+						//map[x][y].reset(dx, dy, Cell.AIR, 0);
 					}
 				}
 				// if the snake is still living, we move it
@@ -314,6 +333,7 @@ public class Game
 					if (map[x + dx][y + dy].getEntity() == Cell.APPLE)
 					{
 						effect = map[x + dx][y + dy].getDetail();
+						snake.addLength(1);
 						eaten++;
 					}
 					else
@@ -355,7 +375,7 @@ public class Game
 			int max = optVar[RANDOM_APPLE] - livingApples;
 			for (int a=0; a<max; a++)
 			{
-				createApple(Cell.A_LENGTH_ONLY);
+				createApple(Cell.A_SPEED_ONLY);
 			}
 		}
 		else
@@ -363,7 +383,7 @@ public class Game
 			optVar[RANDOM_APPLE] -= delta;
 			if (optVar[RANDOM_APPLE] <= 0)
 			{
-				createApple(Cell.A_LENGTH_ONLY);
+				createApple(Cell.A_SPEED_ONLY);
 				optVar[RANDOM_APPLE] += options[RANDOM_APPLE]*(0.5 + Math.random());
 			}
 		}
@@ -403,6 +423,31 @@ public class Game
 	public void setOptVar(int[] optVar)
 	{
 		this.optVar = optVar;
+	}
+	
+	public void createWall(int detail)
+	{
+		Random randomwall = new Random();
+		
+		int nbWall = randomwall.nextInt((int)(map.length-4)) + 1;
+		
+		for (int i=0; i<nbWall; i++) {
+			boolean created = false;
+			int x, y;
+			int n = 0;
+			Random random = new Random();
+			while ((created == false) && (n < map.length*map.length))
+			{
+				x = random.nextInt(map.length);
+				y = random.nextInt(map[0].length);
+				if (map[x][y].getEntity() == Cell.AIR)
+				{
+					map[x][y].reset(0, 0, Cell.WALL, detail);
+					created = true;
+				}
+				n++;
+			}
+		}
 	}
 	
 	/**

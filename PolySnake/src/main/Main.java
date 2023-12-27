@@ -4,16 +4,14 @@ import java.io.File;
 import java.net.MalformedURLException;
 
 import controler.GameControler;
-import controler.GameRunnable;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.Cell;
 import model.Game;
-import network.UDPClientMessage;
-import network.UDPServerMessage;
+import network.TCPClientMessage;
+import network.TCPServerMessage;
 
 
 /**
@@ -21,8 +19,7 @@ import network.UDPServerMessage;
  */
 public class Main extends Application
 {    
-	public static Game game;
-	//public static String scenePathQuentin = "/home/quentin/git/Snake/PolySnake/scenes/";
+	//public static Game game;
 	public static String scenePath = "scenes/";
 	
 	/**
@@ -43,9 +40,7 @@ public class Main extends Application
 	 */
 	public static void main(String[] args)
 	{
-		System.out.println("- = MAIN THREAD START = -");
 		launch(args);
-		System.out.println("- = MAIN THREAD END = -");
 	}
 	
 	/**
@@ -56,17 +51,7 @@ public class Main extends Application
 	@Override
 	public void start(Stage stage) throws Exception
 	{
-		game = Game.getInstance();
-		game.reset(8, 8, 2);
-		System.out.println(game.smoothString());
-		game.createSnake(0, 2, 2, 3, 1, 0);
-		game.createSnake(1, 2, 4, 3, 1, 0);
-		System.out.println(game);
-		game.createApple(Cell.A_LENGTH_ONLY);
-		
 		stage.setTitle("PolySnake");
-		
-		// StackPane root = new StackPane();
 		FXMLLoader loader = FXLoad("Scene_menu");
         Parent root = loader.load();
 		Scene scene = new Scene(root);
@@ -76,16 +61,23 @@ public class Main extends Application
 		
 		scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
 		
-		Thread serverThread = new Thread(new UDPServerMessage());
-		Thread clientThread = new Thread(new UDPClientMessage());
-		// serverThread.start();
-		// clientThread.start();
+		Thread serverThread = new Thread(new TCPServerMessage());
+		Thread clientThread = new Thread(new TCPClientMessage());
+		serverThread.start();
+		clientThread.start();
 		
-		Thread gameThread = new Thread(new GameRunnable());
-		gameThread.start();
+		Game game = Game.getInstance();
+		game.reset(8, 8, 1);
+		game.createSnake(0, 2, 1, 3, 1, 0);
+		// game.createSnake(1, 2, 3, 3, 1, 0);
+		
+		// Thread gameThread = new Thread(new GameRunnable());
+		// gameThread.start();
 		stage.setOnCloseRequest(event -> {
 			stage.close();
 		});
-		stage.show();
+		
+		// stage.show();
+		
 	}
 }
