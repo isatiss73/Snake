@@ -22,6 +22,12 @@ import model.Cell;
 import model.Game;
 
 public class GameViewControler implements Initializable {
+	
+	public static final String mehdiPath = "file:/C:/Users/mehdi/git/Snake/PolySnake/images/";
+	public static final String quentinPath = "file:/home/quentin/git/Snake/PolySnake/images/";
+	public static final String stdPath = "file:/" + System.getProperty("user.dir") + "/images/";
+	public static final String imgPath = quentinPath;
+	
 	public static Game game;
 	
 	private Stage stage;
@@ -133,34 +139,32 @@ public class GameViewControler implements Initializable {
 			
 		    for (int x = 0; x < mapWidth; x++) {
 		        for (int y = 0; y < mapHeight; y++) {
-		        	if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight) {
 		        		
-		        		if (game.getPlayer(0).isLiving() == true && game.getPlayer(0).getTail()[0] == x && game.getPlayer(0).getTail()[1] == y){
-	                        drawPlayerImage(game, gc, x, y, 0);
-			            }
-			        	
-			            if (game.getPlayer(1).isLiving() == true && game.getPlayer(1).getTail()[0] == x && game.getPlayer(1).getTail()[1] == y){
-	                        drawPlayerImage(game, gc, x, y, 1);
-			            }
-			            if (game.getMap()[x][y].getEntity() == Cell.WALL){
-			            	drawFloorImage(gc, x * 66, y * 66);
-	                        drawWallImage(gc, x * 66, y * 66);
-			            }
-			            if (game.getMap()[x][y].getEntity() == Cell.APPLE){
-			            	drawFloorImage(gc, x * 66, y * 66);
-			            	drawAppleImage(gc, x * 66, y * 66);
-			            }
-			            if (game.getMap()[x][y].getEntity() == Cell.AIR){
-			            	drawFloorImage(gc, x * 66, y * 66);
-			            }
-		        	}
+	        		if (game.getPlayer(0).isLiving() == true && game.getPlayer(0).getTail()[0] == x && game.getPlayer(0).getTail()[1] == y){
+                        drawPlayerImage(game, gc, x, y, 0);
+		            }
+		        	
+		            if (game.getPlayer(1).isLiving() == true && game.getPlayer(1).getTail()[0] == x && game.getPlayer(1).getTail()[1] == y){
+                        drawPlayerImage(game, gc, x, y, 1);
+		            }
+		            if (game.getMap()[x][y].getEntity() == Cell.WALL){
+		            	drawFloorImage(gc, x * 66, y * 66);
+                        drawWallImage(gc, x * 66, y * 66);
+		            }
+		            if (game.getMap()[x][y].getEntity() == Cell.APPLE){
+		            	drawFloorImage(gc, x * 66, y * 66);
+		            	drawAppleImage(gc, x * 66, y * 66);
+		            }
+		            if (game.getMap()[x][y].getEntity() == Cell.AIR){
+		            	drawFloorImage(gc, x * 66, y * 66);
+		            }
 		        }
 		    }
 		}
 	}   
 
 	
-    private void drawPlayerImage(Game game, GraphicsContext gc, double x, double y, int who) {
+    private void drawPlayerImage(Game game, GraphicsContext gc, int x, int y, int who) {
  
     	int tailleSnake0 = game.getPlayer(who).getLength(); 	
     	int skinPlayer = 0;
@@ -174,11 +178,11 @@ public class GameViewControler implements Initializable {
     		//La queue
     		if (i==0) {
     			int rot = 0;
-    	    	int xCase=(int)x;
-    	    	int yCase=(int)y;
+    	    	int xCase = x;
+    	    	int yCase = y;
     			
     			drawFloorImage(gc, x*66, y*66);
-    			Image playerTailImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"tail.png"); 
+    			Image playerTailImage = new Image(imgPath + "perso" + skinPlayer +"tail.png"); 
     			
     			
     			if (game.getMap()[xCase][yCase].getxdir() == -1) {
@@ -223,18 +227,18 @@ public class GameViewControler implements Initializable {
 		    				yCase+ydir>=0 && yCase+ydir<game.getMap().length && yCase-ydir>=0 && yCase-ydir<game.getMap().length) 
 		    			{
 		    				if((ydir == 0 && game.getMap()[xCase-xdir][yCase-ydir].getDetail() == who && game.getMap()[xCase-xdir][yCase+ydir].getDetail() == who && game.getMap()[xCase-xdir][yCase-ydir].getxdir() == xdir)) {
-			    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"body.png"); 
+			    				Image playerBodyImage = new Image(imgPath + "perso" + skinPlayer +"body.png"); 
 			    				gc.drawImage(rotateImage(playerBodyImage, 90) , xCase*66, yCase*66);
 			    			}
 		    				
 		    				else if((xdir == 0 && game.getMap()[xCase-xdir][yCase-ydir].getDetail() == who && game.getMap()[xCase-xdir][yCase+ydir].getDetail() == who && game.getMap()[xCase-xdir][yCase-ydir].getydir() == ydir)) {
-			    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"body.png"); 
+			    				Image playerBodyImage = new Image(imgPath + "perso" + skinPlayer +"body.png"); 
 			    				gc.drawImage(playerBodyImage, xCase*66, yCase*66);
 			    			}
 		    			}
 		    				
 			    		if (xCase-1>=0 || yCase-1>=0 || xCase+1<game.getMap().length || yCase+1<game.getMap().length) {
-			    				Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +"coin.png"); 
+			    				Image playerBodyImage = new Image(imgPath + "perso" + skinPlayer +"coin.png"); 
 
 			    				//On teste chaque coin possible
 		    					if (xCase-1>=0) {
@@ -302,7 +306,7 @@ public class GameViewControler implements Initializable {
     			yCase=game.getPlayer(who).getHead()[1];
     			
     			drawFloorImage(gc, xCase*66, yCase*66);
-    	        Image playerBodyImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/perso" + skinPlayer +".png"); 
+    	        Image playerBodyImage = new Image(imgPath + "perso" + skinPlayer +".png"); 
     	        	    	        
     	        if (game.getMap()[xCase][yCase].getxdir() == 1) {
     	        	rot = 270;
@@ -324,17 +328,17 @@ public class GameViewControler implements Initializable {
     }
     
     private void drawWallImage(GraphicsContext gc, double x, double y) {
-        Image wallImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/map" +skinMap +".png");
+        Image wallImage = new Image(imgPath + "map" + skinMap + ".png");
         gc.drawImage(wallImage, x, y);
     }
     
     private void drawAppleImage(GraphicsContext gc, double x, double y) {
-        Image wallImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/pomme" + skinPomme + ".png");
+        Image wallImage = new Image(imgPath + "pomme" + skinPomme + ".png");
         gc.drawImage(wallImage, x, y);
     }
     
     private void drawFloorImage(GraphicsContext gc, double x, double y) {
-        Image floorImage = new Image("file:/C:/Users/mehdi/git/Snake/PolySnake/images/Sol.png");
+        Image floorImage = new Image(imgPath + "Sol.png");
         gc.drawImage(floorImage, x, y);
     }
     

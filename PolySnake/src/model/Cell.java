@@ -138,6 +138,10 @@ public class Cell
 		return res;
 	}
 	
+	/**
+	 * char representation of the entity type
+	 * @return the char representig the entity
+	 */
 	public char toChar()
 	{
 		if (entity == AIR) return ' ';

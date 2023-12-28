@@ -4,14 +4,14 @@ import java.io.File;
 import java.net.MalformedURLException;
 
 import controler.GameControler;
-import controler.GameRunnable;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.Cell;
 import model.Game;
+import network.TCPClientMessage;
+import network.TCPServerMessage;
 
 
 /**
@@ -43,6 +43,11 @@ public class Main extends Application
 		launch(args);
 	}
 	
+	/**
+	 * standard application start method
+	 * @param stage application stage
+	 * @throws Exception we don't really know
+	 */
 	@Override
 	public void start(Stage stage) throws Exception
 	{
@@ -51,7 +56,28 @@ public class Main extends Application
         Parent root = loader.load();
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
-		stage.show();
+		
+		GameControler gameControler = new GameControler(0, 1);
+		
+		scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
+		
+		Thread serverThread = new Thread(new TCPServerMessage());
+		Thread clientThread = new Thread(new TCPClientMessage());
+		serverThread.start();
+		clientThread.start();
+		
+		Game game = Game.getInstance();
+		game.reset(8, 8, 1);
+		game.createSnake(0, 2, 1, 3, 1, 0);
+		// game.createSnake(1, 2, 3, 3, 1, 0);
+		
+		// Thread gameThread = new Thread(new GameRunnable());
+		// gameThread.start();
+		stage.setOnCloseRequest(event -> {
+			stage.close();
+		});
+		
+		// stage.show();
 		
 	}
 }
