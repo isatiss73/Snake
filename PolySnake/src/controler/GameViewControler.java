@@ -110,8 +110,7 @@ public class GameViewControler implements Initializable {
 	        scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
 	        stage.setScene(scene);
 	        stage.setTitle("Jeu local");
-	        stage.show(); 
-	        
+	        stage.show(); 	        
 	        shapeMapImage(gc, nbColonnes, skinPlayer0);
 	        startGameLoop();
 			loadTiles(game, gc);
