@@ -57,27 +57,46 @@ public class GameViewControler implements Initializable {
 	public GraphicsContext gc;
 	public AnimationTimer gameLoop;
 	
+	private Image wallImage, appleImage, floorImage;
+	private Image tail, body, corner, head;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
+		// about the 'Initializable' heritage you know
 	}
 	
+	/**
+	 * seems to be necessary
+	 */
 	public GameViewControler() {
+		// nothing
 	}
 	
+	/**
+	 * set the texture id of the differents elements
+	 * @param skinMap id of the map theme
+	 * @param skinPlayer id of the player skin
+	 * @param skinPomme id of the apple skin
+	 */
 	public void setGameRules(int skinMap, int skinPlayer, int skinPomme) {
 		this.skinMap = skinMap;
 		this.skinPlayer0 = skinPlayer;
 		this.skinPomme = skinPomme;
+		
+		wallImage = new Image(imgPath + "map" + skinMap + ".png");
+		appleImage = new Image(imgPath + "pomme" + skinPomme + ".png");
+		floorImage = new Image(imgPath + "Sol.png");
 	}
 	
+	/**
+	 * Mehdi please describe it
+	 */
 	private void startGameLoop() {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 // Update game state and redraw
             	if (game != null && gc != null) {
-                    updateGame();
                     drawGame();
                     checkGameOver();
             	}
@@ -86,12 +105,17 @@ public class GameViewControler implements Initializable {
         gameLoop.start();
     }
 	
+	/**
+	 * initialize graphic game map canvas and that things you know
+	 * @param game game model
+	 * @param stage window stage
+	 */
     public void initializeCanvas(Game game, Stage stage) {
     	
     	if (!isCanvasInitialized) {
     	
-			this.nbColonnes = game.getMap().length;
-			this.nbLignes = game.getMap()[0].length;
+			nbColonnes = game.getMap().length;
+			nbLignes = game.getMap()[0].length;
 	    	    	
 	    	 // Create the Canvas
 	        canvas = new Canvas(nbColonnes*66, nbLignes*66);
@@ -113,8 +137,7 @@ public class GameViewControler implements Initializable {
 	        stage.setScene(scene);
 	        stage.setTitle("Jeu local");
 	        gameControler.startThreads();
-	        stage.show(); 
-	        
+	        stage.show();
 	        shapeMapImage(gc, nbColonnes, skinPlayer0);
 	        startGameLoop();
 			loadTiles(game, gc);
@@ -122,6 +145,12 @@ public class GameViewControler implements Initializable {
     	}
     }
 	
+    /**
+     * global constructor
+     * @param game game model
+     * @param stage window stage
+     * @param gameThread game thread
+     */
 	public GameViewControler(Game game, Stage stage, Thread gameThread) {
 		this.game=game;
 		this.stage=stage;
@@ -157,15 +186,15 @@ public class GameViewControler implements Initializable {
 	                        drawPlayerImage(game, gc, x, y, 1);
 			            }
 			            if (game.getMap()[x][y].getEntity() == Cell.WALL){
-			            	drawFloorImage(gc, x * 66, y * 66);
-	                        drawWallImage(gc, x * 66, y * 66);
+			            	drawFloorImage(gc, x, y);
+	                        drawWallImage(gc, x, y);
 			            }
 			            else if (game.getMap()[x][y].getEntity() == Cell.APPLE){
-			            	drawFloorImage(gc, x * 66, y * 66);
-			            	drawAppleImage(gc, x * 66, y * 66);
+			            	drawFloorImage(gc, x, y);
+			            	drawAppleImage(gc, x, y);
 			            }
 			            else if (game.getMap()[x][y].getEntity() == Cell.AIR){
-			            	drawFloorImage(gc, x * 66, y * 66);
+			            	drawFloorImage(gc, x, y);
 			            }
 		        	}
 		        }
@@ -173,194 +202,203 @@ public class GameViewControler implements Initializable {
 		}
 	}   
 
-	
+	/**
+	 * draw the entire body of a snake
+	 * @param game global game model
+	 * @param gc graphic context where we draw
+	 * @param x ???
+	 * @param y ???
+	 * @param who left or right snake
+	 */
     private void drawPlayerImage(Game game, GraphicsContext gc, int x, int y, int who) {
  
     	int tailleSnake0 = game.getPlayer(who).getLength(); 	
     	int skinPlayer = 0;
     	
-    	if (who == 0) {skinPlayer = skinPlayer0;}
-    	
-    	else if (who == 1) {skinPlayer = skinPlayer1;}
-    	
-    	for (int i=0; i<tailleSnake0; i++) {
-    		
-    		//La queue
-    		if (i==0) {
-    			int rot = 0;
-    	    	int xCase = x;
-    	    	int yCase = y;
-    			
-    			drawFloorImage(gc, x*66, y*66);
-    			Image playerTailImage = new Image(imgPath + "perso" + skinPlayer +"tail.png"); 
-    			
-    			
-    			if (game.getMap()[xCase][yCase].getxdir() == -1) {
-    	        	rot = 270;
-    	        	gc.drawImage(rotateImage(playerTailImage, rot), x*66, y*66);
-    	        }
-    	        else if (game.getMap()[xCase][yCase].getxdir() == 1) {
-    	        	rot = 90;
-    	        	gc.drawImage(rotateImage(playerTailImage, rot), x*66, y*66);
-    	        }
-    	        else if (game.getMap()[xCase][yCase].getydir() == -1) {
-    	        	rot = 180;
-    	        	gc.drawImage(rotateImage(playerTailImage, rot), x*66, y*66);
-    	        }
-    	        else if (game.getMap()[xCase][yCase].getydir() == 1) {
-    	        	gc.drawImage(playerTailImage, x*66, y*66);
-    	        }
-    		}
-    		
-    		else if (i>0 && i<tailleSnake0-1) {
-    			
-    			int xCaseTail=game.getPlayer(who).getTail()[0];
-    	    	int yCaseTail=game.getPlayer(who).getTail()[1];
+    	// we get the player's skin id to load images
+    	if (who == 0) 
+    		skinPlayer = skinPlayer0;
+    	else if (who == 1) 
+    		skinPlayer = skinPlayer1;
 
+    	// we load every image of the snake
+		tail = new Image(imgPath + "perso" + skinPlayer + "tail.png"); 
+		body = new Image(imgPath + "perso" + skinPlayer +"body.png"); 
+		corner = new Image(imgPath + "perso" + skinPlayer +"coin.png"); 
+		head = new Image(imgPath + "perso" + skinPlayer +".png"); 
+		
+		
+		// we draw the tail
+    	int xCase = x;
+    	int yCase = y;
+		
+		// we define the rotation of the image according to snake's direction
+		int rot = 0;
+		if (game.getMap()[xCase][yCase].getxdir() == -1) 
+			rot = 270;
+        else if (game.getMap()[xCase][yCase].getxdir() == 1) 
+        	rot = 90;
+        else if (game.getMap()[xCase][yCase].getydir() == -1) 
+        	rot = 180;
+		
+		// we draw the tail image with the approriate rotation
+		drawFloorImage(gc, x, y);
+		drawBodyImage(gc, tail, rot, x, y);
+		
+		
+		// we draw the head
+		xCase = game.getPlayer(who).getHead()[0];
+		yCase = game.getPlayer(who).getHead()[1];
+		
+		// we define the rotation of the image according to snake's direction
+		rot = 0;
+        if (game.getMap()[xCase][yCase].getxdir() == 1) 
+        	rot = 270;
+        else if (game.getMap()[xCase][yCase].getxdir() == -1) 
+        	rot = 90;
+        else if (game.getMap()[xCase][yCase].getydir() == 1) 
+        	rot = 180;
+        
+        // we draw the head image with the appropriate direction
+        drawFloorImage(gc, xCase, yCase);
+        drawBodyImage(gc, head, rot, xCase, yCase);
+		
+    	
+        // we wander the body to draw each cell one by one
+    	for (int i = 1; i < tailleSnake0 - 1; i++) {
+    		
+			int xCaseTail=game.getPlayer(who).getTail()[0];
+	    	int yCaseTail=game.getPlayer(who).getTail()[1];
+
+			
+			int xdir = game.getMap()[xCaseTail][yCaseTail].getxdir();
+			int ydir = game.getMap()[xCaseTail][yCaseTail].getydir();
+			
+			xCase=xCaseTail+xdir;
+			yCase=yCaseTail + ydir;
+			
+			// Mehdi please explain it
+			for (int j = 0; j < tailleSnake0 - 2; j++) {
     			
-    			int xdir = game.getMap()[xCaseTail][yCaseTail].getxdir();
-    			int ydir = game.getMap()[xCaseTail][yCaseTail].getydir();
-    			
-    			int xCase=xCaseTail+xdir;
-    			int yCase=yCaseTail + ydir;
-    			
-    			for (int j=0; j<tailleSnake0-2; j++) {
+    			xdir = game.getMap()[xCase][yCase].getxdir();
+	    		ydir = game.getMap()[xCase][yCase].getydir();
+    				    				
+    			if(xCase != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1]) {
+    			    			
+	    			drawFloorImage(gc, xCase, yCase);
 	    			
-	    			xdir = game.getMap()[xCase][yCase].getxdir();
-		    		ydir = game.getMap()[xCase][yCase].getydir();
-	    				    				
-	    			if(xCase != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1]) {
-	    			    			
-		    			drawFloorImage(gc, xCase*66, yCase*66);
-		    						    			
-		    			if (xCase+xdir>=0 && xCase+xdir<game.getMap().length && xCase-xdir>=0 && xCase-xdir<game.getMap().length && 
-		    				yCase+ydir>=0 && yCase+ydir<game.getMap().length && yCase-ydir>=0 && yCase-ydir<game.getMap().length) 
-		    			{
-		    				if((ydir == 0 && game.getMap()[xCase-xdir][yCase-ydir].getDetail() == who && game.getMap()[xCase-xdir][yCase+ydir].getDetail() == who && game.getMap()[xCase-xdir][yCase-ydir].getxdir() == xdir)) {
-			    				Image playerBodyImage = new Image(imgPath + "perso" + skinPlayer +"body.png"); 
-			    				gc.drawImage(rotateImage(playerBodyImage, 90) , xCase*66, yCase*66);
-			    			}
-		    				
-		    				else if((xdir == 0 && game.getMap()[xCase-xdir][yCase-ydir].getDetail() == who && game.getMap()[xCase-xdir][yCase+ydir].getDetail() == who && game.getMap()[xCase-xdir][yCase-ydir].getydir() == ydir)) {
-			    				Image playerBodyImage = new Image(imgPath + "perso" + skinPlayer +"body.png"); 
-			    				gc.drawImage(playerBodyImage, xCase*66, yCase*66);
-			    			}
-		    			}
-		    				
-			    		if (xCase-1>=0 || yCase-1>=0 || xCase+1<game.getMap().length || yCase+1<game.getMap().length) {
-			    				Image playerBodyImage = new Image(imgPath + "perso" + skinPlayer +"coin.png"); 
-
-			    				//On teste chaque coin possible
-		    					if (xCase-1>=0) {
-		    						if ((game.getMap()[xCase-1][yCase].getxdir() == 1 && ydir==-1 && game.getMap()[xCase-1][yCase].getDetail() == who && (xCase-1 != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1]))) {
-				    					gc.drawImage(rotateImage(playerBodyImage, 180), xCase*66, yCase*66); 
-		    						}
-		    						
-		    						else if (game.getMap()[xCase-1][yCase].getxdir() == 1 && ydir==1 && game.getMap()[xCase-1][yCase].getDetail() == who && (xCase-1 != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1]) ) {
-		    							gc.drawImage(rotateImage(playerBodyImage, 270), xCase*66, yCase*66);
-		    						}
-		    					}
-		    					
-		    					if (yCase-1>=0) {
-		    						if (game.getMap()[xCase][yCase-1].getydir() == 1 && xdir==-1 && game.getMap()[xCase][yCase-1].getDetail() == who && (xCase != game.getPlayer(who).getHead()[0] || yCase-1 != game.getPlayer(who).getHead()[1]) ) {
-		    							gc.drawImage(rotateImage(playerBodyImage, 180), xCase*66, yCase*66);
-		    						}
-		    						
-		    						else if (game.getMap()[xCase][yCase-1].getydir() == 1 && xdir==1 && game.getMap()[xCase][yCase-1].getDetail() == who && (xCase != game.getPlayer(who).getHead()[0] || yCase-1 != game.getPlayer(who).getHead()[1])) {
-		    							gc.drawImage(rotateImage(playerBodyImage, 90), xCase*66, yCase*66); 
-		    						}
-		    					}
-		    					
-		    					if (xCase+1<game.getMap().length) {
-		    						if (game.getMap()[xCase+1][yCase].getxdir() == -1 && ydir==-1 && game.getMap()[xCase+1][yCase].getDetail() == who && (xCase+1 != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1]) ) {
-		    							gc.drawImage(rotateImage(playerBodyImage, 90), xCase*66, yCase*66);
-		    						}
-		    						
-		    						else if (game.getMap()[xCase+1][yCase].getxdir() == -1 && ydir==1 && game.getMap()[xCase+1][yCase].getDetail() == who && (xCase+1 != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1])) {
-		    							gc.drawImage(playerBodyImage, xCase*66, yCase*66);
-		    						}
-		    					}
-		    					
-		    					if (yCase+1<game.getMap().length) {
-		    						if (game.getMap()[xCase][yCase+1].getydir() == -1 && xdir==-1 && game.getMap()[xCase][yCase+1].getDetail() == who && (xCase != game.getPlayer(who).getHead()[0] || yCase+1 != game.getPlayer(who).getHead()[1])) {
-		    							gc.drawImage(rotateImage(playerBodyImage, 270), xCase*66, yCase*66); 
-		    						}
-		    						
-		    						else if (game.getMap()[xCase][yCase+1].getydir() == -1 && xdir==1 && game.getMap()[xCase][yCase+1].getDetail() == who && (xCase != game.getPlayer(who).getHead()[0] || yCase+1 != game.getPlayer(who).getHead()[1])) {
-		    							gc.drawImage(playerBodyImage, xCase*66, yCase*66);
-		    						}
-		    					}
-		    			}	
+	    			// not corners
+	    			if (xCase+xdir>=0 && xCase+xdir<game.getMap().length && xCase-xdir>=0 && xCase-xdir<game.getMap().length && 
+	    				yCase+ydir>=0 && yCase+ydir<game.getMap().length && yCase-ydir>=0 && yCase-ydir<game.getMap().length) 
+	    			{
+	    				if((ydir == 0 
+	    						&& game.getMap()[xCase-xdir][yCase-ydir].getDetail() == who 
+	    						&& game.getMap()[xCase-xdir][yCase+ydir].getDetail() == who 
+	    						&& game.getMap()[xCase-xdir][yCase-ydir].getxdir() == xdir)) 
+	    					drawBodyImage(gc, body, 90, xCase, yCase);
+	    				
+	    				else if((xdir == 0 
+	    						&& game.getMap()[xCase-xdir][yCase-ydir].getDetail() == who 
+	    						&& game.getMap()[xCase-xdir][yCase+ydir].getDetail() == who 
+	    						&& game.getMap()[xCase-xdir][yCase-ydir].getydir() == ydir)) 
+	    					drawBodyImage(gc, body, 0, xCase, yCase);
 	    			}
-    				//on met à jour xCase et yCase
-	    			xCase=xCase+xdir;
-	    			yCase=yCase + ydir;
-    			}			
+	    			
+	    			// corners
+	    			if (xCase-1>=0 || yCase-1>=0 || xCase+1<game.getMap().length || yCase+1<game.getMap().length) {
+
+    					if (xCase-1>=0) {
+    						if ((game.getMap()[xCase-1][yCase].getxdir() == 1 && ydir==-1 
+    								&& game.getMap()[xCase-1][yCase].getDetail() == who 
+    								&& (xCase-1 != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1]))) 
+		    					drawBodyImage(gc, corner, 180, xCase, yCase);
+    						
+    						else if (game.getMap()[xCase-1][yCase].getxdir() == 1 && ydir==1 
+    								&& game.getMap()[xCase-1][yCase].getDetail() == who 
+    								&& (xCase-1 != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1]) ) 
+    							drawBodyImage(gc, corner, 270, xCase, yCase);
+    					}
+    					
+    					if (yCase-1>=0) {
+    						if (game.getMap()[xCase][yCase-1].getydir() == 1 && xdir==-1 
+    								&& game.getMap()[xCase][yCase-1].getDetail() == who 
+    								&& (xCase != game.getPlayer(who).getHead()[0] || yCase-1 != game.getPlayer(who).getHead()[1]) ) 
+    							drawBodyImage(gc, corner, 180, xCase, yCase);
+    						
+    						else if (game.getMap()[xCase][yCase-1].getydir() == 1 && xdir==1 
+    								&& game.getMap()[xCase][yCase-1].getDetail() == who 
+    								&& (xCase != game.getPlayer(who).getHead()[0] || yCase-1 != game.getPlayer(who).getHead()[1])) 
+    							drawBodyImage(gc, corner, 90, xCase, yCase);
+    					}
+    					
+    					if (xCase+1<game.getMap().length) {
+    						if (game.getMap()[xCase+1][yCase].getxdir() == -1 && ydir==-1 
+    								&& game.getMap()[xCase+1][yCase].getDetail() == who 
+    								&& (xCase+1 != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1])) 
+    							drawBodyImage(gc, corner, 90, xCase, yCase);
+    						
+    						else if (game.getMap()[xCase+1][yCase].getxdir() == -1 && ydir==1 
+    								&& game.getMap()[xCase+1][yCase].getDetail() == who 
+    								&& (xCase+1 != game.getPlayer(who).getHead()[0] || yCase != game.getPlayer(who).getHead()[1])) 
+    							drawBodyImage(gc, corner, 0, xCase, yCase);
+    					}
+    					
+    					if (yCase+1<game.getMap().length) {
+    						if (game.getMap()[xCase][yCase+1].getydir() == -1 && xdir==-1 
+    								&& game.getMap()[xCase][yCase+1].getDetail() == who 
+    								&& (xCase != game.getPlayer(who).getHead()[0] || yCase+1 != game.getPlayer(who).getHead()[1])) 
+    							drawBodyImage(gc, corner, 270, xCase, yCase);
+    						
+    						else if (game.getMap()[xCase][yCase+1].getydir() == -1 && xdir==1 
+    								&& game.getMap()[xCase][yCase+1].getDetail() == who 
+    								&& (xCase != game.getPlayer(who).getHead()[0] || yCase+1 != game.getPlayer(who).getHead()[1])) 
+    							drawBodyImage(gc, corner, 0, xCase, yCase);
+    					}
+	    			}
+    			}
+				// we update xCase and yCase
+    			xCase += xdir;
+    			yCase += ydir;
 			}
-    		
-    		//La tête
-    		else {
-    			
-    	    	int xdir = game.getMap()[(int)x][(int)y].getxdir();
-    	    	int ydir = game.getMap()[(int)x][(int)y].getydir();
-    	    	
-    	    	int xCase=(int)x;
-    	    	int yCase=(int)y;
-    			
-    			xdir = game.getMap()[game.getPlayer(who).getHead()[0]][game.getPlayer(who).getHead()[1]].getxdir();
-    			ydir = game.getMap()[game.getPlayer(who).getHead()[0]][game.getPlayer(who).getHead()[1]].getydir();
-    			
-    			int rot = 0;
-    				    			
-    			xCase=game.getPlayer(who).getHead()[0];
-    			yCase=game.getPlayer(who).getHead()[1];
-    			
-    			drawFloorImage(gc, xCase*66, yCase*66);
-    	        Image playerBodyImage = new Image(imgPath + "perso" + skinPlayer +".png"); 
-    	        	    	        
-    	        if (game.getMap()[xCase][yCase].getxdir() == 1) {
-    	        	rot = 270;
-    	        	gc.drawImage(rotateImage(playerBodyImage, rot), xCase*66, yCase*66);
-    	        }
-    	        else if (game.getMap()[xCase][yCase].getxdir() == -1) {
-    	        	rot = 90;
-    	        	gc.drawImage(rotateImage(playerBodyImage, rot), xCase*66, yCase*66);
-    	        }
-    	        else if (game.getMap()[xCase][yCase].getydir() == 1) {
-    	        	rot = 180;
-    	        	gc.drawImage(rotateImage(playerBodyImage, rot), xCase*66, yCase*66);
-    	        }
-    	        else if (game.getMap()[xCase][yCase].getydir() == -1) {
-    	        	gc.drawImage(playerBodyImage, xCase*66, yCase*66);
-    	        }
-    		}    			
-	}
+    	}
     }
     
-    private void drawWallImage(GraphicsContext gc, double x, double y) {
-        Image wallImage = new Image(imgPath + "map" + skinMap + ".png");
-        gc.drawImage(wallImage, x, y);
+    private void drawBodyImage(GraphicsContext gc, Image image, int angle, int x, int y) {
+    	gc.drawImage(rotateImage(image, angle), x * 66, y * 66);
     }
     
-    private void drawAppleImage(GraphicsContext gc, double x, double y) {
-        Image wallImage = new Image(imgPath + "pomme" + skinPomme + ".png");
-        gc.drawImage(wallImage, x, y);
+    private void drawWallImage(GraphicsContext gc, int x, int y) {
+        gc.drawImage(wallImage, x * 66, y * 66);
     }
     
-    private void drawFloorImage(GraphicsContext gc, double x, double y) {
-        Image floorImage = new Image(imgPath + "Sol.png");
-        gc.drawImage(floorImage, x, y);
+    private void drawAppleImage(GraphicsContext gc, int x, int y) {
+        gc.drawImage(appleImage, x * 66, y * 66);
     }
     
-    private void shapeMapImage(GraphicsContext gc, double x, double y) {
+    private void drawFloorImage(GraphicsContext gc, int x, int y) {
+        gc.drawImage(floorImage, x * 66, y * 66);
+    }
+    
+    private void shapeMapImage(GraphicsContext gc, int x, int y) {
     	for (int i = 0; i<nbColonnes; i++) {
         	for (int j=0; j<nbLignes; j++) {
-        		drawFloorImage(gc, i*66, j*66);
+        		drawFloorImage(gc, i, j);
         	}
         }
     }
     
-    public static WritableImage rotateImage(Image playerImage, int angle) {
+    /**
+     * create a rotated version of an image
+     * @param playerImage base image
+     * @param angle rotation angle
+     * @return rotated image
+     */
+    public static Image rotateImage(Image playerImage, int angle) {
+    	
+    	// we don't change the image if the is no rotation
+    	if (angle == 0)
+    		return playerImage;
+    	
         int width = (int) playerImage.getWidth();
         int height = (int) playerImage.getHeight();
 
@@ -398,11 +436,10 @@ public class GameViewControler implements Initializable {
 
         return rotatedImage;
     }
-    
-    private void updateGame() {
-    	
-    }
 
+    /**
+     * draw the game map
+     */
     private void drawGame() {
     	gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     	
@@ -410,6 +447,9 @@ public class GameViewControler implements Initializable {
         loadTiles(game, gc);
     }
 	
+    /**
+     * return to menu if the game is over
+     */
     private void checkGameOver() {
         if (game.getLivingNumber() == 0) {
         	
@@ -442,5 +482,4 @@ public class GameViewControler implements Initializable {
             }
         }
     }
-    
 }

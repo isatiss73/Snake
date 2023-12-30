@@ -215,39 +215,25 @@ public class Game
 	 */
 	public int killSnake(int who)
 	{
-		// we delete the snake carcass
-		if (options[OPT_CARCASS] == 0)
-		{
-			int x = players[who].getTail()[0];
-			int y = players[who].getTail()[1];
-			int ex = players[who].getHead()[0];
-			int ey = players[who].getHead()[1];
-			
-			// we clear every cell one by one from tail to head
-			while(x != ex && y != ey)
-			{
-				map[x][y].setEntity(Cell.AIR);
-				x += map[x][y].getxdir();
-				y += map[x][y].getydir();
-			}
-		}
-
+		// we update game and snake status
 		players[who].setLiving(false);
 		livingNumber--;
 		
+		// we get snake informations to wander it
 		int x = players[who].getTail()[0];
 		int y = players[who].getTail()[1];
-		int dx = map[x][y].getxdir();
-		int dy = map[x][y].getydir();
+		int length = players[who].getLength();
+		int dx, dy;
 		
-		for (int i=0; i<players[who].getLength(); i++) {
+		// we replace every cell by air ffrom tail to head
+		for (int i=0; i<length; i++) {
 			dx = map[x][y].getxdir();
 			dy = map[x][y].getydir();
 			
 			map[x][y].setEntity(Cell.AIR);
 			
-			x=x+dx;
-			y=y+dy;
+			x += dx;
+			y += dy;
 		}
 		
 		return livingNumber;
@@ -330,7 +316,6 @@ public class Game
 					if (map[x + dx][y + dy].getEntity() == Cell.APPLE)
 					{
 						effect = map[x + dx][y + dy].getDetail();
-						snake.addLength(1);
 						eaten++;
 					}
 					else
