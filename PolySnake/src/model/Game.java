@@ -13,21 +13,18 @@ public class Game
 	
 	/** easier rules for noobs */
 	public static final int OPT_EASY_MODE = 0;
-	
 	/** revenge mode for dead players to troll alive players */
 	public static final int OPT_REVENGE = 1;
-	
 	/** say if the snakes speeds are independant */
 	public static final int OPT_INDEP_SPEED = 2;
-	
 	/** special quest for bonus for the last alive player */
 	public static final int OPT_GOLD_QUEST = 3;
-	
 	/** time (ms) between two apples spawn | 0 if spawn on eating */
 	public static final int RANDOM_APPLE = 4;
-	
+	/** type of apples */
+	public static final int APPLES_TYPE = 5;
 	/** say if a carcass rest on the map after snake death */
-	public static final int OPT_CARCASS = 5;
+	public static final int OPT_CARCASS = 6;
 	
 	private static Game instance;
 	
@@ -81,8 +78,8 @@ public class Game
 	public void reset(int hsize, int vsize, int maxPlayers)
 	{
 		// options
-		options = new int[]{0, 0, 0, 0, 4000, 0};
-		optVar = new int[]{0, 0, 0, 0, 4000, 0};
+		options = new int[]{0, 0, 0, 0, 4000, 0, 0};
+		optVar = new int[]{0, 0, 0, 0, 4000, Cell.A_LENGTH_ONLY, 0};
 		
 		// creation of tablesy
 		map = new Cell[hsize][vsize];
@@ -340,9 +337,6 @@ public class Game
 					{
 						effect = 0;
 					}
-					/*map[x + dx][y + dy].setEntity(Cell.PLAYER);
-					map[x + dx][y + dy].setDetail(p);
-					map[x + dx][y + dy].setDirection(dx, dy);*/
 					map[x + dx][y + dy].reset(dx, dy, Cell.PLAYER, p);
 					snake.replaceHead(x + dx, y + dy);
 					
@@ -362,7 +356,7 @@ public class Game
 					}
 					if ((effect == Cell.A_CLASSIC) || (effect == Cell.A_SPEED_ONLY))
 					{
-						snake.addSpeed(1);
+						snake.addSpeed(0.2f);
 					}
 				}
 			}
@@ -375,7 +369,7 @@ public class Game
 			int max = optVar[RANDOM_APPLE] - livingApples;
 			for (int a=0; a<max; a++)
 			{
-				createApple(Cell.A_SPEED_ONLY);
+				createApple(optVar[APPLES_TYPE]);
 			}
 		}
 		else
@@ -383,7 +377,7 @@ public class Game
 			optVar[RANDOM_APPLE] -= delta;
 			if (optVar[RANDOM_APPLE] <= 0)
 			{
-				createApple(Cell.A_SPEED_ONLY);
+				createApple(optVar[APPLES_TYPE]);
 				optVar[RANDOM_APPLE] += options[RANDOM_APPLE]*(0.5 + Math.random());
 			}
 		}

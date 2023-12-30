@@ -27,6 +27,12 @@ public class TCPMessage extends TCPBuffer
 		}
 	}
 	
+	/**
+	 * white a lot of data in an output stream
+	 * @param out the output stream you want to spam
+	 * @param loop the amount of lines you want to send
+	 * @throws IOException an error if you cannot write correctly
+	 */
 	void loopWriteMessage(OutputStream out, int loop) throws IOException
 	{
 		for(int i=0;i<loop;i++)
@@ -38,12 +44,20 @@ public class TCPMessage extends TCPBuffer
 		}
 	}
 	
+	/**
+	 * fill a byte buffer with random data
+	 * @param buffer the byte array to write on
+	 */
 	private void fillAtRandom(byte[] buffer)
 	{
 		for(int i=0; i<buffer.length; i++)
 			buffer[i] = (byte) random.nextInt(256);
 	}
 	
+	/**
+	 * fill the buffer with a text message
+	 * @param msOut message to write
+	 */
 	private void fillChar(String msOut)
 	{
 		if(msOut!=null && msOut.length() < buffer.length)
@@ -51,6 +65,9 @@ public class TCPMessage extends TCPBuffer
 				buffer[i] = (byte)msOut.charAt(i);
 	}
 	
+	/**
+	 * clear the buffer, what did you expect ?
+	 */
 	void clearBuffer()
 	{
 		for(int i=0;i<buffer.length;i++)
@@ -75,6 +92,10 @@ public class TCPMessage extends TCPBuffer
 		return null;
 	}
 	
+	/**
+	 * return the size of the written part of the buffer
+	 * @return see the brief...
+	 */
 	protected int count()
 	{
 		for(int i=0;i<buffer.length;i++)

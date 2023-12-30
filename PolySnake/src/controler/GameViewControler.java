@@ -34,6 +34,8 @@ public class GameViewControler implements Initializable {
 	
 	private Thread gameThread;
 	
+	private GameControler gameControler;
+	
 	private Pane root;
 			
 	public int nbColonnes = 1;
@@ -106,10 +108,11 @@ public class GameViewControler implements Initializable {
 	        
 	        // Create the Scene
 	        Scene scene = new Scene(root);
-	        GameControler gameControler = new GameControler(0, 1);
+	        gameControler = new GameControler(0, 1);
 	        scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
 	        stage.setScene(scene);
 	        stage.setTitle("Jeu local");
+	        gameControler.startThreads();
 	        stage.show(); 
 	        
 	        shapeMapImage(gc, nbColonnes, skinPlayer0);
@@ -130,34 +133,41 @@ public class GameViewControler implements Initializable {
 		initializeCanvas(game, stage);
 	}
 
-
+	/**
+	 * draw images for every cell
+	 * @param game model containing the map informations
+	 * @param gc graphic context on wich we draw
+	 */
 	public void loadTiles(Game game, GraphicsContext gc) {
 
+		// we check that the map is loaded to read it
 		if (game != null && game.getMap() != null) {
 			int mapWidth = game.getMap().length;
 	        int mapHeight = game.getMap()[0].length;
 			
+	        // we cross the map to draw each cell one by one
 		    for (int x = 0; x < mapWidth; x++) {
 		        for (int y = 0; y < mapHeight; y++) {
-		        		
-	        		if (game.getPlayer(0).isLiving() == true && game.getPlayer(0).getTail()[0] == x && game.getPlayer(0).getTail()[1] == y){
-                        drawPlayerImage(game, gc, x, y, 0);
-		            }
-		        	
-		            if (game.getPlayer(1).isLiving() == true && game.getPlayer(1).getTail()[0] == x && game.getPlayer(1).getTail()[1] == y){
-                        drawPlayerImage(game, gc, x, y, 1);
-		            }
-		            if (game.getMap()[x][y].getEntity() == Cell.WALL){
-		            	drawFloorImage(gc, x * 66, y * 66);
-                        drawWallImage(gc, x * 66, y * 66);
-		            }
-		            if (game.getMap()[x][y].getEntity() == Cell.APPLE){
-		            	drawFloorImage(gc, x * 66, y * 66);
-		            	drawAppleImage(gc, x * 66, y * 66);
-		            }
-		            if (game.getMap()[x][y].getEntity() == Cell.AIR){
-		            	drawFloorImage(gc, x * 66, y * 66);
-		            }
+		        	if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight) {
+		        		if (game.getPlayer(0).isLiving() == true && game.getPlayer(0).getTail()[0] == x && game.getPlayer(0).getTail()[1] == y){
+	                        drawPlayerImage(game, gc, x, y, 0);
+			            }
+			        	
+			            if (game.getPlayer(1).isLiving() == true && game.getPlayer(1).getTail()[0] == x && game.getPlayer(1).getTail()[1] == y){
+	                        drawPlayerImage(game, gc, x, y, 1);
+			            }
+			            if (game.getMap()[x][y].getEntity() == Cell.WALL){
+			            	drawFloorImage(gc, x * 66, y * 66);
+	                        drawWallImage(gc, x * 66, y * 66);
+			            }
+			            else if (game.getMap()[x][y].getEntity() == Cell.APPLE){
+			            	drawFloorImage(gc, x * 66, y * 66);
+			            	drawAppleImage(gc, x * 66, y * 66);
+			            }
+			            else if (game.getMap()[x][y].getEntity() == Cell.AIR){
+			            	drawFloorImage(gc, x * 66, y * 66);
+			            }
+		        	}
 		        }
 		    }
 		}
@@ -412,9 +422,9 @@ public class GameViewControler implements Initializable {
             }
         	
         	gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        	
             root.getChildren().remove(canvas);
-        	
+        	gameControler.stopThreads();
+            
             try {               
             	// Load the main menu FXML file
             	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_menu.fxml").toURL());

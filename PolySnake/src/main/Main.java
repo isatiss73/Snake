@@ -61,11 +61,6 @@ public class Main extends Application
 		
 		scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
 		
-		Thread serverThread = new Thread(new TCPServerMessage());
-		Thread clientThread = new Thread(new TCPClientMessage());
-		serverThread.start();
-		clientThread.start();
-		
 		Game game = Game.getInstance();
 		game.reset(8, 8, 1);
 		game.createSnake(0, 2, 1, 3, 1, 0);
@@ -77,7 +72,7 @@ public class Main extends Application
 			stage.close();
 		});
 		
-		// stage.show();
+		stage.show();
 		
 	}
 }

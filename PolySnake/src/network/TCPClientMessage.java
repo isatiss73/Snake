@@ -2,16 +2,27 @@ package network;
 
 import java.io.IOException;
 
+/**
+ * the runnable class to send messages with TCP as a client
+ */
 public class TCPClientMessage extends TCPClientBuilder implements Runnable {	
 	private String message;
 	
+	/**
+	 * constructor for local test
+	 */
 	public TCPClientMessage() {
 		this("localhost", 8080);
 	}
 	
+	/**
+	 * main constructor
+	 * @param address address of the server
+	 * @param port listening port
+	 */
 	public TCPClientMessage(String address, int port) {
 		super(address, port);
-		message = null;
+		message = "";
 	}
 	
 	public void run() {
@@ -19,17 +30,43 @@ public class TCPClientMessage extends TCPClientBuilder implements Runnable {
 			System.out.println("TCP client running on " + address + ':' + port);
 			setSocket();
 			out = socket.getOutputStream();
-			int loop = 2000;
-			loopWriteMessage(out, loop);
+			// loopWriteMessage(out, 2000);
+			/*while (!message.equals("exit")) {
+				if (message != "") {
+					System.out.println("sending : " + message);
+					writeMessage(out, message);
+					message = "";
+				}
+			}
+			writeMessage(out, message);
 			out.close();
 			socket.close();
+			System.out.println("TCP client closed");*/
 		}
 		catch(IOException e) { 
-			System.out.println("IOException TCPClientLMessage" + e.getMessage()); 
+			e.printStackTrace();
 		}
 	}
 	
-	public void setMessage(String message) {
-		this.message = message;
+	/**
+	 * give a message to send to the server
+	 * @param message text to send, 'exit' to stop
+	 */
+	public void sendMessage(String message) {
+		this.message = " " + message;
+		System.out.println("sending : " + message);
+		try
+		{
+			writeMessage(out, message);
+			if (message.equals("exit")) {
+				out.close();
+				socket.close();
+				System.out.println("TCP client closed");
+			}
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
