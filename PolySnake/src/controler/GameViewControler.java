@@ -26,7 +26,7 @@ public class GameViewControler implements Initializable {
 	public static final String mehdiPath = "file:/C:/Users/mehdi/git/Snake/PolySnake/images/";
 	public static final String quentinPath = "file:/home/quentin/git/Snake/PolySnake/images/";
 	public static final String stdPath = "file:/" + System.getProperty("user.dir") + "/images/";
-	public static final String imgPath = quentinPath;
+	public static final String imgPath = mehdiPath;
 	
 	public static Game game;
 	
@@ -44,7 +44,7 @@ public class GameViewControler implements Initializable {
 	
 	private int skinPlayer0;
 	
-	private int skinPlayer1=1;
+	private int skinPlayer1=3;
 	
 	private int skinPomme;
 	
@@ -138,25 +138,27 @@ public class GameViewControler implements Initializable {
 			
 		    for (int x = 0; x < mapWidth; x++) {
 		        for (int y = 0; y < mapHeight; y++) {
-		        		
-	        		if (game.getPlayer(0).isLiving() == true && game.getPlayer(0).getTail()[0] == x && game.getPlayer(0).getTail()[1] == y){
-                        drawPlayerImage(game, gc, x, y, 0);
-		            }
-		        	
-		            if (game.getPlayer(1).isLiving() == true && game.getPlayer(1).getTail()[0] == x && game.getPlayer(1).getTail()[1] == y){
-                        drawPlayerImage(game, gc, x, y, 1);
-		            }
-		            if (game.getMap()[x][y].getEntity() == Cell.WALL){
-		            	drawFloorImage(gc, x * 66, y * 66);
-                        drawWallImage(gc, x * 66, y * 66);
-		            }
-		            if (game.getMap()[x][y].getEntity() == Cell.APPLE){
-		            	drawFloorImage(gc, x * 66, y * 66);
-		            	drawAppleImage(gc, x * 66, y * 66);
-		            }
-		            if (game.getMap()[x][y].getEntity() == Cell.AIR){
-		            	drawFloorImage(gc, x * 66, y * 66);
-		            }
+			        if (x>=0 && x<mapWidth && y>=0 && y < mapHeight) {
+			        	
+		        		if (game.getPlayer(0).isLiving() == true && game.getPlayer(0).getTail()[0] == x && game.getPlayer(0).getTail()[1] == y){
+	                        drawPlayerImage(game, gc, x, y, 0);
+			            }
+			        	
+			            if (game.getPlayer(1).isLiving() == true && game.getPlayer(1).getTail()[0] == x && game.getPlayer(1).getTail()[1] == y){
+	                        drawPlayerImage(game, gc, x, y, 1);
+			            }
+			            if (game.getMap()[x][y].getEntity() == Cell.WALL){
+			            	drawFloorImage(gc, x * 66, y * 66);
+	                        drawWallImage(gc, x * 66, y * 66);
+			            }
+			            if (game.getMap()[x][y].getEntity() == Cell.APPLE){
+			            	drawFloorImage(gc, x * 66, y * 66);
+			            	drawAppleImage(gc, x * 66, y * 66);
+			            }
+			            if (game.getMap()[x][y].getEntity() == Cell.AIR){
+			            	drawFloorImage(gc, x * 66, y * 66);
+			            }
+			        }
 		        }
 		    }
 		}

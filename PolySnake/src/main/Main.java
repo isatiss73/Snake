@@ -57,6 +57,8 @@ public class Main extends Application
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		
+		
+		/*
 		GameControler gameControler = new GameControler(0, 1);
 		
 		scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
@@ -75,9 +77,9 @@ public class Main extends Application
 		// gameThread.start();
 		stage.setOnCloseRequest(event -> {
 			stage.close();
-		});
+		});*/
 		
-		// stage.show();
+		stage.show();
 		
 	}
 }

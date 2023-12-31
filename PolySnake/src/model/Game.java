@@ -15,19 +15,19 @@ public class Game
 	public static final int OPT_EASY_MODE = 0;
 	
 	/** revenge mode for dead players to troll alive players */
-	public static final int OPT_REVENGE = 1;
+	public static final int OPT_REVENGE = 0;
 	
 	/** say if the snakes speeds are independant */
-	public static final int OPT_INDEP_SPEED = 2;
+	public static final int OPT_INDEP_SPEED = 0;
 	
 	/** special quest for bonus for the last alive player */
-	public static final int OPT_GOLD_QUEST = 3;
+	public static final int OPT_GOLD_QUEST = 0;
 	
 	/** time (ms) between two apples spawn | 0 if spawn on eating */
-	public static final int RANDOM_APPLE = 4;
+	public static final int RANDOM_APPLE = 0;
 	
 	/** say if a carcass rest on the map after snake death */
-	public static final int OPT_CARCASS = 5;
+	public static final int OPT_CARCASS = 0;
 	
 	private static Game instance;
 	
@@ -237,6 +237,7 @@ public class Game
 
 		players[who].setLiving(false);
 		livingNumber--;
+		
 		
 		int x = players[who].getTail()[0];
 		int y = players[who].getTail()[1];
