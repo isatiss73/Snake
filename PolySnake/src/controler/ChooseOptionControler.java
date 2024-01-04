@@ -24,6 +24,8 @@ import model.Game;
 
 public class ChooseOptionControler extends Application {
 	public static Game game;
+		
+		private boolean HostORGuest;
 	
 	
 		private int skinMap;
@@ -119,18 +121,31 @@ public class ChooseOptionControler extends Application {
 	    
 	    @FXML
 	    public void initialize() {
-            try {
+	    	//tell if the player is the host or a guest :
+	    	game = Game.getInstance();	   	
+	    	
+	    	if (game != null) {
+		    	if (game.getControler().leftID==0) HostORGuest = true;
+		    	else HostORGuest = false;		    	
+	    	}
+	    	
+	    	//Write the IP Adress and Port of the player :
+	    	try {
                 TextIP.setText("IP : " +InetAddress.getLocalHost().getHostAddress());
             } catch (UnknownHostException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            try (ServerSocket serverSocket = new ServerSocket(0)) { // 0 permet au système de choisir un port disponible
-                TextPort.setText("Port : " + serverSocket.getLocalPort());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+	    	
+	    	// Si le client se connecte, on réécris son port plutôt qu'en prendre un nouveau automatiquement
+	    	if (HostORGuest) {
+	            try (ServerSocket serverSocket = new ServerSocket(0)) { // 0 pour choisir automatiquement un port disponible
+	                TextPort.setText("Port : " + serverSocket.getLocalPort());
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	    	}
+            
             BoiteNbBots.valueProperty().addListener((observable, oldValue, newValue) -> {
                 NbBots=newValue.intValue();
                 ChiffreNbBots.setText(Integer.toString(NbBots));
@@ -140,6 +155,22 @@ public class ChooseOptionControler extends Application {
                 TailleSerpent=newValue.intValue();
                 ChiffreTailleSerpent.setText(Integer.toString(TailleSerpent));
             });
+
+        	
+            if (HostORGuest == false) {
+            	BoiteApparitionPomme.setDisable(true);
+            	BoiteAssiste.setDisable(true);
+            	BoiteChacunPomme.setDisable(true);
+            	BoiteCroissance.setDisable(true);
+            	BoiteEchec.setDisable(true);
+            	BoiteItem.setDisable(true);
+                BoiteMap.setDisable(true);
+            	BoiteMurSpecial.setDisable(true);
+            	BoiteNbBots.setDisable(true);
+            	BoiteRevanche.setDisable(true);
+            	BoiteRuéeOr.setDisable(true);
+            	BoiteTailleSerpent.setDisable(true);
+            }
         }
 	    
 	    public void setSkinOptions(int skinMap, int skinPlayer, int skinPomme) {

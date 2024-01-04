@@ -9,7 +9,7 @@ import model.Game;
  */
 public class GameControler
 {
-	protected int leftID = 1;
+	protected int leftID;
 	protected int guests;
 	protected boolean twoLocal;
 	

@@ -132,7 +132,7 @@ public class GameViewControler implements Initializable {
 	        
 	        // Create the Scene
 	        Scene scene = new Scene(root);
-	        gameControler = new GameControler(0, 1);
+	        gameControler = game.getControler();
 	        scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
 	        stage.setScene(scene);
 	        stage.setTitle("Jeu local");
