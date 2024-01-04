@@ -2,6 +2,8 @@ package model;
 
 import java.util.Random;
 
+import controler.GameControler;
+
 /**
  * global game object
  */
@@ -27,6 +29,8 @@ public class Game
 	public static final int OPT_CARCASS = 6;
 	
 	private static Game instance;
+	
+	private GameControler controler;
 	
 	private int[] options;
 	private int[] optVar;
@@ -78,8 +82,8 @@ public class Game
 	public void reset(int hsize, int vsize, int maxPlayers)
 	{
 		// options
-		options = new int[]{0, 0, 0, 0, 4000, 0, 0};
-		optVar = new int[]{0, 0, 0, 0, 4000, Cell.A_LENGTH_ONLY, 0};
+		options = new int[]{0, 0, 0, 0, 0, 0, 0};
+		optVar = new int[]{0, 0, 0, 0, 3, Cell.A_LENGTH_ONLY, 0};
 		
 		// creation of tablesy
 		map = new Cell[hsize][vsize];
@@ -99,6 +103,8 @@ public class Game
 				map[x][y] = new Cell();
 			}
 		}
+		
+		controler = new GameControler(0, 1);
 	}
 	
 	/**
@@ -427,6 +433,22 @@ public class Game
 				n++;
 			}
 		}
+	}
+	
+	/**
+	 * set a new controler to the game
+	 * @param newControler the new controler
+	 */
+	public void setControler(GameControler newControler) {
+		controler = newControler;
+	}
+	
+	/**
+	 * get the controler instance
+	 * @return the controler instance
+	 */
+	public GameControler getControler() {
+		return controler;
 	}
 	
 	/**

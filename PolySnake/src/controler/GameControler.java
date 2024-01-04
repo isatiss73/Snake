@@ -38,7 +38,6 @@ public class GameControler
 		setIDs(leftID, rightID);
 		server = new TCPServerMessage();
 		client = new TCPClientMessage();
-		
 	}
 	
 	/**

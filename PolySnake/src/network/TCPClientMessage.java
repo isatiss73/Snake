@@ -5,8 +5,7 @@ import java.io.IOException;
 /**
  * the runnable class to send messages with TCP as a client
  */
-public class TCPClientMessage extends TCPClientBuilder implements Runnable {	
-	private String message;
+public class TCPClientMessage extends TCPClientBuilder implements Runnable {
 	
 	/**
 	 * constructor for local test
@@ -22,7 +21,6 @@ public class TCPClientMessage extends TCPClientBuilder implements Runnable {
 	 */
 	public TCPClientMessage(String address, int port) {
 		super(address, port);
-		message = "";
 	}
 	
 	public void run() {
@@ -53,7 +51,6 @@ public class TCPClientMessage extends TCPClientBuilder implements Runnable {
 	 * @param message text to send, 'exit' to stop
 	 */
 	public void sendMessage(String message) {
-		this.message = " " + message;
 		System.out.println("sending : " + message);
 		try
 		{

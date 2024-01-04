@@ -24,6 +24,18 @@ public class TCPClientBuilder extends TCPMessage {
 		out = null;
 	}
 	
+	/**
+	 * reset the address and port then update the socket connection
+	 * @param newAddress new address
+	 * @param newPort new port
+	 * @throws IOException error with the socket
+	 */
+	public void reset(String newAddress, int newPort) throws IOException {
+		address = newAddress;
+		port = newPort;
+		setSocket();
+	}
+	
 	protected void setSocket() throws IOException {
 		isA = new InetSocketAddress(address, port);
 		socket = new Socket(address, port);

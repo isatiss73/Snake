@@ -57,11 +57,12 @@ public class Main extends Application
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		
-		GameControler gameControler = new GameControler(0, 1);
+		GameControler gameControler = new GameControler(0, -1);
 		
 		scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
 		
 		Game game = Game.getInstance();
+		game.setControler(gameControler);
 		game.reset(8, 8, 1);
 		game.createSnake(0, 2, 1, 3, 1, 0);
 		// game.createSnake(1, 2, 3, 3, 1, 0);
