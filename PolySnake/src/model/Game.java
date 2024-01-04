@@ -78,8 +78,8 @@ public class Game
 	public void reset(int hsize, int vsize, int maxPlayers)
 	{
 		// options
-		options = new int[]{0, 0, 0, 0, 4000, 0, 0};
-		optVar = new int[]{0, 0, 0, 0, 4000, Cell.A_LENGTH_ONLY, 0};
+		options = new int[]{0, 0, 0, 0, 0, 0, 0};
+		optVar = new int[]{0, 0, 0, 0, 1, Cell.A_LENGTH_ONLY, 0};
 		
 		// creation of tablesy
 		map = new Cell[hsize][vsize];

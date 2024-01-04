@@ -12,6 +12,18 @@ public class TCPClientBuilder extends TCPMessage {
 	String address;
 	int port;
 	
+	    /**
+	 * reset the address and port then update the socket connection
+	 * @param newAddress new address
+	 * @param newPort new port
+	 * @throws IOException error with the socket
+	 */
+	public void reset(String newAddress, int newPort) throws IOException {
+	    address = newAddress;
+	    port = newPort;
+	    setSocket();
+	}
+	
 	TCPClientBuilder() {
 		this("localhost", 8080);
 	}

@@ -11,8 +11,8 @@ import network.TCPServerMessage;
  */
 public class GameControler
 {
-	private int leftID;
-	private int rightID;
+	private int leftID = 1;
+	private int rightID = -1;
 	private boolean twoLocal;
 	TCPServerMessage server;
 	TCPClientMessage client;

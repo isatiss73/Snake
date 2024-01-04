@@ -3,6 +3,9 @@ package controler;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.UnknownHostException;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -117,6 +120,17 @@ public class ChooseOptionControler extends Application {
 	    
 	    @FXML
 	    public void initialize() {
+	    	try {
+				TextIP.setText("IP : " +InetAddress.getLocalHost().getHostAddress());
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	    	
+	    	try (ServerSocket serverSocket = new ServerSocket(0)) { // 0 permet au système de choisir un port disponible
+	            TextPort.setText("Port : " + serverSocket.getLocalPort());
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
 	    	BoiteNbBots.valueProperty().addListener((observable, oldValue, newValue) -> {
 	    		NbBots=newValue.intValue();
 	    		ChiffreNbBots.setText(Integer.toString(NbBots));
