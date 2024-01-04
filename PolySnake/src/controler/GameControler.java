@@ -3,12 +3,21 @@ package controler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import model.Game;
+import network.TCPClientMessage;
+import network.TCPServerMessage;
 
+/**
+ * the controler of the game
+ */
 public class GameControler
 {
 	private int leftID;
 	private int rightID;
 	private boolean twoLocal;
+	TCPServerMessage server;
+	TCPClientMessage client;
+	Thread serverThread;
+	Thread clientThread;
 	
 	/**
 	 * constructor with one single local player
@@ -16,7 +25,7 @@ public class GameControler
 	 */
 	public GameControler(int leftID)
 	{
-		setIDs(leftID, -1);
+		this(leftID, -1);
 	}
 	
 	/**
@@ -27,6 +36,28 @@ public class GameControler
 	public GameControler(int leftID, int rightID)
 	{
 		setIDs(leftID, rightID);
+		server = new TCPServerMessage();
+		client = new TCPClientMessage();
+		
+	}
+	
+	/**
+	 * create threads for client and server and start them
+	 */
+	public void startThreads() 
+	{
+		serverThread = new Thread(server);
+		clientThread = new Thread(client);
+		serverThread.start();
+		clientThread.start();
+	}
+	
+	/**
+	 * stop the threads bro
+	 */
+	public void stopThreads()
+	{
+		client.sendMessage("exit");
 	}
 	
 	/**
@@ -60,7 +91,7 @@ public class GameControler
 		KeyCode keyCode = event.getCode();
         String keyText = keyCode.getName();
         Game game = Game.getInstance();
-        boolean left = true;
+        boolean interesting = true;
         
         // left player management
         switch(keyText)
@@ -78,12 +109,13 @@ public class GameControler
         	game.getPlayer(leftID).setDirection(0, -1);
         	break;
         default:
-        	left = false;
+        	interesting = false;
         	break;
         }
         // right player management
-        if (!left && twoLocal)
+        if (!interesting && twoLocal)
         {
+        	interesting = true;
         	switch(keyText)
             {
             case "Right":
@@ -99,9 +131,15 @@ public class GameControler
             	game.getPlayer(rightID).setDirection(0, -1);
             	break;
             default:
-            	left = false;
+            	interesting = false;
             	break;
             }
+        }
+        // we send the key text to the server
+        if (interesting)
+        {
+        	System.out.println("interesting : " + keyText);
+        	client.sendMessage(keyText);
         }
 	}
 }

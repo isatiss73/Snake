@@ -2,15 +2,28 @@ package network;
 
 import java.io.IOException;
 
+/**
+ * the runnable class to recieve messages with TCP as a server
+ */
 public class TCPServerMessage extends TCPServerBuilder implements Runnable {
+	
 	private String message;
 	
+	/**
+	 * constructor for local test
+	 */
 	public TCPServerMessage() {
-		super();
+		this("localhost", 8080);
 	}
 	
+	/**
+	 * main constructor
+	 * @param address address of the client
+	 * @param port listening port
+	 */
 	public TCPServerMessage(String address, int port) {
 		super(address, port);
+		message = "";
 	}
 	
 	public void run() {
@@ -20,24 +33,33 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 			setSocket();
 			socket = ss.accept();
 			in = socket.getInputStream();
-			String msIn;
+			String msIn = "";
 			int nbLoop = 0;
 			long compteur = 0;
-			do {
+			// do {
+			while (!msIn.equals("exit")) {
 				compteur += count();
 				msIn = readMessage(in);
-				System.out.println(msIn);
+				if (msIn != null)
+					System.out.println(msIn);
+				else
+					msIn = "";
 				nbLoop++;
-			} while (in.read() != -1);
+			} // while (in.read() != -1);
 			System.out.println("\nIterations : " + nbLoop + "\nDonnees : " + compteur);
 			in.close();
 			socket.close();
+			System.out.println("TCP server closed");
 		}
 		catch(IOException e) { 
-			System.out.println("IOException TCPServerLMessage" + e.getMessage()); 
+			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * get the last not null message recieved
+	 * @return the message as a string (at least empty)
+	 */
 	public String getMessage() {
 		return message;
 	}

@@ -8,9 +8,9 @@ public class Snake
 {
 	private int playerID;
 	private int length;
-	private int speed;
-	private int time;
-	private int delay;
+	private float speed;
+	private float time;
+	private float delay;
 	private int[] direction;
 	private int score;
 	private String pseudo;
@@ -108,7 +108,7 @@ public class Snake
 	 * get snake's movement delay
 	 * @return movement delay in ms
 	 */
-	public int getDelay()
+	public float getDelay()
 	{
 		return delay;
 	}
@@ -218,7 +218,7 @@ public class Snake
 	 * change the snake's speed (absolute)
 	 * @param speed new snake's speed
 	 */
-	public void setSpeed(int speed)
+	public void setSpeed(float speed)
 	{
 		if (speed > 0)
 		{
@@ -231,7 +231,7 @@ public class Snake
 	 * change the snake's speed (relative)
 	 * @param delta difference to add/remove
 	 */
-	public void addSpeed(int delta)
+	public void addSpeed(float delta)
 	{
 		if (speed + delta > 0)
 		{
