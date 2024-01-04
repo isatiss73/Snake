@@ -43,29 +43,39 @@
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-            <Button fx:id="boutonMenu" layoutX="14.0" layoutY="293.0" mnemonicParsing="false" onAction="#clicboutonMenuAction" prefHeight="27.0" prefWidth="214.0" text="Menu">
+            <Button fx:id="boutonMenu" layoutX="14.0" layoutY="335.0" mnemonicParsing="false" onAction="#clicboutonMenuAction" prefHeight="16.0" prefWidth="110.0" text="Menu">
                <font>
-                  <Font name="System Bold" size="43.0" />
+                  <Font name="System Bold" size="23.0" />
                </font>
             </Button>
-            <Button fx:id="boutonOK" contentDisplay="CENTER" layoutX="411.0" layoutY="293.0" mnemonicParsing="false" onAction="#clicboutonOKAction" prefHeight="70.0" prefWidth="214.0" text="OK" textAlignment="CENTER" textFill="#009623">
+            <Button fx:id="boutonOK" contentDisplay="CENTER" layoutX="260.0" layoutY="276.0" mnemonicParsing="false" onAction="#clicboutonOKAction" prefHeight="27.0" prefWidth="102.0" text="OK" textAlignment="CENTER" textFill="#02bf1d">
                <font>
-                  <Font name="System Bold" size="43.0" />
+                  <Font name="System Bold" size="24.0" />
                </font>
             </Button>
-            <TextField fx:id="IPaddress" layoutX="162.0" layoutY="123.0" prefHeight="52.0" prefWidth="298.0" promptText="IP">
+            <TextField fx:id="IPaddress" layoutX="162.0" layoutY="107.0" prefHeight="52.0" prefWidth="298.0" promptText="IP (Hôte)">
                <font>
                   <Font size="25.0" />
                </font>
             </TextField>
-            <TextField fx:id="PortAddress" layoutX="162.0" layoutY="207.0" prefHeight="52.0" prefWidth="298.0" promptText="Port">
+            <TextField fx:id="PortAddress" layoutX="162.0" layoutY="193.0" prefHeight="52.0" prefWidth="298.0" promptText="Port (Hôte)">
                <font>
                   <Font size="25.0" />
                </font>
             </TextField>
-            <Text fill="#df0000" layoutX="154.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rejoindre Partie :" textAlignment="CENTER" underline="true">
+            <Text fill="#df0000" layoutX="151.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rejoindre Partie :" textAlignment="CENTER" underline="true">
                <font>
-                  <Font name="System Italic" size="45.0" />
+                  <Font name="System Italic" size="46.0" />
+               </font>
+            </Text>
+            <Text fx:id="TextIP" layoutX="460.0" layoutY="355.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IP : " wrappingWidth="180.53671264648438">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="TextPort" layoutX="460.0" layoutY="382.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port : " wrappingWidth="180.53671264648438">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
                </font>
             </Text>
       </children>

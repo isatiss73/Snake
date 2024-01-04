@@ -3,21 +3,15 @@ package controler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import model.Game;
-import network.TCPClientMessage;
-import network.TCPServerMessage;
 
 /**
  * the controler of the game
  */
 public class GameControler
 {
-	private int leftID;
-	private int rightID;
-	private boolean twoLocal;
-	TCPServerMessage server;
-	TCPClientMessage client;
-	Thread serverThread;
-	Thread clientThread;
+	protected int leftID = 1;
+	protected int guests;
+	protected boolean twoLocal;
 	
 	/**
 	 * constructor with one single local player
@@ -36,19 +30,14 @@ public class GameControler
 	public GameControler(int leftID, int rightID)
 	{
 		setIDs(leftID, rightID);
-		server = new TCPServerMessage();
-		client = new TCPClientMessage();
 	}
 	
 	/**
-	 * create threads for client and server and start them
+	 * create threads and start them
 	 */
 	public void startThreads() 
 	{
-		serverThread = new Thread(server);
-		clientThread = new Thread(client);
-		serverThread.start();
-		clientThread.start();
+		
 	}
 	
 	/**
@@ -56,7 +45,16 @@ public class GameControler
 	 */
 	public void stopThreads()
 	{
-		client.sendMessage("exit");
+		
+	}
+	
+	/**
+	 * send a message to every connected device
+	 * @param message text message to send
+	 */
+	public void sendMessage(String message)
+	{
+		
 	}
 	
 	/**
@@ -71,7 +69,6 @@ public class GameControler
 			leftID = left;
 			if (right >= 0)
 			{
-				rightID = right;
 				twoLocal = true;
 			}
 			else
@@ -79,6 +76,66 @@ public class GameControler
 				twoLocal = false;
 			}
 		}
+	}
+	
+	/**
+	 * recieve a message for someone else and interpret it
+	 * @param message the recieved message
+	 * @return true if the message is interesting
+	 */
+	public boolean recieveMessage(String message)
+	{
+		Game game = Game.getInstance();
+        boolean interesting = true;
+        String[] split = message.split(":");
+        message = split[1];
+        int id = Integer.valueOf(split[0]);
+        
+        // left player management
+        switch(message)
+        {
+        case "D":
+        	game.getPlayer(id).setDirection(1, 0);
+        	break;
+        case "Q":
+        	game.getPlayer(id).setDirection(-1, 0);
+        	break;
+        case "S":
+        	game.getPlayer(id).setDirection(0, 1);
+        	break;
+        case "Z":
+        	game.getPlayer(id).setDirection(0, -1);
+        	break;
+        default:
+        	interesting = false;
+        	break;
+        }
+        // right player management
+        if (!interesting && twoLocal)
+        {
+        	interesting = true;
+        	int rightID = leftID + 1;
+        	switch(message)
+            {
+            case "Right":
+            	game.getPlayer(rightID).setDirection(1, 0);
+            	break;
+            case "Left":
+            	game.getPlayer(rightID).setDirection(-1, 0);
+            	break;
+            case "Down":
+            	game.getPlayer(rightID).setDirection(0, 1);
+            	break;
+            case "Up":
+            	game.getPlayer(rightID).setDirection(0, -1);
+            	break;
+            default:
+            	interesting = false;
+            	break;
+            }
+        }
+        
+        return interesting;
 	}
 	
 	/**
@@ -115,6 +172,7 @@ public class GameControler
         if (!interesting && twoLocal)
         {
         	interesting = true;
+        	int rightID = leftID + 1;
         	switch(keyText)
             {
             case "Right":
@@ -138,7 +196,7 @@ public class GameControler
         if (interesting)
         {
         	System.out.println("interesting : " + keyText);
-        	client.sendMessage(keyText);
+        	sendMessage(keyText);
         }
 	}
 }

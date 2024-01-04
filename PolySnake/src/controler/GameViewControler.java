@@ -26,7 +26,7 @@ public class GameViewControler implements Initializable {
 	public static final String mehdiPath = "file:/C:/Users/mehdi/git/Snake/PolySnake/images/";
 	public static final String quentinPath = "file:/home/quentin/git/Snake/PolySnake/images/";
 	public static final String stdPath = "file:/" + System.getProperty("user.dir") + "/images/";
-	public static final String imgPath = quentinPath;
+	public static final String imgPath = mehdiPath;
 	
 	public static Game game;
 	

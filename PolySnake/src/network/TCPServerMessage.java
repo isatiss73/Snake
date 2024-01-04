@@ -2,12 +2,16 @@ package network;
 
 import java.io.IOException;
 
+import controler.GameControler;
+import model.Game;
+
 /**
  * the runnable class to recieve messages with TCP as a server
  */
 public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 	
 	private String message;
+	private GameControler gamer;
 	
 	/**
 	 * constructor for local test
@@ -24,6 +28,7 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 	public TCPServerMessage(String address, int port) {
 		super(address, port);
 		message = "";
+		gamer = Game.getInstance().getControler();
 	}
 	
 	public void run() {
@@ -41,7 +46,10 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 				compteur += count();
 				msIn = readMessage(in);
 				if (msIn != null)
+				{
 					System.out.println(msIn);
+					gamer.recieveMessage(msIn);
+				}
 				else
 					msIn = "";
 				nbLoop++;

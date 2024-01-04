@@ -3,6 +3,9 @@ package controler;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.UnknownHostException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class RejoindreMenuControler {
@@ -23,6 +27,12 @@ public class RejoindreMenuControler {
     private TextField PortAddress;
 
     @FXML
+    private Text TextIP;
+
+    @FXML
+    private Text TextPort;
+    
+    @FXML
     private Button boutonMenu;
 
     @FXML
@@ -30,8 +40,18 @@ public class RejoindreMenuControler {
 
     @FXML
     public void initialize() {
-        //boutonMenu.setOnAction(event -> clicboutonMenuAction());
-        boutonOK.setOnAction(event -> clicboutonOKAction());
+    	try {
+			TextIP.setText("IP : " +InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	    	
+    	try (ServerSocket serverSocket = new ServerSocket(0)) { // 0 permet au système de choisir un port disponible
+            TextPort.setText("Port : " + serverSocket.getLocalPort());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        boutonOK.setOnAction(event -> clicboutonOKAction());        
     }
     
     @FXML	
