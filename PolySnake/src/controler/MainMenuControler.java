@@ -120,7 +120,7 @@ public class MainMenuControler {
     	
     	AddSkinMap();
     	    	
-    	ImageSkinMap.setImage(new Image(new File("images/map" + skinMap+".png").toURI().toString()));
+    	ChangeImage(ImageSkinMap, "map", skinMap);
     }
 
     @FXML
@@ -128,7 +128,7 @@ public class MainMenuControler {
     	
     	RemoveSkinMap();
     	    	
-    	ImageSkinMap.setImage(new Image(new File("images/map" + skinMap+".png").toURI().toString()));
+    	ChangeImage(ImageSkinMap, "map", skinMap);
     }
     
     @FXML
@@ -136,7 +136,7 @@ public class MainMenuControler {
     	
     	AddSkinPlayer();
     	    	
-    	ImageSkinJoueur.setImage(new Image(new File("images/perso" + skinPlayer+".png").toURI().toString()));
+    	ChangeImage(ImageSkinJoueur, "perso", skinPlayer);
     }
 
     @FXML
@@ -144,7 +144,7 @@ public class MainMenuControler {
     	
     	RemoveSkinPlayer();
     	  	
-    	ImageSkinJoueur.setImage(new Image(new File("images/perso" + skinPlayer+".png").toURI().toString()));
+    	ChangeImage(ImageSkinJoueur, "perso", skinPlayer);
     }
     
     @FXML
@@ -152,7 +152,7 @@ public class MainMenuControler {
     	
     	AddSkinPomme();
     	    	
-    	ImageSkinPomme.setImage(new Image(new File("images/pomme" + skinPomme+".png").toURI().toString()));
+    	ChangeImage(ImageSkinPomme, "pomme", skinPomme);
     }
 
     @FXML
@@ -160,7 +160,7 @@ public class MainMenuControler {
     	
     	RemoveSkinPomme();
     	    	
-    	ImageSkinPomme.setImage(new Image(new File("images/pomme" + skinPomme+".png").toURI().toString()));
+    	ChangeImage(ImageSkinPomme, "pomme", skinPomme);
     }
     
     public void AddSkinMap() {
@@ -180,8 +180,7 @@ public class MainMenuControler {
     		skinMap = MaxSkinMap;
     	}
     }
-    
-    
+        
     public void AddSkinPlayer() {
     	if (skinPlayer < MaxSkinPlayer) {
     		skinPlayer++;
@@ -216,6 +215,10 @@ public class MainMenuControler {
     	else {
     		skinPomme = MaxSkinPomme;
     	}
+    }
+    
+    public void ChangeImage (ImageView Image, String FileName, int VarName) {
+    	Image.setImage(new Image(new File("images/" +FileName + VarName+".png").toURI().toString()));    
     }
     
 }
