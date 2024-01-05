@@ -84,7 +84,10 @@ public class ChooseOptionControler extends Application {
 	    private Slider BoiteTailleSerpent;
 
 	    @FXML
-	    private Button BoutonLancerPartie;
+	    private Button BoutonLancerPartieLAN;
+
+	    @FXML
+	    private Button BoutonLancerPartieLocal;
 	    
 	    @FXML
 	    private Button BoutonRetour;
@@ -170,6 +173,8 @@ public class ChooseOptionControler extends Application {
             	BoiteRevanche.setDisable(true);
             	BoiteRuéeOr.setDisable(true);
             	BoiteTailleSerpent.setDisable(true);
+            	BoutonLancerPartieLAN.setDisable(true);
+            	BoutonLancerPartieLocal.setDisable(true);
             }
         }
 	    
@@ -231,7 +236,7 @@ public class ChooseOptionControler extends Application {
 	    }
 
 	    @FXML
-	    void clicBoutonLancerPartieAction(ActionEvent event) throws IOException {
+	    void clicBoutonLancerPartieLANAction(ActionEvent event) throws IOException {
 	    	//System.out.println("Bouton Lancer partie !");
 	    	// Initialiser le jeu en premier
 		    game = Game.getInstance();
@@ -265,6 +270,11 @@ public class ChooseOptionControler extends Application {
 	    	stage.show();
 	    }
 	    
+	    
+	    @FXML
+	    void clicBoutonLancerPartieLocalAction(ActionEvent event) throws IOException {
+
+	    }
 	    
 
 	    @FXML
