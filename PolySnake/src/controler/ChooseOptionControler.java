@@ -237,16 +237,27 @@ public class ChooseOptionControler extends Application {
 
 	    @FXML
 	    void clicBoutonLancerPartieLANAction(ActionEvent event) throws IOException {
-	    	//System.out.println("Bouton Lancer partie !");
+
+	    	
+	    }
+	    
+	    
+	    @FXML
+	    void clicBoutonLancerPartieLocalAction(ActionEvent event) throws IOException {
+	    	
 	    	// Initialiser le jeu en premier
 		    game = Game.getInstance();
 		    game.reset(10,10, 2);
+		    
 		    //System.out.println(game.smoothString());
+		    
 		    game.createSnake(0, 2, 2, 2, 1, 0);
 		    game.createSnake(1, 2, 4, 2, 1, 0);
 		    game.getPlayer(0).setSpeed(3);
 		    game.getPlayer(1).setSpeed(3);
+		    
 		    //System.out.println(game);
+		    
 		    game.createApple(Cell.A_LENGTH_ONLY);
 		    game.createWall(Cell.A_LENGTH_ONLY);
 		    
@@ -268,12 +279,6 @@ public class ChooseOptionControler extends Application {
 		    jeu.initializeCanvas(game,stage);
 	    	
 	    	stage.show();
-	    }
-	    
-	    
-	    @FXML
-	    void clicBoutonLancerPartieLocalAction(ActionEvent event) throws IOException {
-
 	    }
 	    
 
