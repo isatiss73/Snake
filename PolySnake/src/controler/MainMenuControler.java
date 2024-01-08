@@ -87,6 +87,8 @@ public class MainMenuControler {
 
     @FXML
     void clicBoutonHebergerAction(ActionEvent event) throws IOException {
+        Pseudo = textPseudo.getText();
+        
     	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_Heberger_param.fxml").toURL());
     	Parent root = loader.load();
 		
@@ -104,6 +106,8 @@ public class MainMenuControler {
     
     @FXML
     void clicBoutonRejoindreAction(ActionEvent event) throws IOException {
+        Pseudo = textPseudo.getText();
+
     	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_Rejoindre.fxml").toURL());
     	Parent root = loader.load();
 		
