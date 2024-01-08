@@ -50,7 +50,7 @@ public class Game
 	 */
 	private Game(int hsize, int vsize, int maxPlayers)
 	{
-		controler = new GameControler(0, false);
+		controler = new GameControler(0, -1);
 		reset(hsize, vsize, maxPlayers);
 	}
 

@@ -55,8 +55,7 @@ public class Main extends Application
 		stage.setScene(scene);
 		
 		GameControler controler = Game.getInstance().getControler();
-		// controler.setIDs(0, true);
-		controler.addGuest("localhost", 8080);
+		controler.addGuest("192.168.13.228", 8002);
 		scene.setOnKeyReleased(event -> controler.keyReleased(event));
 		
 		stage.setOnCloseRequest(event -> {

@@ -47,7 +47,7 @@ public class GameViewControler implements Initializable {
 	
 	private int skinPlayer0;
 	
-	private int skinPlayer1=1;
+	private int skinPlayer1=5;
 	
 	private int skinPomme;
 	

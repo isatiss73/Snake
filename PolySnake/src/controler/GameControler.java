@@ -13,6 +13,8 @@ public class GameControler
 {
 	/** id of the first local player (0 if host) */
 	private int leftID;
+	/** id of the second local player( -1 if not, never 0) */
+	private int rightID;
 	/** true if there are two local players */
 	private boolean twoLocal;
 	/** list of guests if you are host, only the host else */
@@ -23,10 +25,26 @@ public class GameControler
 	 * @param leftID id of the first local player (0 if host)
 	 * @param twoLocal true if there are two local players
 	 */
-	public GameControler(int leftID, boolean twoLocal)
+	public GameControler(int leftID, int rightID)
 	{
-		setIDs(leftID, twoLocal);
+		setIDs(leftID, rightID);
 		guests = new ArrayList<GuestProfile>();
+	}
+	
+	/**
+	 * get the left player id
+	 * @return the left player id
+	 */
+	public int getLeftID() {
+		return leftID;
+	}
+	
+	/**
+	 * get if there are two local players
+	 * @return true if there are two local
+	 */
+	public boolean isTwoLocal() {
+		return twoLocal;
 	}
 	
 	/**
@@ -54,12 +72,21 @@ public class GameControler
 	 * @param left ID for the left player >= 0
 	 * @param twoLocal true if there are two local players
 	 */
-	public void setIDs(int left, boolean twoLocal)
+	public void setIDs(int left, int right)
 	{
 		if (left >= 0)
 		{
 			leftID = left;
-			this.twoLocal = twoLocal;
+			if (right > 0)
+			{
+				rightID = right;
+				twoLocal = true;
+			}
+			else
+			{
+				rightID = -1;
+				twoLocal = false;
+			}
 		}
 	}
 	
@@ -177,7 +204,6 @@ public class GameControler
         if (!interesting && twoLocal)
         {
         	interesting = true;
-        	int rightID = leftID + 1;
         	switch(keyText)
             {
             case "Right":

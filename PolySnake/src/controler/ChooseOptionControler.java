@@ -25,6 +25,8 @@ import model.Game;
 
 public class ChooseOptionControler extends Application {
 	public static Game game;
+		
+		private boolean HostORGuest;
 	
 	
 		private int skinMap;
@@ -83,7 +85,10 @@ public class ChooseOptionControler extends Application {
 	    private Slider BoiteTailleSerpent;
 
 	    @FXML
-	    private Button BoutonLancerPartie;
+	    private Button BoutonLancerPartieLAN;
+
+	    @FXML
+	    private Button BoutonLancerPartieLocal;
 	    
 	    @FXML
 	    private Button BoutonRetour;
@@ -120,18 +125,33 @@ public class ChooseOptionControler extends Application {
 	    
 	    @FXML
 	    public void initialize() {
-            try {
+	    	//tell if the player is the host or a guest :
+	    	game = Game.getInstance();	   	
+	    	
+	    	if (game != null) {
+		    	if (game.getControler().getLeftID() == 0) 
+		    		HostORGuest = true;
+		    	else 
+		    		HostORGuest = false;		    	
+	    	}
+	    	
+	    	//Write the IP Adress and Port of the player :
+	    	try {
                 TextIP.setText("IP : " +InetAddress.getLocalHost().getHostAddress());
             } catch (UnknownHostException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            try (ServerSocket serverSocket = new ServerSocket(0)) { // 0 permet au système de choisir un port disponible
-                TextPort.setText("Port : " + serverSocket.getLocalPort());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+	    	
+	    	// Si le client se connecte, on réécris son port plutôt qu'en prendre un nouveau automatiquement
+	    	if (HostORGuest) {
+	            try (ServerSocket serverSocket = new ServerSocket(8001)) { // 0 pour choisir automatiquement un port disponible
+	                TextPort.setText("Port : " + serverSocket.getLocalPort());
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	    	}
+            
             BoiteNbBots.valueProperty().addListener((observable, oldValue, newValue) -> {
                 NbBots=newValue.intValue();
                 ChiffreNbBots.setText(Integer.toString(NbBots));
@@ -141,6 +161,24 @@ public class ChooseOptionControler extends Application {
                 TailleSerpent=newValue.intValue();
                 ChiffreTailleSerpent.setText(Integer.toString(TailleSerpent));
             });
+
+        	
+            if (HostORGuest == false) {
+            	BoiteApparitionPomme.setDisable(true);
+            	BoiteAssiste.setDisable(true);
+            	BoiteChacunPomme.setDisable(true);
+            	BoiteCroissance.setDisable(true);
+            	BoiteEchec.setDisable(true);
+            	BoiteItem.setDisable(true);
+                BoiteMap.setDisable(true);
+            	BoiteMurSpecial.setDisable(true);
+            	BoiteNbBots.setDisable(true);
+            	BoiteRevanche.setDisable(true);
+            	BoiteRuéeOr.setDisable(true);
+            	BoiteTailleSerpent.setDisable(true);
+            	BoutonLancerPartieLAN.setDisable(true);
+            	BoutonLancerPartieLocal.setDisable(true);
+            }
         }
 	    
 	    public void setSkinOptions(int skinMap, int skinPlayer, int skinPomme) {
@@ -201,19 +239,64 @@ public class ChooseOptionControler extends Application {
 	    }
 
 	    @FXML
-	    void clicBoutonLancerPartieAction(ActionEvent event) throws IOException {
-	    	//System.out.println("Bouton Lancer partie !");
+	    void clicBoutonLancerPartieLANAction(ActionEvent event) throws IOException {
 	    	// Initialiser le jeu en premier
 		    game = Game.getInstance();
 		    game.reset(10,10, 2);
+		    
 		    //System.out.println(game.smoothString());
+		    
 		    game.createSnake(0, 2, 2, 2, 1, 0);
 		    game.createSnake(1, 2, 4, 2, 1, 0);
 		    game.getPlayer(0).setSpeed(3);
 		    game.getPlayer(1).setSpeed(3);
+		    game.getControler().setIDs(0, -1);
+		    
 		    //System.out.println(game);
+		    
 		    game.createApple(Cell.A_LENGTH_ONLY);
-		    game.createWall(Cell.A_LENGTH_ONLY);
+		    // game.createWall(Cell.A_LENGTH_ONLY);
+		    
+	    	Thread gameThread = new Thread(new GameRunnable());
+			gameThread.start();
+			
+			FXMLLoader loader = Main.FXLoad("Scene_partie");
+	    	Parent root = loader.load();
+		    
+	    	Scene scene = new Scene(root);
+	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    	
+	    	stage.setScene(scene);
+		    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
+			
+			jeu.setGameRules(skinMap, skinPlayer, skinPomme);
+			
+		    jeu.initializeCanvas(game,stage);
+	    	
+	    	stage.show();
+	    	
+	    }
+	    
+	    
+	    @FXML
+	    void clicBoutonLancerPartieLocalAction(ActionEvent event) throws IOException {
+	    	
+	    	// Initialiser le jeu en premier
+		    game = Game.getInstance();
+		    game.reset(10,10, 2);
+		    
+		    //System.out.println(game.smoothString());
+		    
+		    game.createSnake(0, 2, 2, 2, 1, 0);
+		    game.createSnake(1, 2, 4, 2, 1, 0);
+		    game.getPlayer(0).setSpeed(3);
+		    game.getPlayer(1).setSpeed(3);
+		    game.getControler().setIDs(0, 1);
+		    
+		    //System.out.println(game);
+		    
+		    game.createApple(Cell.A_LENGTH_ONLY);
+		    // game.createWall(Cell.A_LENGTH_ONLY);
 		    
 	    	Thread gameThread = new Thread(new GameRunnable());
 			gameThread.start();
@@ -233,7 +316,6 @@ public class ChooseOptionControler extends Application {
 	    	
 	    	stage.show();
 	    }
-	    
 	    
 
 	    @FXML
