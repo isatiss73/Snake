@@ -31,7 +31,7 @@ public class MainMenuControler {
 	
 	private int MaxSkinPlayer = 7;
 	
-	private int MaxSkinPomme = 4;
+	private int MaxSkinPomme = 5;
 	
 	private String Pseudo;
 	
@@ -91,6 +91,7 @@ public class MainMenuControler {
     @FXML
     void clicBoutonHebergerAction(ActionEvent event) throws IOException {
     	FXMLLoader loader = Main.FXLoad("Scene_Heberger_param");
+        Pseudo = textPseudo.getText();
     	Parent root = loader.load();
 		
     	ChooseOptionControler chooseOptionController = loader.getController();
@@ -108,6 +109,7 @@ public class MainMenuControler {
     @FXML
     void clicBoutonRejoindreAction(ActionEvent event) throws IOException {
     	FXMLLoader loader = Main.FXLoad("Scene_Rejoindre");
+        Pseudo = textPseudo.getText();
     	Parent root = loader.load();
 		
     	Scene scene = new Scene(root);

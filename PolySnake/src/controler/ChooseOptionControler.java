@@ -138,6 +138,7 @@ public class ChooseOptionControler extends Application {
 	    	//Write the IP Adress and Port of the player :
 	    	try {
                 TextIP.setText("IP : " +InetAddress.getLocalHost().getHostAddress());
+                //TextPort.setText(InetAddress.getLocalHost().getHostName());
             } catch (UnknownHostException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -146,6 +147,7 @@ public class ChooseOptionControler extends Application {
 	    	// Si le client se connecte, on réécris son port plutôt qu'en prendre un nouveau automatiquement
 	    	if (HostORGuest) {
 	            try (ServerSocket serverSocket = new ServerSocket(8001)) { // 0 pour choisir automatiquement un port disponible
+
 	                TextPort.setText("Port : " + serverSocket.getLocalPort());
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -294,7 +296,6 @@ public class ChooseOptionControler extends Application {
 		    game.getControler().setIDs(0, 1);
 		    
 		    //System.out.println(game);
-		    
 		    game.createApple(Cell.A_LENGTH_ONLY);
 		    // game.createWall(Cell.A_LENGTH_ONLY);
 		    
