@@ -10,9 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Game;
-import network.TCPClientMessage;
-import network.TCPServerMessage;
-
 
 /**
  * main application class
@@ -20,7 +17,7 @@ import network.TCPServerMessage;
 public class Main extends Application
 {    
 	//public static Game game;
-	public static String scenePath = "scenes/";
+	public static final String scenePath = "scenes/";
 	
 	/**
 	 * create a FXMLLoader without headache
@@ -57,19 +54,13 @@ public class Main extends Application
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		
-		GameControler gameControler = new GameControler(0, -1);
+		GameControler controler = Game.getInstance().getControler();
+		// controler.setIDs(0, true);
+		controler.addGuest("localhost", 8080);
+		scene.setOnKeyReleased(event -> controler.keyReleased(event));
 		
-		scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
-		
-		Game game = Game.getInstance();
-		game.setControler(gameControler);
-		game.reset(8, 8, 1);
-		game.createSnake(0, 2, 1, 3, 1, 0);
-		// game.createSnake(1, 2, 3, 3, 1, 0);
-		
-		// Thread gameThread = new Thread(new GameRunnable());
-		// gameThread.start();
 		stage.setOnCloseRequest(event -> {
+			controler.stopThreads();
 			stage.close();
 		});
 		

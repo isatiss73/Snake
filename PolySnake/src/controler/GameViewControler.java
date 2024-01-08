@@ -18,6 +18,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import main.Main;
 import model.Cell;
 import model.Game;
 
@@ -26,7 +27,7 @@ public class GameViewControler implements Initializable {
 	public static final String mehdiPath = "file:/C:/Users/mehdi/git/Snake/PolySnake/images/";
 	public static final String quentinPath = "file:/home/quentin/git/Snake/PolySnake/images/";
 	public static final String stdPath = "file:/" + System.getProperty("user.dir") + "/images/";
-	public static final String imgPath = mehdiPath;
+	public static final String imgPath = quentinPath;
 	
 	public static Game game;
 	
@@ -132,11 +133,10 @@ public class GameViewControler implements Initializable {
 	        
 	        // Create the Scene
 	        Scene scene = new Scene(root);
-	        gameControler = new GameControler(0, 1);
+	        gameControler = game.getControler();
 	        scene.setOnKeyReleased(event -> gameControler.keyReleased(event));
 	        stage.setScene(scene);
 	        stage.setTitle("Jeu local");
-	        gameControler.startThreads();
 	        stage.show();
 	        shapeMapImage(gc, nbColonnes, skinPlayer0);
 	        startGameLoop();
@@ -463,11 +463,10 @@ public class GameViewControler implements Initializable {
         	
         	gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             root.getChildren().remove(canvas);
-        	gameControler.stopThreads();
             
             try {               
             	// Load the main menu FXML file
-            	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_menu.fxml").toURL());
+            	FXMLLoader loader = Main.FXLoad("Scene_menu");
     	    	Parent menu = loader.load();
                 
     	    	Scene menuScene = new Scene(menu);

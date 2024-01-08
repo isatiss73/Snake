@@ -1,5 +1,7 @@
 package controler;
 
+import java.util.ArrayList;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import model.Game;
@@ -9,27 +11,22 @@ import model.Game;
  */
 public class GameControler
 {
-	protected int leftID = 1;
-	protected int guests;
-	protected boolean twoLocal;
+	/** id of the first local player (0 if host) */
+	private int leftID;
+	/** true if there are two local players */
+	private boolean twoLocal;
+	/** list of guests if you are host, only the host else */
+	ArrayList<GuestProfile> guests;
 	
 	/**
-	 * constructor with one single local player
-	 * @param leftID
+	 * unique constructor
+	 * @param leftID id of the first local player (0 if host)
+	 * @param twoLocal true if there are two local players
 	 */
-	public GameControler(int leftID)
+	public GameControler(int leftID, boolean twoLocal)
 	{
-		this(leftID, -1);
-	}
-	
-	/**
-	 * constructor with two local players
-	 * @param leftID
-	 * @param rightID
-	 */
-	public GameControler(int leftID, int rightID)
-	{
-		setIDs(leftID, rightID);
+		setIDs(leftID, twoLocal);
+		guests = new ArrayList<GuestProfile>();
 	}
 	
 	/**
@@ -37,7 +34,9 @@ public class GameControler
 	 */
 	public void startThreads() 
 	{
-		
+		for (GuestProfile guest : guests) {
+			guest.startThreads();
+		}
 	}
 	
 	/**
@@ -45,7 +44,43 @@ public class GameControler
 	 */
 	public void stopThreads()
 	{
-		
+		for (GuestProfile guest : guests) {
+			guest.stopThreads();
+		}
+	}
+	
+	/**
+	 * change ID for the two local players
+	 * @param left ID for the left player >= 0
+	 * @param twoLocal true if there are two local players
+	 */
+	public void setIDs(int left, boolean twoLocal)
+	{
+		if (left >= 0)
+		{
+			leftID = left;
+			this.twoLocal = twoLocal;
+		}
+	}
+	
+	/**
+	 * add a guest to the list
+	 * @param address device address
+	 * @param port connection port
+	 */
+	public void addGuest(String address, int port)
+	{
+		GuestProfile profile = new GuestProfile(address, port);
+		guests.add(profile);
+		profile.startThreads();
+	}
+	
+	/**
+	 * remove every guest from the list
+	 */
+	public void clearGuests()
+	{
+		guests.clear();
 	}
 	
 	/**
@@ -54,88 +89,58 @@ public class GameControler
 	 */
 	public void sendMessage(String message)
 	{
-		
-	}
-	
-	/**
-	 * change ID for the two local players
-	 * @param left ID for the left player >= 0
-	 * @param right ID for the right player, -1 if no right player
-	 */
-	public void setIDs(int left, int right)
-	{
-		if (left >= 0)
-		{
-			leftID = left;
-			if (right >= 0)
-			{
-				twoLocal = true;
-			}
-			else
-			{
-				twoLocal = false;
-			}
+		for (GuestProfile guest : guests) {
+			guest.sendMessage(message);
 		}
 	}
 	
 	/**
 	 * recieve a message for someone else and interpret it
 	 * @param message the recieved message
-	 * @return true if the message is interesting
 	 */
-	public boolean recieveMessage(String message)
+	public void recieveMessage(String message)
 	{
 		Game game = Game.getInstance();
         boolean interesting = true;
         String[] split = message.split(":");
-        message = split[1];
-        int id = Integer.valueOf(split[0]);
         
-        // left player management
-        switch(message)
+        // inputs management
+        if (split.length > 1)
         {
-        case "D":
-        	game.getPlayer(id).setDirection(1, 0);
-        	break;
-        case "Q":
-        	game.getPlayer(id).setDirection(-1, 0);
-        	break;
-        case "S":
-        	game.getPlayer(id).setDirection(0, 1);
-        	break;
-        case "Z":
-        	game.getPlayer(id).setDirection(0, -1);
-        	break;
-        default:
-        	interesting = false;
-        	break;
+	        message = split[1];
+	        int id = Integer.valueOf(split[0]);
+	        
+	        // left player management
+	        switch(message)
+	        {
+	        case "D":
+	        case "Right":
+	        	game.getPlayer(id).setDirection(1, 0);
+	        	break;
+	        case "Q":
+	        case "Left":
+	        	game.getPlayer(id).setDirection(-1, 0);
+	        	break;
+	        case "S":
+	        case "Down":
+	        	game.getPlayer(id).setDirection(0, 1);
+	        	break;
+	        case "Z":
+	        case "Up":
+	        	game.getPlayer(id).setDirection(0, -1);
+	        	break;
+	        default:
+	        	interesting = false;
+	        	break;
+	        }
+	        
+			if (interesting && leftID == 0)
+				sendMessage(message);
         }
-        // right player management
-        if (!interesting && twoLocal)
+        else
         {
-        	interesting = true;
-        	int rightID = leftID + 1;
-        	switch(message)
-            {
-            case "Right":
-            	game.getPlayer(rightID).setDirection(1, 0);
-            	break;
-            case "Left":
-            	game.getPlayer(rightID).setDirection(-1, 0);
-            	break;
-            case "Down":
-            	game.getPlayer(rightID).setDirection(0, 1);
-            	break;
-            case "Up":
-            	game.getPlayer(rightID).setDirection(0, -1);
-            	break;
-            default:
-            	interesting = false;
-            	break;
-            }
+        	// other messages...
         }
-        
-        return interesting;
 	}
 	
 	/**

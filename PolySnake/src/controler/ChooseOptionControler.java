@@ -19,6 +19,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import main.Main;
 import model.Cell;
 import model.Game;
 
@@ -217,8 +218,7 @@ public class ChooseOptionControler extends Application {
 	    	Thread gameThread = new Thread(new GameRunnable());
 			gameThread.start();
 			
-			FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_partie.fxml").toURL());
-
+			FXMLLoader loader = Main.FXLoad("Scene_partie");
 	    	Parent root = loader.load();
 		    
 	    	Scene scene = new Scene(root);
@@ -238,7 +238,7 @@ public class ChooseOptionControler extends Application {
 
 	    @FXML
 	    void clicBoutonRetourAction(ActionEvent event) throws IOException {
-	    	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_menu.fxml").toURL());
+	    	FXMLLoader loader = Main.FXLoad("Scene_menu");
 	    	Parent root = loader.load();
 			
 	    	Scene scene = new Scene(root);

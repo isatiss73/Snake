@@ -16,6 +16,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import main.Main;
+import model.Game;
 
 public class MainMenuControler {
 
@@ -81,13 +83,14 @@ public class MainMenuControler {
     
     @FXML	
     public void clicBoutonQuitterAction() {
+    	Game.getInstance().getControler().stopThreads();
     	Platform.exit();
     }
 
 
     @FXML
     void clicBoutonHebergerAction(ActionEvent event) throws IOException {
-    	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_Heberger_param.fxml").toURL());
+    	FXMLLoader loader = Main.FXLoad("Scene_Heberger_param");
     	Parent root = loader.load();
 		
     	ChooseOptionControler chooseOptionController = loader.getController();
@@ -104,7 +107,7 @@ public class MainMenuControler {
     
     @FXML
     void clicBoutonRejoindreAction(ActionEvent event) throws IOException {
-    	FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_Rejoindre.fxml").toURL());
+    	FXMLLoader loader = Main.FXLoad("Scene_Rejoindre");
     	Parent root = loader.load();
 		
     	Scene scene = new Scene(root);

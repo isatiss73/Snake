@@ -50,6 +50,7 @@ public class Game
 	 */
 	private Game(int hsize, int vsize, int maxPlayers)
 	{
+		controler = new GameControler(0, false);
 		reset(hsize, vsize, maxPlayers);
 	}
 
@@ -59,7 +60,7 @@ public class Game
 	 */
 	private Game()
 	{
-		reset(DEFAULT_MAP_SIZE, DEFAULT_MAP_SIZE, 1);
+		this(DEFAULT_MAP_SIZE, DEFAULT_MAP_SIZE, 1);
 	}
 	
 	/**
@@ -103,8 +104,6 @@ public class Game
 				map[x][y] = new Cell();
 			}
 		}
-		
-		controler = new GameControler(0, 1);
 	}
 	
 	/**

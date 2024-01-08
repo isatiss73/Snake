@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import main.Main;
 
 public class RejoindreMenuControler {
 	
@@ -56,7 +57,7 @@ public class RejoindreMenuControler {
     
     @FXML	
     public void clicboutonMenuAction(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(new File("scenes/Scene_menu.fxml").toURL());
+        FXMLLoader loader = Main.FXLoad("Scene_menu");
     	Parent root = loader.load();
 		
     	Scene scene = new Scene(root);
