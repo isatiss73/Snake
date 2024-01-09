@@ -54,11 +54,13 @@ public class TCPClientMessage extends TCPClientBuilder implements Runnable {
 		System.out.println("sending : " + message);
 		try
 		{
-			writeMessage(out, message);
-			if (message.equals("exit")) {
-				out.close();
-				socket.close();
-				System.out.println("TCP client closed");
+			if (out != null) {
+				writeMessage(out, message);
+				if (message.equals("exit")) {
+					out.close();
+					socket.close();
+					System.out.println("TCP client closed");
+				}
 			}
 		} 
 		catch (IOException e)

@@ -39,7 +39,7 @@ public class TCPClientBuilder extends TCPMessage {
 	protected void setSocket() throws IOException {
 		isA = new InetSocketAddress(address, port);
 		socket = new Socket(address, port);
-		socket.setSoTimeout(1000);
+		// socket.setSoTimeout(1000);
 		setStreamBuffer(socket.getReceiveBufferSize());
 	}
 }

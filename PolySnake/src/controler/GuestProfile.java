@@ -24,9 +24,9 @@ public class GuestProfile
 	 * @param address address to speak to
 	 * @param port connection port
 	 */
-	public GuestProfile(String address, int port) {
-		server = new TCPServerMessage(address, port);
-		client = new TCPClientMessage(address, port);
+	public GuestProfile(String address, int serverPort, int clientPort) {
+		server = new TCPServerMessage(address, serverPort);
+		client = new TCPClientMessage(address, clientPort);
 	}
 	
 	/**
@@ -35,11 +35,11 @@ public class GuestProfile
 	 * @param port new connection port
 	 * @throws IOException an exception probably
 	 */
-	public void reset(String address, int port) throws IOException {
+	public void reset(String address, int serverPort, int clientPort) throws IOException {
 		serverThread.interrupt();
 		clientThread.interrupt();
-		server.reset(address, port);
-		client.reset(address, port);
+		server.reset(address, serverPort);
+		client.reset(address, clientPort);
 	}
 	
 	/**

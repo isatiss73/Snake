@@ -95,9 +95,9 @@ public class GameControler
 	 * @param address device address
 	 * @param port connection port
 	 */
-	public void addGuest(String address, int port)
+	public void addGuest(String address, int serverPort, int clientPort)
 	{
-		GuestProfile profile = new GuestProfile(address, port);
+		GuestProfile profile = new GuestProfile(address, serverPort, clientPort);
 		guests.add(profile);
 		profile.startThreads();
 	}
