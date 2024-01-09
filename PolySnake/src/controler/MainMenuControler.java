@@ -31,7 +31,7 @@ public class MainMenuControler {
 	
 	private int MaxSkinPlayer = 7;
 	
-	private int MaxSkinPomme = 5;
+	private int MaxSkinPomme = 8;
 	
 	private String Pseudo;
 	
