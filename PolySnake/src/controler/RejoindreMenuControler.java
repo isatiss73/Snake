@@ -21,6 +21,11 @@ import main.Main;
 
 public class RejoindreMenuControler {
 	
+	private int skinMap;
+    private int skinPlayer;
+    private int skinPomme;
+    private String Pseudo;
+	
     @FXML
     private TextField IPaddress;
 
@@ -39,6 +44,13 @@ public class RejoindreMenuControler {
     @FXML
     private Button boutonOK;
 
+    public void setSkins(int skinMap, int skinPlayer, int skinPomme, String Pseudo) {
+    	this.skinMap = skinMap;
+    	this.skinPlayer = skinPlayer;
+    	this.skinPomme = skinPomme;
+    	this.Pseudo = Pseudo;
+    }
+    
     @FXML
     public void initialize() {
     	try {
@@ -59,12 +71,16 @@ public class RejoindreMenuControler {
     public void clicboutonMenuAction(ActionEvent event) throws IOException {
         FXMLLoader loader = Main.FXLoad("Scene_menu");
     	Parent root = loader.load();
-		
+    	
+        MainMenuControler menu = loader.getController();
+        
     	Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
     	
     	stage.setScene(scene);
 
+        menu.setSkins(skinMap, skinPlayer, skinPomme, Pseudo);
+    	
     	stage.show();
     }
     

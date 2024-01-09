@@ -27,7 +27,7 @@ public class GameViewControler implements Initializable {
 	public static final String mehdiPath = "file:/C:/Users/mehdi/git/Snake/PolySnake/images/";
 	public static final String quentinPath = "file:/home/quentin/git/Snake/PolySnake/images/";
 	public static final String stdPath = "file:/" + System.getProperty("user.dir") + "/images/";
-	public static final String imgPath = quentinPath;
+	public static final String imgPath = mehdiPath;
 	
 	public static Game game;
 	
@@ -50,6 +50,8 @@ public class GameViewControler implements Initializable {
 	private int skinPlayer1=5;
 	
 	private int skinPomme;
+	
+	private String Pseudo;
 	
 	public Canvas canvas;
 	
@@ -79,10 +81,11 @@ public class GameViewControler implements Initializable {
 	 * @param skinPlayer id of the player skin
 	 * @param skinPomme id of the apple skin
 	 */
-	public void setGameRules(int skinMap, int skinPlayer, int skinPomme) {
+	public void setGameRules(int skinMap, int skinPlayer, int skinPomme, String Pseudo) {
 		this.skinMap = skinMap;
 		this.skinPlayer0 = skinPlayer;
 		this.skinPomme = skinPomme;
+		this.Pseudo = Pseudo;
 		
 		wallImage = new Image(imgPath + "map" + skinMap + ".png");
 		appleImage = new Image(imgPath + "pomme" + skinPomme + ".png");
@@ -466,13 +469,18 @@ public class GameViewControler implements Initializable {
             
             try {               
             	// Load the main menu FXML file
-            	FXMLLoader loader = Main.FXLoad("Scene_menu");
+            	FXMLLoader loader = Main.FXLoad("Scene_Fin_Partie");
     	    	Parent menu = loader.load();
                 
     	    	Scene menuScene = new Scene(menu);
-    	    
+    	    	
+    	    	
                 stage.setScene(menuScene);
-                stage.setTitle("Main Menu");
+                stage.setTitle("Résultats");
+                
+    	    	EndGameControler results = loader.getController();
+    	    	results.setSkins(skinPlayer0, skinPlayer1, skinMap, skinPomme, skinPlayer0, Pseudo);
+
                 stage.show();
                 
             }
