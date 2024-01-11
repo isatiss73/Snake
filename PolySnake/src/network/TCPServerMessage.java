@@ -1,6 +1,7 @@
 package network;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import controler.GameControler;
 import model.Game;
@@ -12,6 +13,8 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 	
 	private String message;
 	private GameControler gamer;
+	private ArrayList<TCPServerArm> arms;
+	private ArrayList<Thread> threads;
 	
 	/**
 	 * constructor for local test
@@ -34,11 +37,11 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 	public void run() {
 		try
 		{
-			System.out.println("TCP server running on " + address + ':' + port);
+			System.out.println("TCP server head running on " + address + ':' + port);
 			setSocket();
 			while (true) {
 				socket = ss.accept();
-//				new thread(socket); la connexion client
+			//	new thread(socket); la connexion client
 			}
 			// ledit thread à faire :
 			in = socket.getInputStream();
