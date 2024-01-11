@@ -59,7 +59,11 @@ public class GameViewControler implements Initializable {
 	
 	private int skinPlayer0;
 	
-	private int skinPlayer1=4;
+	private int skinPlayer1=2;
+	
+	private int skinPlayer2=3;
+
+	private int skinPlayer3=4;
 	
 	private int skinPomme;
 	
@@ -516,6 +520,14 @@ public class GameViewControler implements Initializable {
             		if (i==1) {
             			ListeSkins.add(skinPlayer1);
             			ListePseudo.add("Joueur 2");
+            		}
+            		if (i==2) {
+            			ListeSkins.add(skinPlayer2);
+            			ListePseudo.add("Joueur 3");
+            		}
+            		if (i==3) {
+            			ListeSkins.add(skinPlayer3);
+            			ListePseudo.add("Joueur 4");
             		}
 
             	}
