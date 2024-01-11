@@ -5,10 +5,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Random;
 
-public class TCPMessage extends TCPBuffer
+public class TCPMessage implements Runnable
 {
 	protected Random random = new Random();
 	protected int count;
+	protected byte[] buffer;
+	private final int size = 8192;
+
+	/** The set method for the buffer. */
+	void setStreamBuffer(int size)
+	{
+		if (size > 0) buffer = new byte[size];
+		else buffer = new byte[this.size];
+	}
 	
 	/**
 	 * the only interesting method for client
@@ -102,5 +111,11 @@ public class TCPMessage extends TCPBuffer
 			if(buffer[i] == 0)
 				return i;
 		return buffer.length;
+	}
+
+	@Override
+	public void run()
+	{
+		// nothing je crois
 	}
 }

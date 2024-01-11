@@ -36,7 +36,11 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 		{
 			System.out.println("TCP server running on " + address + ':' + port);
 			setSocket();
-			socket = ss.accept();
+			while (true) {
+				socket = ss.accept();
+//				new thread(socket); la connexion client
+			}
+			// ledit thread à faire :
 			in = socket.getInputStream();
 			String msIn = "";
 			int nbLoop = 0;

@@ -50,6 +50,7 @@ public class Game
 	 */
 	private Game(int hsize, int vsize, int maxPlayers)
 	{
+		instance = this;
 		controler = new GameControler(0, -1);
 		reset(hsize, vsize, maxPlayers);
 	}
