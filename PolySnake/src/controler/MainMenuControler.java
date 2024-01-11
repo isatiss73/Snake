@@ -86,6 +86,17 @@ public class MainMenuControler {
     	Game.getInstance().getControler().stopThreads();
     	Platform.exit();
     }
+    
+    public void setSkins(int skinMap, int skinPlayer, int skinPomme, String Pseudo) {
+    	this.skinMap = skinMap;
+    	this.skinPlayer = skinPlayer;
+    	this.skinPomme = skinPomme;
+    	this.Pseudo = Pseudo;
+    	ChangeImage(ImageSkinMap, "map", skinMap);
+    	ChangeImage(ImageSkinJoueur, "perso", skinPlayer);
+    	ChangeImage(ImageSkinPomme, "pomme", skinPomme);
+    	textPseudo.setText(Pseudo);
+    }
 
 
     @FXML
@@ -96,7 +107,7 @@ public class MainMenuControler {
 		
     	ChooseOptionControler chooseOptionController = loader.getController();
 
-    	chooseOptionController.setSkinOptions(skinMap, skinPlayer, skinPomme);
+    	chooseOptionController.setSkinOptions(skinMap, skinPlayer, skinPomme, Pseudo);
     	
     	Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -111,11 +122,15 @@ public class MainMenuControler {
     	FXMLLoader loader = Main.FXLoad("Scene_Rejoindre");
         Pseudo = textPseudo.getText();
     	Parent root = loader.load();
-		
+    	
     	Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
     	
     	stage.setScene(scene);
+    	
+    	RejoindreMenuControler rejoindre = loader.getController();
+    	
+    	rejoindre.setSkins(skinMap, skinPlayer, skinPomme, Pseudo);
 
     	stage.show();
     }

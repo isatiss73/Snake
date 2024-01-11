@@ -32,6 +32,7 @@ public class ChooseOptionControler extends Application {
 		private int skinMap;
 	    private int skinPlayer;
 	    private int skinPomme;
+	    private String Pseudo;
 	
 	
 		private int ruleAppPomme=0;
@@ -183,10 +184,11 @@ public class ChooseOptionControler extends Application {
             }
         }
 	    
-	    public void setSkinOptions(int skinMap, int skinPlayer, int skinPomme) {
+	    public void setSkinOptions(int skinMap, int skinPlayer, int skinPomme, String Pseudo) {
 	        this.skinMap = skinMap;
 	        this.skinPlayer = skinPlayer;
 	        this.skinPomme = skinPomme;
+	        this.Pseudo = Pseudo;
 	    }
 	    
 	    
@@ -271,7 +273,11 @@ public class ChooseOptionControler extends Application {
 	    	stage.setScene(scene);
 		    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
 			
-			jeu.setGameRules(skinMap, skinPlayer, skinPomme);
+            if (Pseudo == "") {
+            	Pseudo = "Joueur 1";
+            }
+		    
+			jeu.setGameRules(skinMap, skinPlayer, skinPomme, Pseudo);
 			
 		    jeu.initializeCanvas(game,stage);
 	    	
@@ -297,7 +303,7 @@ public class ChooseOptionControler extends Application {
 		    
 		    //System.out.println(game);
 		    game.createApple(Cell.A_LENGTH_ONLY);
-		    // game.createWall(Cell.A_LENGTH_ONLY);
+		    game.createWall(Cell.A_LENGTH_ONLY);
 		    
 	    	Thread gameThread = new Thread(new GameRunnable());
 			gameThread.start();
@@ -311,7 +317,11 @@ public class ChooseOptionControler extends Application {
 	    	stage.setScene(scene);
 		    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
 			
-			jeu.setGameRules(skinMap, skinPlayer, skinPomme);
+            if (Pseudo == "") {
+            	Pseudo = "Joueur 1";
+            }
+		    
+			jeu.setGameRules(skinMap, skinPlayer, skinPomme, Pseudo);
 			
 		    jeu.initializeCanvas(game,stage);
 	    	
@@ -327,7 +337,11 @@ public class ChooseOptionControler extends Application {
 	    	Scene scene = new Scene(root);
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	    	
+	        MainMenuControler menu = loader.getController();
+	        
 	    	stage.setScene(scene);
+	    	
+	        menu.setSkins(skinMap, skinPlayer, skinPomme, Pseudo);
 
 	    	stage.show();
 	    }

@@ -85,7 +85,7 @@ public class Game
 	{
 		// options
 		options = new int[]{0, 0, 0, 0, 0, 0, 0};
-		optVar = new int[]{0, 0, 0, 0, 3, Cell.A_LENGTH_ONLY, 0};
+		optVar = new int[]{0, 0, 0, 0, 1, Cell.A_LENGTH_ONLY, 0};
 		
 		// creation of tablesy
 		map = new Cell[hsize][vsize];
@@ -400,6 +400,10 @@ public class Game
 		livingApples++;
 	}
 	
+	public void setApple(int detail, int x, int y) {
+		map[x][y].reset(0, 0, Cell.APPLE, detail);
+	}
+	
 	public void setOptions(int[] options)
 	{
 		this.options = options;
@@ -435,6 +439,10 @@ public class Game
 		}
 	}
 	
+	public void setWall(int detail, int x, int y) {
+		map[x][y].reset(0, 0, Cell.WALL, detail);
+	}
+	
 	/**
 	 * set a new controler to the game
 	 * @param newControler the new controler
@@ -459,6 +467,10 @@ public class Game
 	public Snake getPlayer(int who)
 	{
 		return players[who];
+	}
+	
+	public int getNumberOfSnakes() {
+		return players.length;
 	}
 	
 	/**
