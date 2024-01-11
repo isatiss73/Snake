@@ -399,6 +399,10 @@ public class Game
 		livingApples++;
 	}
 	
+	public void setApple(int detail, int x, int y) {
+		map[x][y].reset(0, 0, Cell.APPLE, detail);
+	}
+	
 	public void setOptions(int[] options)
 	{
 		this.options = options;
@@ -432,6 +436,10 @@ public class Game
 				n++;
 			}
 		}
+	}
+	
+	public void setWall(int detail, int x, int y) {
+		map[x][y].reset(0, 0, Cell.WALL, detail);
 	}
 	
 	/**

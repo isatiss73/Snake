@@ -519,7 +519,7 @@ public class GameViewControler implements Initializable {
             		}
             		if (i==1) {
             			ListeSkins.add(skinPlayer1);
-            			ListePseudo.add("Joueur 2");
+            			ListePseudo.add("Sami");
             		}
             		if (i==2) {
             			ListeSkins.add(skinPlayer2);
