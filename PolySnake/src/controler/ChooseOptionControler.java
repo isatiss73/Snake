@@ -299,7 +299,7 @@ public class ChooseOptionControler extends Application {
 		    
 		    //System.out.println(game);
 		    game.createApple(Cell.A_LENGTH_ONLY);
-		    // game.createWall(Cell.A_LENGTH_ONLY);
+		    game.createWall(Cell.A_LENGTH_ONLY);
 		    
 	    	Thread gameThread = new Thread(new GameRunnable());
 			gameThread.start();

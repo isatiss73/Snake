@@ -84,7 +84,7 @@ public class Game
 	{
 		// options
 		options = new int[]{0, 0, 0, 0, 0, 0, 0};
-		optVar = new int[]{0, 0, 0, 0, 3, Cell.A_LENGTH_ONLY, 0};
+		optVar = new int[]{0, 0, 0, 0, 1, Cell.A_LENGTH_ONLY, 0};
 		
 		// creation of tablesy
 		map = new Cell[hsize][vsize];
@@ -458,6 +458,10 @@ public class Game
 	public Snake getPlayer(int who)
 	{
 		return players[who];
+	}
+	
+	public int getNumberOfSnakes() {
+		return players.length;
 	}
 	
 	/**

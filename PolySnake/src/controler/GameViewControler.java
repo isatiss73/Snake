@@ -1,8 +1,10 @@
 package controler;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import javafx.animation.AnimationTimer;
@@ -38,6 +40,16 @@ public class GameViewControler implements Initializable {
 	private GameControler gameControler;
 	
 	private Pane root;
+	
+	private int numberOfSnakes;
+	
+	private ArrayList<Integer> Tailles = new ArrayList<>();
+	
+	private ArrayList<Integer> Podium = new ArrayList<>();
+	
+	private ArrayList<Integer> ListeSkins= new ArrayList<>();
+	
+	private ArrayList<String> ListePseudo= new ArrayList<>();
 			
 	public int nbColonnes = 1;
 	
@@ -47,7 +59,7 @@ public class GameViewControler implements Initializable {
 	
 	private int skinPlayer0;
 	
-	private int skinPlayer1=5;
+	private int skinPlayer1=4;
 	
 	private int skinPomme;
 	
@@ -161,6 +173,8 @@ public class GameViewControler implements Initializable {
 		
 		nbColonnes = game.getMap().length;
 		nbLignes = game.getMap()[0].length;
+		
+		numberOfSnakes = game.getNumberOfSnakes();
    
 		initializeCanvas(game, stage);
 	}
@@ -390,6 +404,27 @@ public class GameViewControler implements Initializable {
         }
     }
     
+    public void setPodium(ArrayList<Integer> Tailles) {
+    	ArrayList<Integer> indicesPlayers = new ArrayList<Integer>();
+    	
+        for (int i = 0; i < Tailles.size(); i++) {
+        	indicesPlayers.add(i);
+        }
+        
+        Collections.sort(indicesPlayers, new Comparator<Integer>() {
+
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				// TODO Auto-generated method stub
+				return Tailles.get(o2).compareTo(Tailles.get(o1));
+			}
+        });
+        
+        Podium.clear();
+        
+        Podium.addAll(indicesPlayers);
+    }
+    
     /**
      * create a rotated version of an image
      * @param playerImage base image
@@ -468,18 +503,40 @@ public class GameViewControler implements Initializable {
             root.getChildren().remove(canvas);
             
             try {               
+            	
+            	System.out.println("T1 : " + game.getPlayer(0).getLength() + "  T2 : " + game.getPlayer(1).getLength());
+            	
+            	for (int i=0; i<numberOfSnakes; i++) {
+            		Tailles.add(game.getPlayer(i).getLength());
+            		
+            		if (i==0) {
+            			ListeSkins.add(skinPlayer0);
+            			ListePseudo.add(Pseudo);
+            		}
+            		if (i==1) {
+            			ListeSkins.add(skinPlayer1);
+            			ListePseudo.add("Joueur 2");
+            		}
+
+            	}
+
+            	setPodium(Tailles);	
+            	
             	// Load the main menu FXML file
             	FXMLLoader loader = Main.FXLoad("Scene_Fin_Partie");
     	    	Parent menu = loader.load();
                 
     	    	Scene menuScene = new Scene(menu);
-    	    	
-    	    	
+    	    	    	    	
                 stage.setScene(menuScene);
                 stage.setTitle("Résultats");
                 
     	    	EndGameControler results = loader.getController();
-    	    	results.setSkins(skinPlayer0, skinPlayer1, skinMap, skinPomme, skinPlayer0, Pseudo);
+    	    	results.setPlayers(ListeSkins, ListePseudo, skinMap, skinPomme, skinPlayer0, Pseudo, Podium);
+    	    	
+    	    	results.setLengths(Tailles, Podium);
+    	    	
+    	    	System.out.println("Podium : " + Podium);
 
                 stage.show();
                 

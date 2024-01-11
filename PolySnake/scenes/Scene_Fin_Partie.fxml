@@ -21,7 +21,7 @@
                <font>
                   <Font size="20.0" />
                </font></Text>
-            <ImageView fx:id="Image_Gagnant" fitHeight="47.0" fitWidth="45.0" layoutX="52.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="Image_Gagnant" fitHeight="47.0" fitWidth="45.0" layoutX="52.0" layoutY="96.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/perso0.png" />
                </image>
@@ -41,6 +41,51 @@
                   <Font size="21.0" />
                </font>
             </Button>
+            <Text layoutX="428.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Taille :" underline="true">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Text fx:id="Text_Taille1er" layoutX="422.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3" textAlignment="CENTER" wrappingWidth="68.120361328125">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Text>
+            <Text fx:id="Text_Taille2eme" layoutX="422.0" layoutY="185.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3" textAlignment="CENTER" wrappingWidth="68.120361328125">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Text>
+            <ImageView fx:id="Image_3eme" fitHeight="47.0" fitWidth="45.0" layoutX="52.0" layoutY="218.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/perso0.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="Image_4eme" fitHeight="47.0" fitWidth="45.0" layoutX="52.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/perso0.png" />
+               </image>
+            </ImageView>
+            <Text fx:id="ID_3eme" layoutX="115.0" layoutY="248.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3ème : Pseudo 3ème" wrappingWidth="306.93670654296875">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Text fx:id="ID_4eme" layoutX="115.0" layoutY="310.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4ème : Pseudo 4ème" wrappingWidth="306.93670654296875">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Text fx:id="Text_Taille3eme" layoutX="422.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3" textAlignment="CENTER" wrappingWidth="68.120361328125">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Text>
+            <Text fx:id="Text_Taille4eme" layoutX="422.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3" textAlignment="CENTER" wrappingWidth="68.120361328125">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
    </children>
