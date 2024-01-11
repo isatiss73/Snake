@@ -273,6 +273,10 @@ public class ChooseOptionControler extends Application {
 	    	stage.setScene(scene);
 		    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
 			
+            if (Pseudo == "") {
+            	Pseudo = "Joueur 1";
+            }
+		    
 			jeu.setGameRules(skinMap, skinPlayer, skinPomme, Pseudo);
 			
 		    jeu.initializeCanvas(game,stage);
@@ -313,6 +317,10 @@ public class ChooseOptionControler extends Application {
 	    	stage.setScene(scene);
 		    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
 			
+            if (Pseudo == "") {
+            	Pseudo = "Joueur 1";
+            }
+		    
 			jeu.setGameRules(skinMap, skinPlayer, skinPomme, Pseudo);
 			
 		    jeu.initializeCanvas(game,stage);
