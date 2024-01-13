@@ -5,19 +5,25 @@ package model;
  */
 public class Cell
 {
+	// cell entity type identifiers
 	public static final int AIR = 0;
 	public static final int WALL = 1;
 	public static final int APPLE = 2;
 	public static final int PLAYER = 3;
 	
+	// apple type identifiers
 	public static final int A_NOTHING = 0;
 	public static final int A_CLASSIC = 1;
 	public static final int A_LENGTH_ONLY = 2;
 	public static final int A_SPEED_ONLY = 3;
 	
+	/** horizontal direction of the entity on the cell */
 	private int xdir;
+	/** vertical direction of the entity on the cell */
 	private int ydir;
+	/** type of entity on the cell */
 	private int entity;
+	/** type of apple/wall or player id */
 	private int detail;
 	
 	/**

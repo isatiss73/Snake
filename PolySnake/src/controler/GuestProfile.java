@@ -6,7 +6,8 @@ import network.TCPClientMessage;
 import network.TCPServerMessage;
 
 /**
- * server and client thread and runnable for a profile
+ * a useless class for when we were noobs with TCP
+ * @deprecated
  */
 public class GuestProfile
 {

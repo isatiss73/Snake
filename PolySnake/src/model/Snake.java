@@ -6,20 +6,35 @@ package model;
  */
 public class Snake
 {
+	/** unique player identifier in the game list */
 	private int playerID;
+	/** snake length */
 	private int length;
+	/** snake speed in cell/second */
 	private float speed;
+	/** time after last snake move in ms */
 	private float time;
+	/** time between two snake moves in ms */
 	private float delay;
+	/** horizontal and vertical direction */
 	private int[] direction;
+	/** current player score */
 	private int score;
+	/** player public name */
 	private String pseudo;
+	/** public snake skin id */
 	private int snakeSkin;
+	/** local map texture id */
 	private int mapSkin;
+	/** local apple texture id */
 	private int appleSkin;
+	/** true if the snake is living */
 	private boolean living;
+	/** it will be useful in the future */
 	private int power;
+	/** snake head position */
 	private int[] head;
+	/** snake tail position */
 	private int[] tail;
 	
 	/**

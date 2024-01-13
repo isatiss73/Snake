@@ -1,11 +1,15 @@
 package network;
 
+/**
+ * a useless class
+ * @deprecated
+ */
 public class TCPBuffer
 {
 	protected byte[] buffer;
 	private final int size = 8192;
 
-	/** The set method for the buffer. */
+	/** The set method for the buffer */
 	void setStreamBuffer(int size)
 	{
 		if (size > 0) buffer = new byte[size];

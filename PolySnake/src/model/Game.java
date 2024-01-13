@@ -27,18 +27,25 @@ public class Game
 	public static final int APPLES_TYPE = 5;
 	/** say if a carcass rest on the map after snake death */
 	public static final int OPT_CARCASS = 6;
-	
+	/** the only game instance */
 	private static Game instance;
-	
+	/** the game controler */
 	private GameControler controler;
-	
+	/** status of every gameplay option */
 	private int[] options;
+	/** variables for gameplay options */
 	private int[] optVar;
+	/** 2D matrix of map cells */
 	private Cell[][] map;
+	/** list of all snakes/players in the game */
 	private Snake[] players;
+	/** current number of living players */
 	private int livingNumber;
+	/** current number of apples on the map */
 	private int livingApples;
+	/** maximum snake speed */
 	private int maxSpeed;
+	/** maximum snake length */
 	private int maxLength;
 	
 	
@@ -277,8 +284,7 @@ public class Game
 	 * @param delta time (ms) elapsed since last update
 	 * @return yes if something has changed
 	 */
-	public boolean evolve(int delta)
-	{
+	public boolean evolve(int delta) {
 		int[] pos = new int[2];
 		int x, y, dx, dy;
 		int effect;
@@ -287,14 +293,12 @@ public class Game
 		boolean changement = false;
 		
 		// we move every alive player p one by one
-		for (int p=0; p<players.length; p++)
-		{
+		for (int p=0; p<players.length; p++) {
 			snake = players[p];
 			if(snake.isLiving()==false) {
 				//killSnake(p);
 			}
-			if (snake.isLiving() && snake.elapseTime(delta))
-			{
+			if (snake.isLiving() && snake.elapseTime(delta)) {
 				changement = true;
 				pos = snake.getHead();
 				x = pos[0];
@@ -303,37 +307,31 @@ public class Game
 				dy = snake.getDirection()[1];
 				map[x][y].setDirection(dx, dy);
 				// we check if the head can reach the target position
-				if (!isAccessible(x + dx, y + dy))
-				{
+				if (!isAccessible(x + dx, y + dy)) {
 					// we kill the snake
 					System.out.println("DEATH OF " + snake.getPseudo());
 
 					// we manage the end game
-					if (killSnake(p) == 0)
-					{
+					if (killSnake(p) == 0) {
 						System.out.println("GAME OVER");
 						//map[x][y].reset(dx, dy, Cell.AIR, 0);
 					}
 				}
 				// if the snake is still living, we move it
-				else
-				{
+				else {
 					// head's movement
-					if (map[x + dx][y + dy].getEntity() == Cell.APPLE)
-					{
+					if (map[x + dx][y + dy].getEntity() == Cell.APPLE) {
 						effect = map[x + dx][y + dy].getDetail();
 						eaten++;
 					}
-					else
-					{
+					else {
 						effect = 0;
 					}
 					map[x + dx][y + dy].reset(dx, dy, Cell.PLAYER, p);
 					snake.replaceHead(x + dx, y + dy);
 					
 					// tail's movement
-					if (!((effect == Cell.A_CLASSIC) || (effect == Cell.A_LENGTH_ONLY)))
-					{
+					if (!((effect == Cell.A_CLASSIC) || (effect == Cell.A_LENGTH_ONLY))) {
 						x = snake.getTail()[0];
 						y = snake.getTail()[1];
 						dx = map[x][y].getxdir();
@@ -341,12 +339,10 @@ public class Game
 						map[x][y].reset();
 						snake.replaceTail(x + dx, y + dy);
 					}
-					else
-					{
+					else {
 						snake.addLength(1);
 					}
-					if ((effect == Cell.A_CLASSIC) || (effect == Cell.A_SPEED_ONLY))
-					{
+					if ((effect == Cell.A_CLASSIC) || (effect == Cell.A_SPEED_ONLY)) {
 						snake.addSpeed(0.2f);
 					}
 				}
@@ -355,19 +351,15 @@ public class Game
 		
 		// apples respawn
 		livingApples -= eaten;
-		if (options[RANDOM_APPLE] == 0)
-		{
+		if (options[RANDOM_APPLE] == 0) {
 			int max = optVar[RANDOM_APPLE] - livingApples;
-			for (int a=0; a<max; a++)
-			{
+			for (int a=0; a<max; a++) {
 				createApple(optVar[APPLES_TYPE]);
 			}
 		}
-		else
-		{
+		else {
 			optVar[RANDOM_APPLE] -= delta;
-			if (optVar[RANDOM_APPLE] <= 0)
-			{
+			if (optVar[RANDOM_APPLE] <= 0) {
 				createApple(optVar[APPLES_TYPE]);
 				optVar[RANDOM_APPLE] += options[RANDOM_APPLE]*(0.5 + Math.random());
 			}
@@ -380,18 +372,15 @@ public class Game
 	 * try to create an apple on the board
 	 * @param detail type of apple
 	 */
-	public void createApple(int detail)
-	{
+	public void createApple(int detail) {
 		boolean created = false;
 		int x, y;
 		int n = 0;
 		Random random = new Random();
-		while ((created == false) && (n < map.length*map.length))
-		{
+		while ((created == false) && (n < map.length*map.length)) {
 			x = random.nextInt(map.length);
 			y = random.nextInt(map[0].length);
-			if (map[x][y].getEntity() == Cell.AIR)
-			{
+			if (map[x][y].getEntity() == Cell.AIR) {
 				map[x][y].reset(0, 0, Cell.APPLE, detail);
 				created = true;
 			}
@@ -400,37 +389,53 @@ public class Game
 		livingApples++;
 	}
 	
+	/**
+	 * force to place an apple on a cell
+	 * @param detail type of apple
+	 * @param x horizontal position on the map
+	 * @param y vertical position on the map
+	 */
 	public void setApple(int detail, int x, int y) {
-		map[x][y].reset(0, 0, Cell.APPLE, detail);
+		if (isAccessible(x, y))
+			map[x][y].reset(0, 0, Cell.APPLE, detail);
 	}
 	
-	public void setOptions(int[] options)
-	{
+	/**
+	 * change gameplay options set
+	 * @param options
+	 */
+	public void setOptions(int[] options) {
 		this.options = options;
 	}
 	
-	public void setOptVar(int[] optVar)
-	{
+	/** change options variables set */
+	public void setOptVar(int[] optVar) {
 		this.optVar = optVar;
 	}
 	
-	public void createWall(int detail)
-	{
+	/** 
+	 * randomly add walls of the map
+	 * @param detail type of wall (no influence today)
+	 */
+	public void createWall(int detail) {
+		// randomly choose a number of walls
 		Random randomwall = new Random();
-		
 		int nbWall = randomwall.nextInt((int)(map.length-4)) + 1;
 		
+		// we add each wall one by one
 		for (int i=0; i<nbWall; i++) {
 			boolean created = false;
 			int x, y;
 			int n = 0;
 			Random random = new Random();
-			while ((created == false) && (n < map.length*map.length))
-			{
+			
+			// we try to add the wall while the cell is not accurate
+			while ((created == false) && (n < map.length*map.length)) {
 				x = random.nextInt(map.length);
 				y = random.nextInt(map[0].length);
-				if (map[x][y].getEntity() == Cell.AIR)
-				{
+				
+				// if the cell is empty, we create the wall
+				if (map[x][y].getEntity() == Cell.AIR) {
 					map[x][y].reset(0, 0, Cell.WALL, detail);
 					created = true;
 				}
@@ -464,11 +469,14 @@ public class Game
 	 * @param who position in the list
 	 * @return the snake object of the player
 	 */
-	public Snake getPlayer(int who)
-	{
+	public Snake getPlayer(int who) {
 		return players[who];
 	}
 	
+	/**
+	 * indicate the total number of snakes in the game
+	 * @return the length of the snakes list
+	 */
 	public int getNumberOfSnakes() {
 		return players.length;
 	}
@@ -477,8 +485,7 @@ public class Game
 	 * get max snakes speed
 	 * @return max snakes speed
 	 */
-	public int getMaxSpeed()
-	{
+	public int getMaxSpeed() {
 		return maxSpeed;
 	}
 	
@@ -486,8 +493,7 @@ public class Game
 	 * get max snakes length
 	 * @return max snakes length
 	 */
-	public int getMaxLength()
-	{
+	public int getMaxLength() {
 		return maxLength;
 	}
 	
@@ -495,8 +501,7 @@ public class Game
 	 * get number of living players
 	 * @return this number
 	 */
-	public int getLivingNumber()
-	{
+	public int getLivingNumber() {
 		return livingNumber;
 	}
 	
@@ -504,8 +509,7 @@ public class Game
 	 * return the map of cells
 	 * @return a 2D cell array
 	 */
-	public Cell[][] getMap()
-	{
+	public Cell[][] getMap() {
 		return map;
 	}
 }

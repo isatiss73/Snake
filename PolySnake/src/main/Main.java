@@ -14,8 +14,7 @@ import model.Game;
 /**
  * main application class
  */
-public class Main extends Application
-{    
+public class Main extends Application {    
 	//public static Game game;
 	public static final String scenePath = "scenes/";
 	
@@ -25,8 +24,7 @@ public class Main extends Application
 	 * @return the beautiful FXMLLoader if you are lucky
 	 * @throws MalformedURLException a huge error if you are unlucky
 	 */
-	public static FXMLLoader FXLoad(String fileName) throws MalformedURLException
-	{
+	public static FXMLLoader FXLoad(String fileName) throws MalformedURLException {
 		String path = scenePath + fileName + ".fxml";
 		return new FXMLLoader(new File(path).toURL());
 	}
@@ -35,8 +33,7 @@ public class Main extends Application
 	 * main application entry point
 	 * @param args program's arguments (nothing special here)
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		launch(args);
 	}
 	
@@ -46,8 +43,7 @@ public class Main extends Application
 	 * @throws Exception we don't really know
 	 */
 	@Override
-	public void start(Stage stage) throws Exception
-	{
+	public void start(Stage stage) throws Exception {
 		stage.setTitle("PolySnake");
 		FXMLLoader loader = FXLoad("Scene_menu");
         Parent root = loader.load();

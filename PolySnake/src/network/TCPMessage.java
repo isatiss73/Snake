@@ -5,11 +5,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Random;
 
+/**
+ * a class to manage messages in input and output streams but without any link with TCP
+ */
 public class TCPMessage implements Runnable
 {
+	/** a randomizer for some methods */
 	protected Random random = new Random();
+	/** I don't if it's actually useful */
 	protected int count;
+	/** it's actually useful */
 	protected byte[] buffer;
+	/** the size of the buffer */
 	private final int size = 8192;
 
 	/** The set method for the buffer. */

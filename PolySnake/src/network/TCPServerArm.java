@@ -6,8 +6,13 @@ import java.net.Socket;
 import controler.GameControler;
 import model.Game;
 
+/**
+ * runnable TCP connector between the host and a single guest
+ */
 public class TCPServerArm extends TCPServerBuilder implements Runnable {
+	/** text message buffer */
 	private String message;
+	/** the game controler */
 	private GameControler gamer;
 	
 	/**
@@ -21,6 +26,10 @@ public class TCPServerArm extends TCPServerBuilder implements Runnable {
 		gamer = Game.getInstance().getControler();
 	}
 	
+	/**
+	 * the thread running method
+	 */
+	@Override
 	public void run() {
 		gamer = Game.getInstance().getControler();
 		System.out.println("TCP server arm running on " + address + ':' + port);

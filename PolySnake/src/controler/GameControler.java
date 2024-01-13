@@ -1,5 +1,6 @@
 package controler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.scene.input.KeyCode;
@@ -13,19 +14,23 @@ import network.TCPServerMessage;
  * the controler of the game
  */
 public class GameControler {
+	/** simply the single game instance */
+	private Game game;
 	/** id of the first local player (0 if host) */
 	private int leftID;
 	/** id of the second local player( -1 if not, never 0) */
 	private int rightID;
 	/** true if there are two local players */
 	private boolean twoLocal;
-	/** list of guests if you are host, only the host else */
-	// ArrayList<GuestProfile> guests;
-	
+	/** true if you are host, false if you are guest */
 	private boolean isHost;
+	/** TCP server manager for host */
 	private TCPServerMessage server;
+	/** TCP client manager for everyone */
 	private TCPClientMessage client;
+	/** TCP ha ba non il faut l'enlever je pense */
 	private TCPMessage tcp;
+	/** qu'est-ce que c'est que cela ? */
 	private Thread thread;
 	
 	/**
@@ -34,10 +39,27 @@ public class GameControler {
 	 * @param twoLocal true if there are two local players
 	 */
 	public GameControler(int leftID, int rightID) {
-		server = new TCPServerMessage();
+		game = Game.getInstance();
+		server = TCPServerMessage.getInstance();
 		client = new TCPClientMessage();
 		setIDs(leftID, rightID);
 		// guests = new ArrayList<GuestProfile>();
+	}
+	
+	/**
+	 * rest TCP client informations
+	 * @param Adresse
+	 * @param port
+	 */
+	public void reset(String Adresse, int port) {
+		try {
+			if(client != null) {
+				client.reset(Adresse, port);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -141,7 +163,6 @@ public class GameControler {
 	 * @param message the recieved message
 	 */
 	public void recieveMessage(String message) {
-		Game game = Game.getInstance();
         boolean interesting = true;
         String[] split = message.split(":");
         
@@ -177,7 +198,6 @@ public class GameControler {
 	public void keyReleased(KeyEvent event) {
 		KeyCode keyCode = event.getCode();
         String keyText = keyCode.getName();
-        Game game = Game.getInstance();
         boolean interesting = true;
         
         // left player management

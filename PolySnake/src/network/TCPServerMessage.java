@@ -1,25 +1,33 @@
 package network;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 
 import controler.GameControler;
 import model.Game;
 
 /**
- * the runnable class to recieve messages with TCP as a server
+ * the runnable class for the server to globally manage TCP
  */
 public class TCPServerMessage extends TCPServerBuilder implements Runnable {
-	
+	/** the single instance */
+	private static TCPServerMessage instance;
+	/** store recieved messages as text */
 	private String message;
+	/** the game controler */
 	private GameControler gamer;
+	/** a connection for every single guest */
 	private ArrayList<TCPServerArm> arms;
+	/** a thread for every single connection */
 	private ArrayList<Thread> threads;
+	/** false where we close the connection */
+	private boolean open;
 	
 	/**
 	 * constructor for local test
 	 */
-	public TCPServerMessage() {
+	private TCPServerMessage() {
 		this("localhost", 8080);
 	}
 	
@@ -28,40 +36,54 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 	 * @param address address of the client
 	 * @param port listening port
 	 */
-	public TCPServerMessage(String address, int port) {
+	private TCPServerMessage(String address, int port) {
 		super(address, port);
 		message = "";
+		open = true;
 		gamer = Game.getInstance().getControler();
 	}
 	
+	/**
+	 * get the single instance
+	 * @return the instance huh
+	 */
+	public static TCPServerMessage getInstance() {
+		if (instance == null)
+			instance = new TCPServerMessage();
+		return instance;
+	}
+	
+	/**
+	 * reset the connection with other informations
+	 * @param address ip address
+	 * @param port listening port
+	 */
+	public void reset(String address, int port) throws IOException {
+		super.reset(address, port);
+	}
+	
+	/**
+	 * the thread running method
+	 */
+	@Override
 	public void run() {
-		try
-		{
+		try {
 			System.out.println("TCP server head running on " + address + ':' + port);
 			setSocket();
-			while (true) {
-				socket = ss.accept();
-			//	new thread(socket); la connexion client
+			
+			// we accept every guest request and add it to the list
+			while (open == true) {
+				Socket socket = ss.accept();
+				TCPServerArm arm = new TCPServerArm(socket);
+				Thread thread = new Thread(arm);
+				arms.add(arm);
+				threads.add(thread);
+				thread.start();
 			}
-			// ledit thread à faire :
-			in = socket.getInputStream();
-			String msIn = "";
-			int nbLoop = 0;
-			long compteur = 0;
-			// do {
-			while (!msIn.equals("exit")) {
-				compteur += count();
-				msIn = readMessage(in);
-				if (msIn != null)
-				{
-					System.out.println(msIn);
-					gamer.recieveMessage(msIn);
-				}
-				else
-					msIn = "";
-				nbLoop++;
-			} // while (in.read() != -1);
-			System.out.println("\nIterations : " + nbLoop + "\nDonnees : " + compteur);
+			System.out.println("TCP server closing request");
+			for (Thread thread : threads) {
+				thread.interrupt();
+			}
 			in.close();
 			socket.close();
 			System.out.println("TCP server closed");
@@ -69,6 +91,13 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 		catch(IOException e) { 
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * try to close every connection
+	 */
+	public void close() {
+		open = false;
 	}
 	
 	/**

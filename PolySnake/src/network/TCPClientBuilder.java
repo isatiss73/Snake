@@ -5,12 +5,15 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+/**
+ * base for TCP client classes
+ */
 public class TCPClientBuilder extends TCPMessage {
-	Socket socket;
-	InetSocketAddress isA;
-	OutputStream out;
-	String address;
-	int port;
+	protected Socket socket;
+	protected InetSocketAddress isA;
+	protected OutputStream out;
+	protected String address;
+	protected int port;
 	
 	TCPClientBuilder() {
 		this("localhost", 8080);
