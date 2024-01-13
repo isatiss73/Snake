@@ -29,9 +29,7 @@ import model.Game;
  */
 public class GameViewControler implements Initializable {
 	
-	// different pathes for images because it works in a strange way
-	public static final String mehdiPath = "file:/C:/Users/mehdi/git/Snake/PolySnake/images/";
-	public static final String quentinPath = "file:/home/quentin/git/Snake/PolySnake/images/";
+	/** path for images */
 	public static String imgPath;
 	
 	private Game game;
