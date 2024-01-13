@@ -41,6 +41,8 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 		message = "";
 		open = true;
 		gamer = Game.getInstance().getControler();
+		arms = new ArrayList<TCPServerArm>();
+		threads = new ArrayList<Thread>();
 	}
 	
 	/**
@@ -91,6 +93,17 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 		catch(IOException e) { 
 			e.printStackTrace();
 		}
+	}
+	
+	public void sendMessage(String text) {
+		message = text;
+		// send the message to every guest
+		for (TCPServerArm arm : arms) {
+			arm.sendMessage(text);
+		}
+		// manage a closing message
+		if (text.equals("exit"))
+			close();
 	}
 	
 	/**

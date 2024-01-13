@@ -47,9 +47,9 @@ public class GameControler {
 	}
 	
 	/**
-	 * rest TCP client informations
-	 * @param Adresse
-	 * @param port
+	 * reset TCP client informations
+	 * @param Adresse omg it's in french
+	 * @param port not Amsterdam
 	 */
 	public void reset(String Adresse, int port) {
 		try {
@@ -57,7 +57,6 @@ public class GameControler {
 				client.reset(Adresse, port);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -155,7 +154,7 @@ public class GameControler {
 		/*for (GuestProfile guest : guests) {
 			guest.sendMessage(message);
 		}*/
-		
+		server.sendMessage(message);
 	}
 	
 	/**

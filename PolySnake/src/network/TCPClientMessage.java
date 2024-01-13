@@ -23,11 +23,14 @@ public class TCPClientMessage extends TCPClientBuilder implements Runnable {
 		super(address, port);
 	}
 	
+	/**
+	 * the thread running method
+	 */
+	@Override
 	public void run() {
 		try {
 			System.out.println("TCP client running on " + address + ':' + port);
 			setSocket();
-			out = socket.getOutputStream();
 			// loopWriteMessage(out, 2000);
 			/*while (!message.equals("exit")) {
 				if (message != "") {

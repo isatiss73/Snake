@@ -24,55 +24,40 @@ import main.Main;
 import model.Cell;
 import model.Game;
 
+/**
+ * the controler of the game view
+ */
 public class GameViewControler implements Initializable {
 	
+	// different pathes for images because it works in a strange way
 	public static final String mehdiPath = "file:/C:/Users/mehdi/git/Snake/PolySnake/images/";
 	public static final String quentinPath = "file:/home/quentin/git/Snake/PolySnake/images/";
-	public static final String stdPath = "file:/" + System.getProperty("user.dir") + "/images/";
-	public static final String imgPath = mehdiPath;
+	public static String imgPath;
 	
-	public static Game game;
-	
-	private Stage stage;
-	
-	private Thread gameThread;
-	
+	private Game game;
 	private GameControler gameControler;
-	
+	private Stage stage;
+	private Thread gameThread;
 	private Pane root;
 	
-	private int numberOfSnakes;
-	
 	private ArrayList<Integer> Tailles = new ArrayList<>();
-	
 	private ArrayList<Integer> Podium = new ArrayList<>();
-	
 	private ArrayList<Integer> ListeSkins= new ArrayList<>();
-	
 	private ArrayList<String> ListePseudo= new ArrayList<>();
-			
-	public int nbColonnes = 1;
-	
-	private int nbLignes = 1;
-	
-	private int skinMap;
-	
-	private int skinPlayer0;
-	
-	private int skinPlayer1=2;
-	
-	private int skinPlayer2=3;
 
-	private int skinPlayer3=4;
-	
+	private int numberOfSnakes;
+	private int nbColonnes = 1;
+	private int nbLignes = 1;
+	private int skinMap;
+	private int skinPlayer0;
+	private int skinPlayer1 = 2;
+	private int skinPlayer2 = 3;
+	private int skinPlayer3 = 4;
 	private int skinPomme;
-	
 	private String Pseudo;
 	
-	public Canvas canvas;
-	
 	private boolean isCanvasInitialized = false;
-	
+	public Canvas canvas;
 	public GraphicsContext gc;
 	public AnimationTimer gameLoop;
 	
@@ -85,10 +70,22 @@ public class GameViewControler implements Initializable {
 	}
 	
 	/**
-	 * seems to be necessary
+	 * the constructor as always
 	 */
 	public GameViewControler() {
-		// nothing
+		setPath();
+	}
+	
+	/**
+	 * set the images path
+	 */
+	public static void setPath() {
+		String dir = System.getProperty("user.dir") + "/images/";
+		imgPath = "file:";
+		// we decide if we add a '/' to the images path in case of the OS
+		if (dir.charAt(0) != '/')
+			imgPath += '/';
+		imgPath += dir;
 	}
 	
 	/**

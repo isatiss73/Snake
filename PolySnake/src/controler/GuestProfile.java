@@ -1,9 +1,10 @@
 package controler;
 
 import java.io.IOException;
+import java.net.Socket;
 
 import network.TCPClientMessage;
-import network.TCPServerMessage;
+import network.TCPServerArm;
 
 /**
  * a useless class for when we were noobs with TCP
@@ -12,7 +13,7 @@ import network.TCPServerMessage;
 public class GuestProfile
 {
 	/** TCP server manager */
-	private TCPServerMessage server;
+	private TCPServerArm server;
 	/** TCP client manager */
 	private TCPClientMessage client;
 	/** thread to recieve data */
@@ -26,7 +27,13 @@ public class GuestProfile
 	 * @param port connection port
 	 */
 	public GuestProfile(String address, int serverPort, int clientPort) {
-		server = new TCPServerMessage(address, serverPort);
+		try
+		{
+			server = new TCPServerArm(new Socket(address, serverPort));
+		} catch (Exception e)
+		{
+			server = null;
+		}
 		client = new TCPClientMessage(address, clientPort);
 	}
 	

@@ -31,7 +31,6 @@ public class TCPServerArm extends TCPServerBuilder implements Runnable {
 	 */
 	@Override
 	public void run() {
-		gamer = Game.getInstance().getControler();
 		System.out.println("TCP server arm running on " + address + ':' + port);
 		
 		try {
@@ -58,9 +57,30 @@ public class TCPServerArm extends TCPServerBuilder implements Runnable {
 			System.out.println("TCP server closed");
 		} 
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+	}
+	
+	/**
+	 * give a message to send to the client
+	 * @param message text to send, 'exit' to stop
+	 */
+	public void sendMessage(String text) {
+		System.out.println("arm sending : " + text);
+		try
+		{
+			if (out != null) {
+				writeMessage(out, text);
+				if (text.equals("exit")) {
+					out.close();
+					socket.close();
+					System.out.println("TCP client closed");
+				}
+			}
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

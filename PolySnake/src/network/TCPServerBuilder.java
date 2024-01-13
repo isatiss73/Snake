@@ -2,6 +2,7 @@ package network;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,11 +15,12 @@ public class TCPServerBuilder extends TCPMessage {
 	protected InetSocketAddress isA;
 	protected ServerSocket ss;
 	protected InputStream in;
+	protected OutputStream out;
 	protected String address;
 	protected int port;
 	
 	/**
-	 * only usefull for testing
+	 * only useful for testing
 	 */
 	TCPServerBuilder() {
 		this("localhost", 8080);
@@ -36,6 +38,7 @@ public class TCPServerBuilder extends TCPMessage {
 		socket = null;
 		isA = null;
 		in = null;
+		out = null;
 	}
 	
 	/**
@@ -58,6 +61,24 @@ public class TCPServerBuilder extends TCPMessage {
 		isA = new InetSocketAddress(address ,port);
 		ss = new ServerSocket(port);
 		socket = new Socket(address, port);
+		in = socket.getInputStream();
+		out = socket.getOutputStream();
 		setStreamBuffer(ss.getReceiveBufferSize());
+	}
+	
+	/**
+	 * get the connection ip address
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+	
+	/**
+	 * get the connection port
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
 	}
 }

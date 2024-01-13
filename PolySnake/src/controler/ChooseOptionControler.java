@@ -1,9 +1,7 @@
 package controler;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.UnknownHostException;
 
 import javafx.application.Application;
@@ -13,7 +11,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
@@ -22,18 +23,20 @@ import javafx.stage.Stage;
 import main.Main;
 import model.Cell;
 import model.Game;
+import network.TCPServerMessage;
 
+/**
+ * controler of the options selection view
+ */
 public class ChooseOptionControler extends Application {
-	public static Game game;
 		
+		private Game game;
 		private boolean HostORGuest;
-	
 	
 		private int skinMap;
 	    private int skinPlayer;
 	    private int skinPomme;
 	    private String Pseudo;
-	
 	
 		private int ruleAppPomme=0;
 		private int ruleAssiste=0;
@@ -45,7 +48,6 @@ public class ChooseOptionControler extends Application {
 		private int ruleMurSpec=0;
 		private int ruleRevanche=0;
 		private int ruleRueeOr=0;
-
 		private int NbBots=0;
 		private int TailleSerpent=2;
 		
@@ -141,18 +143,12 @@ public class ChooseOptionControler extends Application {
                 TextIP.setText("IP : " +InetAddress.getLocalHost().getHostAddress());
                 //TextPort.setText(InetAddress.getLocalHost().getHostName());
             } catch (UnknownHostException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 	    	
-	    	// Si le client se connecte, on réécris son port plutôt qu'en prendre un nouveau automatiquement
+	    	// Si le client se connecte, on reecrit son port plutot qu'en prendre un nouveau automatiquement
 	    	if (HostORGuest) {
-	            try (ServerSocket serverSocket = new ServerSocket(8001)) { // 0 pour choisir automatiquement un port disponible
-
-	                TextPort.setText("Port : " + serverSocket.getLocalPort());
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
+	            TextPort.setText("Port : " + TCPServerMessage.getInstance().getPort());
 	    	}
             
             BoiteNbBots.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -243,113 +239,131 @@ public class ChooseOptionControler extends Application {
 	    }
 
 	    @FXML
-	    void clicBoutonLancerPartieLANAction(ActionEvent event) throws IOException {
-	    	// Initialiser le jeu en premier
-		    game = Game.getInstance();
-		    game.reset(10,10, 2);
-		    
-		    //System.out.println(game.smoothString());
-		    
-		    game.createSnake(0, 2, 2, 2, 1, 0);
-		    game.createSnake(1, 2, 4, 2, 1, 0);
-		    game.getPlayer(0).setSpeed(3);
-		    game.getPlayer(1).setSpeed(3);
-		    game.getControler().setIDs(0, -1);
-		    
-		    //System.out.println(game);
-		    
-		    game.createApple(Cell.A_LENGTH_ONLY);
-		    game.createWall(Cell.A_LENGTH_ONLY);
-		    
-	    	Thread gameThread = new Thread(new GameRunnable());
-			gameThread.start();
-			
-			FXMLLoader loader = Main.FXLoad("Scene_partie");
-	    	Parent root = loader.load();
-		    
-	    	Scene scene = new Scene(root);
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	    	
-	    	stage.setScene(scene);
-		    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
-			
-            if (Pseudo == "") {
-            	Pseudo = "Joueur 1";
-            }
-		    
-			jeu.setGameRules(skinMap, skinPlayer, skinPomme, Pseudo);
-			
-		    jeu.initializeCanvas(game,stage);
-	    	
-	    	stage.show();
-	    	
+	    void clicBoutonLancerPartieLANAction(ActionEvent event) {
+	    	try {
+		    	// Initialiser le jeu en premier
+			    game = Game.getInstance();
+			    game.reset(10,10, 2);
+			    
+			    //System.out.println(game.smoothString());
+			    
+			    game.createSnake(0, 2, 2, 2, 1, 0);
+			    game.createSnake(1, 2, 4, 2, 1, 0);
+			    game.getPlayer(0).setSpeed(3);
+			    game.getPlayer(1).setSpeed(3);
+			    game.getControler().setIDs(0, -1);
+			    
+			    //System.out.println(game);
+			    
+			    game.createApple(Cell.A_LENGTH_ONLY);
+			    game.createWall(Cell.A_LENGTH_ONLY);
+			    
+		    	Thread gameThread = new Thread(new GameRunnable());
+				gameThread.start();
+				
+				FXMLLoader loader = Main.FXLoad("Scene_partie");
+		    	Parent root = loader.load();
+			    
+		    	Scene scene = new Scene(root);
+		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		    	
+		    	stage.setScene(scene);
+			    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
+				
+	            if (Pseudo == "") {
+	            	Pseudo = "Joueur 1";
+	            }
+			    
+				jeu.setGameRules(skinMap, skinPlayer, skinPomme, Pseudo);
+				
+			    jeu.initializeCanvas(game,stage);
+		    	
+		    	stage.show();
+	    	}
+	    	catch (IOException e) {
+	    		System.out.println(e.getMessage());
+	    		Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
+	    		alert.showAndWait();
+	    	}
 	    }
 	    
 	    
 	    @FXML
-	    void clicBoutonLancerPartieLocalAction(ActionEvent event) throws IOException {
-	    	
-	    	// Initialiser le jeu en premier
-		    game = Game.getInstance();
-		    game.reset(10,10, 2);
-		    
-		    //System.out.println(game.smoothString());
-		    
-		    game.createSnake(0, 2, 2, 2, 1, 0);
-		    game.createSnake(1, 2, 4, 2, 1, 0);
-		    game.getPlayer(0).setSpeed(3);
-		    game.getPlayer(1).setSpeed(3);
-		    game.getControler().setIDs(0, 1);
-		    
-		    //System.out.println(game);
-		    game.createApple(Cell.A_LENGTH_ONLY);
-		    game.createWall(Cell.A_LENGTH_ONLY);
-		    
-	    	Thread gameThread = new Thread(new GameRunnable());
-			gameThread.start();
-			
-			FXMLLoader loader = Main.FXLoad("Scene_partie");
-	    	Parent root = loader.load();
-		    
-	    	Scene scene = new Scene(root);
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	    	
-	    	stage.setScene(scene);
-		    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
-			
-            if (Pseudo == "") {
-            	Pseudo = "Joueur 1";
-            }
-		    
-			jeu.setGameRules(skinMap, skinPlayer, skinPomme, Pseudo);
-			
-		    jeu.initializeCanvas(game,stage);
-	    	
-	    	stage.show();
+	    void clicBoutonLancerPartieLocalAction(ActionEvent event) {
+	    	try {
+		    	// Initialiser le jeu en premier
+			    game = Game.getInstance();
+			    game.reset(10,10, 2);
+			    
+			    //System.out.println(game.smoothString());
+			    
+			    game.createSnake(0, 2, 2, 2, 1, 0);
+			    game.createSnake(1, 2, 4, 2, 1, 0);
+			    game.getPlayer(0).setSpeed(3);
+			    game.getPlayer(1).setSpeed(3);
+			    game.getControler().setIDs(0, 1);
+			    
+			    //System.out.println(game);
+			    game.createApple(Cell.A_LENGTH_ONLY);
+			    game.createWall(Cell.A_LENGTH_ONLY);
+			    
+		    	Thread gameThread = new Thread(new GameRunnable());
+				gameThread.start();
+				
+				FXMLLoader loader = Main.FXLoad("Scene_partie");
+		    	Parent root = loader.load();
+			    
+		    	Scene scene = new Scene(root);
+		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		    	
+		    	stage.setScene(scene);
+			    GameViewControler jeu = new GameViewControler(game, stage, gameThread);
+				
+	            if (Pseudo == "") {
+	            	Pseudo = "Joueur 1";
+	            }
+			    
+				jeu.setGameRules(skinMap, skinPlayer, skinPomme, Pseudo);
+				
+			    jeu.initializeCanvas(game,stage);
+		    	
+		    	stage.show();
+	    	}
+	    	catch (IOException e) {
+	    		System.out.println(e.getMessage());
+	    		Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
+	    		alert.showAndWait();
+	    	}
 	    }
 	    
 
 	    @FXML
-	    void clicBoutonRetourAction(ActionEvent event) throws IOException {
-	    	FXMLLoader loader = Main.FXLoad("Scene_menu");
-	    	Parent root = loader.load();
-			
-	    	Scene scene = new Scene(root);
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	    	
-	        MainMenuControler menu = loader.getController();
-	        
-	    	stage.setScene(scene);
-	    	
-	        menu.setSkins(skinMap, skinPlayer, skinPomme, Pseudo);
-
-	    	stage.show();
+	    void clicBoutonRetourAction(ActionEvent event) {
+	    	try {
+		    	FXMLLoader loader = Main.FXLoad("Scene_menu");
+		    	Parent root = loader.load();
+				
+		    	Scene scene = new Scene(root);
+		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		    	
+		        MainMenuControler menu = loader.getController();
+		        
+		    	stage.setScene(scene);
+		    	
+		        menu.setSkins(skinMap, skinPlayer, skinPomme, Pseudo);
+	
+		    	stage.show();
+	    	}
+	    	catch (IOException e) {
+	    		System.out.println(e.getMessage());
+	    		Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
+	    		alert.showAndWait();
+	    	}
 	    }
 
 
 		@Override
 		public void start(Stage arg0) throws Exception {
-			// TODO Auto-generated method stub
 			
 		}
     
