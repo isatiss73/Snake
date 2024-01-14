@@ -40,8 +40,8 @@ public class GameViewControler implements Initializable {
 	
 	private ArrayList<Integer> Tailles = new ArrayList<>();
 	private ArrayList<Integer> Podium = new ArrayList<>();
-	private ArrayList<Integer> ListeSkins= new ArrayList<>();
-	private ArrayList<String> ListePseudo= new ArrayList<>();
+	private ArrayList<Integer> ListeSkins = new ArrayList<>();
+	private ArrayList<String> ListePseudo = new ArrayList<>();
 
 	private int numberOfSnakes;
 	private int nbColonnes = 1;
@@ -80,7 +80,7 @@ public class GameViewControler implements Initializable {
 	public static void setPath() {
 		String dir = System.getProperty("user.dir") + "/images/";
 		imgPath = "file:";
-		// we decide if we add a '/' to the images path in case of the OS
+		// we decide if we add a '/' to the images path depending on the OS
 		if (dir.charAt(0) != '/')
 			imgPath += '/';
 		imgPath += dir;
@@ -189,18 +189,17 @@ public class GameViewControler implements Initializable {
 		if (game != null && game.getMap() != null) {
 			int mapWidth = game.getMap().length;
 	        int mapHeight = game.getMap()[0].length;
+	        int snakes = game.getNumberOfSnakes();
 			
 	        // we cross the map to draw each cell one by one
 		    for (int x = 0; x < mapWidth; x++) {
 		        for (int y = 0; y < mapHeight; y++) {
 		        	if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight) {
-		        		if (game.getPlayer(0).isLiving() == true && game.getPlayer(0).getTail()[0] == x && game.getPlayer(0).getTail()[1] == y){
-	                        drawPlayerImage(game, gc, x, y, 0);
-			            }
-			        	
-			            if (game.getPlayer(1).isLiving() == true && game.getPlayer(1).getTail()[0] == x && game.getPlayer(1).getTail()[1] == y){
-	                        drawPlayerImage(game, gc, x, y, 1);
-			            }
+		        		for (int i=0; i<snakes; i++) {
+			        		if (game.getPlayer(i).isLiving() == true && game.getPlayer(i).getTail()[0] == x && game.getPlayer(i).getTail()[1] == y){
+		                        drawPlayerImage(game, gc, x, y, i);
+				            }
+		        		}
 			            if (game.getMap()[x][y].getEntity() == Cell.WALL){
 			            	drawFloorImage(gc, x, y);
 	                        drawWallImage(gc, x, y);
@@ -503,9 +502,8 @@ public class GameViewControler implements Initializable {
             
             try {               
             	
-            	System.out.println("T1 : " + game.getPlayer(0).getLength() + "  T2 : " + game.getPlayer(1).getLength());
-            	
             	for (int i=0; i<numberOfSnakes; i++) {
+            		System.out.println("T" + i + " : " + game.getPlayer(i).getLength());
             		Tailles.add(game.getPlayer(i).getLength());
             		
             		if (i==0) {
@@ -514,7 +512,7 @@ public class GameViewControler implements Initializable {
             		}
             		if (i==1) {
             			ListeSkins.add(skinPlayer1);
-            			ListePseudo.add("Sami");
+            			ListePseudo.add("Joueur 2");
             		}
             		if (i==2) {
             			ListeSkins.add(skinPlayer2);

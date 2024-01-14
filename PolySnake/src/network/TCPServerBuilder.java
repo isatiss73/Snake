@@ -3,6 +3,7 @@ package network;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,6 +25,7 @@ public class TCPServerBuilder extends TCPMessage {
 	 */
 	TCPServerBuilder() {
 		this("localhost", 8080);
+		System.out.println("TCPServerBuilder default constructor");
 	}
 	
 	/**
@@ -32,25 +34,39 @@ public class TCPServerBuilder extends TCPMessage {
 	 * @param port listening port
 	 */
 	TCPServerBuilder(String address, int port) {
-		this.address = address;
-		this.port = port;
-		ss = null;
-		socket = null;
-		isA = null;
-		in = null;
-		out = null;
+		super();
+		try
+		{
+			reset(address, port);
+		} catch (IOException e)
+		{
+			System.out.println("j'espere que tout va bien pour toi");
+		}
 	}
 	
 	/**
 	 * reset the address and port then update the socket connection
 	 * @param newAddress new address
 	 * @param newPort new port
+	 * @return true if it is successfull
 	 * @throws IOException error with the socket
 	 */
-	public void reset(String newAddress, int newPort) throws IOException {
-		address = newAddress;
-		port = newPort;
-		setSocket();
+	public boolean reset(String newAddress, int newPort) throws IOException {
+		if (available(newPort)) {
+			address = newAddress;
+			port = newPort;
+			if (in != null)
+				in.close();
+			if (out != null)
+				out.close();
+			if (ss != null)
+				ss.close();
+			if (socket != null)
+				socket.close();
+			System.out.println("TCP server reset on " + address + ':' + port);
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -58,12 +74,44 @@ public class TCPServerBuilder extends TCPMessage {
 	 * @throws IOException probably something terrible
 	 */
 	protected void setSocket() throws IOException {
+		System.out.println("TCP socket setting on " + address + ':' + port);
 		isA = new InetSocketAddress(address ,port);
 		ss = new ServerSocket(port);
 		socket = new Socket(address, port);
 		in = socket.getInputStream();
 		out = socket.getOutputStream();
 		setStreamBuffer(ss.getReceiveBufferSize());
+	}
+	
+	/**
+	 * get the availability of a TCP port
+	 * @param port port you are interested in
+	 * @return true if the port is available
+	 */
+	public static boolean available(int port) {
+
+	    ServerSocket ss = null;
+	    DatagramSocket ds = null;
+	    try {
+	        ss = new ServerSocket(port);
+	        ss.setReuseAddress(true);
+	        ds = new DatagramSocket(port);
+	        ds.setReuseAddress(true);
+	        return true;
+	    } catch (IOException e) {
+	    } finally {
+	        if (ds != null)
+	        	ds.close();
+
+	        if (ss != null) {
+	            try {
+	                ss.close();
+	            } catch (IOException e) {
+	            }
+	        }
+	    }
+
+	    return false;
 	}
 	
 	/**

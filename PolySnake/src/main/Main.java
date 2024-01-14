@@ -1,6 +1,7 @@
 package main;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 import controler.GameControler;
@@ -10,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Game;
+import network.TCPServerMessage;
 
 /**
  * main application class
@@ -40,20 +42,27 @@ public class Main extends Application {
 	/**
 	 * standard application start method
 	 * @param stage application stage
-	 * @throws Exception we don't really know
+	 * @throws IOException error on fxml load or server reset
 	 */
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(Stage stage) throws IOException {
 		stage.setTitle("PolySnake");
 		FXMLLoader loader = FXLoad("Scene_menu");
         Parent root = loader.load();
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		
+		// the controler tries to get a port
+		TCPServerMessage server = TCPServerMessage.getInstance();
+		int port = 12000;
+		while (!server.reset(server.getAddress(), port) && port < 13000)
+			port++;
+		if (port >= 13000)
+			throw new IOException();
+		System.out.println(server.getPort());
+		
 		GameControler controler = Game.getInstance().getControler();
-		// controler.addGuest("192.168.13.228", 9001, 9002);
-		// controler.addGuest("localhost", 8080, 8080);
-		// controler.startThreads();
+		controler.startThread();
 		scene.setOnKeyReleased(event -> controler.keyReleased(event));
 		
 		stage.setOnCloseRequest(event -> {

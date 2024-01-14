@@ -29,6 +29,7 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 	 */
 	private TCPServerMessage() {
 		this("localhost", 8080);
+		System.out.println("TCPServerMessage default constructor");
 	}
 	
 	/**
@@ -43,6 +44,7 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 		gamer = Game.getInstance().getControler();
 		arms = new ArrayList<TCPServerArm>();
 		threads = new ArrayList<Thread>();
+		System.out.println("ananas " + address + ':' + port);
 	}
 	
 	/**
@@ -56,31 +58,25 @@ public class TCPServerMessage extends TCPServerBuilder implements Runnable {
 	}
 	
 	/**
-	 * reset the connection with other informations
-	 * @param address ip address
-	 * @param port listening port
-	 */
-	public void reset(String address, int port) throws IOException {
-		super.reset(address, port);
-	}
-	
-	/**
 	 * the thread running method
 	 */
 	@Override
 	public void run() {
 		try {
-			System.out.println("TCP server head running on " + address + ':' + port);
+			System.out.println("server head trying on " + address + ':' + port);
 			setSocket();
+			System.out.println("server head running on " + address + ':' + port);
 			
 			// we accept every guest request and add it to the list
 			while (open == true) {
-				Socket socket = ss.accept();
-				TCPServerArm arm = new TCPServerArm(socket);
-				Thread thread = new Thread(arm);
-				arms.add(arm);
-				threads.add(thread);
-				thread.start();
+				if (ss != null) {
+					Socket socket = ss.accept();
+					TCPServerArm arm = new TCPServerArm(socket);
+					Thread thread = new Thread(arm);
+					arms.add(arm);
+					threads.add(thread);
+					thread.start();
+				}
 			}
 			System.out.println("TCP server closing request");
 			for (Thread thread : threads) {

@@ -243,15 +243,14 @@ public class ChooseOptionControler extends Application {
 	    	try {
 		    	// Initialiser le jeu en premier
 			    game = Game.getInstance();
-			    game.reset(10,10, 2);
+			    game.reset(10, 10);
 			    
 			    //System.out.println(game.smoothString());
 			    
-			    game.createSnake(0, 2, 2, 2, 1, 0);
-			    game.createSnake(1, 2, 4, 2, 1, 0);
+			    game.createSnake(2, 2, 2, 1, 0);
 			    game.getPlayer(0).setSpeed(3);
-			    game.getPlayer(1).setSpeed(3);
 			    game.getControler().setIDs(0, -1);
+			    game.getControler().setRunning(true);
 			    
 			    //System.out.println(game);
 			    
@@ -293,15 +292,16 @@ public class ChooseOptionControler extends Application {
 	    	try {
 		    	// Initialiser le jeu en premier
 			    game = Game.getInstance();
-			    game.reset(10,10, 2);
+			    game.reset(10, 10);
 			    
 			    //System.out.println(game.smoothString());
 			    
-			    game.createSnake(0, 2, 2, 2, 1, 0);
-			    game.createSnake(1, 2, 4, 2, 1, 0);
+			    game.createSnake(2, 2, 2, 1, 0);
+			    game.createSnake(2, 4, 2, 1, 0);
 			    game.getPlayer(0).setSpeed(3);
 			    game.getPlayer(1).setSpeed(3);
 			    game.getControler().setIDs(0, 1);
+			    game.getControler().setRunning(true);
 			    
 			    //System.out.println(game);
 			    game.createApple(Cell.A_LENGTH_ONLY);

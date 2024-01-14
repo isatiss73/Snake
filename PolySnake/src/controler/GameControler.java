@@ -1,13 +1,12 @@
 package controler;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import model.Game;
-import network.TCPClientMessage;
 import network.TCPMessage;
+import network.TCPClientMessage;
 import network.TCPServerMessage;
 
 /**
@@ -24,6 +23,8 @@ public class GameControler {
 	private boolean twoLocal;
 	/** true if you are host, false if you are guest */
 	private boolean isHost;
+	/** true is the game is running */
+	private boolean running;
 	/** TCP server manager for host */
 	private TCPServerMessage server;
 	/** TCP client manager for everyone */
@@ -43,7 +44,7 @@ public class GameControler {
 		server = TCPServerMessage.getInstance();
 		client = new TCPClientMessage();
 		setIDs(leftID, rightID);
-		// guests = new ArrayList<GuestProfile>();
+		running = false;
 	}
 	
 	/**
@@ -78,25 +79,47 @@ public class GameControler {
 	}
 	
 	/**
-	 * create threads and start them
+	 * get if you are the host or a guest
+	 * @return true if you are the host
 	 */
-	public void startThreads() {
-		/*for (GuestProfile guest : guests) {
-			guest.startThreads();
-		}*/
+	public boolean isHost() {
+		return isHost;
+	}
+	
+	/**
+	 * get if the game is running or not
+	 * @return true if the game is running
+	 */
+	public boolean isRunning() {
+		return running;
+	}
+	
+	/**
+	 * say if the game is running or not
+	 * @param value true or false you know
+	 */
+	public void setRunning(boolean value) {
+		running = value;
+	}
+	
+	/**
+	 * create the TCP thread and start it
+	 */
+	public void startThread() {
+		if (thread != null)
+			thread.interrupt();
 		thread = new Thread(tcp);
 		thread.start();
 	}
 	
 	/**
-	 * stop the threads bro
+	 * stop the threads as you can read
 	 */
 	public void stopThreads() {
-		/*for (GuestProfile guest : guests) {
-			guest.stopThreads();
-		}*/
 		if (thread != null)
 			thread.interrupt();
+		if (server != null)
+			server.close();
 	}
 	
 	/**
@@ -126,35 +149,16 @@ public class GameControler {
 	}
 	
 	/**
-	 * add a guest to the list
-	 * @param address device address
-	 * @param port connection port
-	 */
-	/*public void addGuest(String address, int serverPort, int clientPort)
-	{
-		GuestProfile profile = new GuestProfile(address, serverPort, clientPort);
-		guests.add(profile);
-		profile.startThreads();
-	}*/
-	
-	/**
-	 * remove every guest from the list
-	 */
-	/*public void clearGuests()
-	{
-		// guests.clear();
-	}*/
-	
-	/**
 	 * send a message to every connected device
 	 * @param message text message to send
 	 */
 	public void sendMessage(String message)
 	{
-		/*for (GuestProfile guest : guests) {
-			guest.sendMessage(message);
-		}*/
-		server.sendMessage(message);
+		System.out.println("Controler sending : " + message);
+		if (isHost)
+			server.sendMessage(message);
+		else
+			client.sendMessage(message);
 	}
 	
 	/**
@@ -199,45 +203,51 @@ public class GameControler {
         String keyText = keyCode.getName();
         boolean interesting = true;
         
-        // left player management
-        switch(keyText) {
-        case "D":
-        	game.getPlayer(leftID).setDirection(1, 0);
-        	break;
-        case "Q":
-        	game.getPlayer(leftID).setDirection(-1, 0);
-        	break;
-        case "S":
-        	game.getPlayer(leftID).setDirection(0, 1);
-        	break;
-        case "Z":
-        	game.getPlayer(leftID).setDirection(0, -1);
-        	break;
-        default:
+        // listen game commands only when it's running
+        if (running) {
+	        // left player management
+	        switch(keyText) {
+	        case "D":
+	        	game.getPlayer(leftID).setDirection(1, 0);
+	        	break;
+	        case "Q":
+	        	game.getPlayer(leftID).setDirection(-1, 0);
+	        	break;
+	        case "S":
+	        	game.getPlayer(leftID).setDirection(0, 1);
+	        	break;
+	        case "Z":
+	        	game.getPlayer(leftID).setDirection(0, -1);
+	        	break;
+	        default:
+	        	interesting = false;
+	        	break;
+	        }
+	        // right player management
+	        if (!interesting && twoLocal) {
+	        	interesting = true;
+	        	switch(keyText) {
+	            case "Right":
+	            	game.getPlayer(rightID).setDirection(1, 0);
+	            	break;
+	            case "Left":
+	            	game.getPlayer(rightID).setDirection(-1, 0);
+	            	break;
+	            case "Down":
+	            	game.getPlayer(rightID).setDirection(0, 1);
+	            	break;
+	            case "Up":
+	            	game.getPlayer(rightID).setDirection(0, -1);
+	            	break;
+	            default:
+	            	interesting = false;
+	            	break;
+	            }
+	        }
+        }
+        else
         	interesting = false;
-        	break;
-        }
-        // right player management
-        if (!interesting && twoLocal) {
-        	interesting = true;
-        	switch(keyText) {
-            case "Right":
-            	game.getPlayer(rightID).setDirection(1, 0);
-            	break;
-            case "Left":
-            	game.getPlayer(rightID).setDirection(-1, 0);
-            	break;
-            case "Down":
-            	game.getPlayer(rightID).setDirection(0, 1);
-            	break;
-            case "Up":
-            	game.getPlayer(rightID).setDirection(0, -1);
-            	break;
-            default:
-            	interesting = false;
-            	break;
-            }
-        }
+        
         // we send the key text to the server
         if (interesting) {
         	System.out.println("interesting : " + keyText);

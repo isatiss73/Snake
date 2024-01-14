@@ -31,11 +31,9 @@ public class TCPServerArm extends TCPServerBuilder implements Runnable {
 	 */
 	@Override
 	public void run() {
-		System.out.println("TCP server arm running on " + address + ':' + port);
 		
 		try {
-			setSocket();
-			in = socket.getInputStream();
+			System.out.println("TCP server arm running on " + address + ':' + port);
 			String msIn = "";
 			int nbLoop = 0;
 			long compteur = 0;

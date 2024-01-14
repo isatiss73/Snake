@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import controler.GameControler;
@@ -38,7 +39,7 @@ public class Game
 	/** 2D matrix of map cells */
 	private Cell[][] map;
 	/** list of all snakes/players in the game */
-	private Snake[] players;
+	private ArrayList<Snake> players;
 	/** current number of living players */
 	private int livingNumber;
 	/** current number of apples on the map */
@@ -53,13 +54,12 @@ public class Game
 	 * complete constructor
 	 * @param hsize horizontal map size
 	 * @param vsize vertical map size
-	 * @param maxPlayers maximum players number
 	 */
-	private Game(int hsize, int vsize, int maxPlayers)
+	private Game(int hsize, int vsize)
 	{
 		instance = this;
 		controler = new GameControler(0, -1);
-		reset(hsize, vsize, maxPlayers);
+		reset(hsize, vsize);
 	}
 
 	
@@ -68,7 +68,7 @@ public class Game
 	 */
 	private Game()
 	{
-		this(DEFAULT_MAP_SIZE, DEFAULT_MAP_SIZE, 1);
+		this(DEFAULT_MAP_SIZE, DEFAULT_MAP_SIZE);
 	}
 	
 	/**
@@ -86,9 +86,8 @@ public class Game
 	 * complete reconstructor
 	 * @param hsize horizontal map size
 	 * @param vsize vertical map size
-	 * @param maxPlayers maximum players number
 	 */
-	public void reset(int hsize, int vsize, int maxPlayers)
+	public void reset(int hsize, int vsize)
 	{
 		// options
 		options = new int[]{0, 0, 0, 0, 0, 0, 0};
@@ -96,11 +95,11 @@ public class Game
 		
 		// creation of tablesy
 		map = new Cell[hsize][vsize];
-		players = new Snake[maxPlayers];
+		players = new ArrayList<Snake>();
 		
 		// variables initialisation
 		livingApples = 0;
-		livingNumber = maxPlayers;
+		livingNumber = 0;
 		maxSpeed = DEFAULT_MAX_SPEED;
 		maxLength = DEFAULT_MAX_LENGTH;
 		
@@ -199,23 +198,23 @@ public class Game
 	
 	/**
 	 * create a snake
-	 * @param who index of the snake
 	 * @param x initial horizontal position
 	 * @param y initial vertical position
 	 * @param length initial length
 	 * @param xdir initial horizontal direction
 	 * @param ydir initial vertical direction
 	 */
-	public void createSnake(int who, int x, int y, int length, int xdir, int ydir)
+	public void createSnake(int x, int y, int length, int xdir, int ydir)
 	{
 		if (x - length >= -1)
 		{
-			players[who] = new Snake(x, y, length, xdir, ydir);
+			livingNumber++;
+			players.add(new Snake(x, y, length, xdir, ydir));
 			for (int i=0; i<length; i++)
 			{
 				map[x-i][y].setDirection(xdir, ydir);
 				map[x-i][y].setEntity(Cell.PLAYER);
-				map[x-i][y].setDetail(who);
+				map[x-i][y].setDetail(players.size() - 1);
 			}
 		}
 	}
@@ -229,13 +228,14 @@ public class Game
 	public int killSnake(int who)
 	{
 		// we update game and snake status
-		players[who].setLiving(false);
+		Snake snake = players.get(who);
+		snake.setLiving(false);
 		livingNumber--;
 		
 		// we get snake informations to wander it
-		int x = players[who].getTail()[0];
-		int y = players[who].getTail()[1];
-		int length = players[who].getLength();
+		int x = snake.getTail()[0];
+		int y = snake.getTail()[1];
+		int length = snake.getLength();
 		int dx, dy;
 		
 		// we replace every cell by air ffrom tail to head
@@ -293,8 +293,8 @@ public class Game
 		boolean changement = false;
 		
 		// we move every alive player p one by one
-		for (int p=0; p<players.length; p++) {
-			snake = players[p];
+		for (int p=0; p<players.size(); p++) {
+			snake = players.get(p);
 			if(snake.isLiving()==false) {
 				//killSnake(p);
 			}
@@ -351,17 +351,19 @@ public class Game
 		
 		// apples respawn
 		livingApples -= eaten;
-		if (options[RANDOM_APPLE] == 0) {
-			int max = optVar[RANDOM_APPLE] - livingApples;
-			for (int a=0; a<max; a++) {
-				createApple(optVar[APPLES_TYPE]);
+		if (controler.isHost()) {
+			if (options[RANDOM_APPLE] == 0) {
+				int max = optVar[RANDOM_APPLE] - livingApples;
+				for (int a=0; a<max; a++) {
+					createApple(optVar[APPLES_TYPE]);
+				}
 			}
-		}
-		else {
-			optVar[RANDOM_APPLE] -= delta;
-			if (optVar[RANDOM_APPLE] <= 0) {
-				createApple(optVar[APPLES_TYPE]);
-				optVar[RANDOM_APPLE] += options[RANDOM_APPLE]*(0.5 + Math.random());
+			else {
+				optVar[RANDOM_APPLE] -= delta;
+				if (optVar[RANDOM_APPLE] <= 0) {
+					createApple(optVar[APPLES_TYPE]);
+					optVar[RANDOM_APPLE] += options[RANDOM_APPLE]*(0.5 + Math.random());
+				}
 			}
 		}
 		
@@ -383,6 +385,7 @@ public class Game
 			if (map[x][y].getEntity() == Cell.AIR) {
 				map[x][y].reset(0, 0, Cell.APPLE, detail);
 				created = true;
+				controler.sendMessage("A:" + detail + ':' + x + ':' + y);
 			}
 			n++;
 		}
@@ -470,7 +473,7 @@ public class Game
 	 * @return the snake object of the player
 	 */
 	public Snake getPlayer(int who) {
-		return players[who];
+		return players.get(who);
 	}
 	
 	/**
@@ -478,7 +481,7 @@ public class Game
 	 * @return the length of the snakes list
 	 */
 	public int getNumberOfSnakes() {
-		return players.length;
+		return players.size();
 	}
 	
 	/**

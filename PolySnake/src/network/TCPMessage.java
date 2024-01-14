@@ -18,6 +18,10 @@ public class TCPMessage implements Runnable
 	protected byte[] buffer;
 	/** the size of the buffer */
 	private final int size = 8192;
+	
+	public TCPMessage() {
+		setStreamBuffer(size);
+	}
 
 	/** The set method for the buffer. */
 	void setStreamBuffer(int size)
